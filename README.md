@@ -9,9 +9,9 @@ Built with C# and .NET 8 Windows Forms.
 
 ## 📥 Download
 
-[![Download K-win](https://img.shields.io/badge/Download-K--win%20v1.0.0-blue)](https://github.com/TypoGrammar/-K-win/releases/latest/download/K-win.exe)
+[![Download K-win](https://img.shields.io/badge/Download-K--win%20v1.0.0-blue)](https://github.com/Elomami1976/K-Win/releases/latest/download/K-win.exe)
 
-**[⬇️ Download Latest Release](https://github.com/TypoGrammar/-K-win/releases/latest)**
+**[⬇️ Download Latest Release](https://github.com/Elomami1976/K-Win/releases/latest)**
 
 ## ✨ Features
 
@@ -113,7 +113,7 @@ You can open issues, suggest improvements, or submit pull requests.
 ---
 
 <p align="center">
-	<a href="https://typogrammar.github.io/-K-win/">🌐 Website</a> •
-	<a href="https://github.com/TypoGrammar/-K-win/releases">⬇️ Download</a> •
-	<a href="https://github.com/TypoGrammar/-K-win/issues">🐛 Report Bug</a>
+	<a href="https://elomami1976.github.io/K-Win/">🌐 Website</a> •
+	<a href="https://github.com/Elomami1976/K-Win/releases">⬇️ Download</a> •
+	<a href="https://github.com/Elomami1976/K-Win/issues">🐛 Report Bug</a>
 </p>
