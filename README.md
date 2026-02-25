@@ -3,6 +3,11 @@
 ![Windows 11](https://img.shields.io/badge/Windows-11-blue?logo=windows)
 ![.NET 8](https://img.shields.io/badge/.NET-8-purple)
 ![Build](https://img.shields.io/badge/Status-Stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+<p align="center">
+  <img src="https://elomami1976.github.io/K-Win/assets/og-image.png" alt="K-win Windows 11 Optimization Tool" width="600">
+</p>
 
 A safe, transparent Windows 11 optimization tool focused on performance, privacy, and cleanup.
 Built with C# and .NET 8 Windows Forms.
