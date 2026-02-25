@@ -1,0 +1,44 @@
+# Robots.txt for K-win
+# https://elomami1976.github.io/K-Win/
+
+# Allow all search engine crawlers
+User-agent: *
+Allow: /
+
+# Specific search engine guidelines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Disallow specific file types that don't need indexing
+Disallow: /*.json$
+Disallow: /*.map$
+
+# Allow important resources
+Allow: /assets/
+Allow: /style.css
+Allow: /script.js
+
+# Sitemap location
+Sitemap: https://elomami1976.github.io/K-Win/sitemap.xml
+
+# Host directive (for Yandex)
+Host: https://elomami1976.github.io/K-Win/

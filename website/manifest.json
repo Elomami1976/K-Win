@@ -1,0 +1,49 @@
+{
+    "name": "K-win - Windows 11 Optimizer",
+    "short_name": "K-win",
+    "description": "Free open-source Windows 11 optimization tool. Boost performance, protect privacy, clean disk space.",
+    "start_url": "/K-Win/",
+    "scope": "/K-Win/",
+    "display": "standalone",
+    "background_color": "#0A0A0F",
+    "theme_color": "#0078D4",
+    "orientation": "portrait-primary",
+    "lang": "en",
+    "dir": "ltr",
+    "categories": ["utilities", "productivity"],
+    "icons": [
+        {
+            "src": "assets/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "assets/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/og-image.png",
+            "sizes": "1200x630",
+            "type": "image/png",
+            "label": "K-win Windows 11 Optimization Tool Interface"
+        }
+    ],
+    "related_applications": [
+        {
+            "platform": "windows",
+            "url": "https://github.com/Elomami1976/K-Win/releases/latest/download/K-win.exe"
+        }
+    ],
+    "prefer_related_applications": true
+}
