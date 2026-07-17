@@ -18,6 +18,8 @@ Built with C# and .NET 8 Windows Forms.
 
 **[⬇️ Download Latest Release](https://github.com/Elomami1976/K-Win/releases/latest)**
 
+> **⚠️ Windows SmartScreen notice:** When you first run `K-win.exe`, Windows 11 may show a blue **"Windows protected your PC"** screen. This happens because the app is not yet code-signed — it is not a virus detection. Click **More info** → **Run anyway** to start K-win. If the button doesn't appear, right-click the .exe → **Properties** → check **Unblock** → **OK**, then run it again. K-win is fully open source, so you can review or build the code yourself.
+
 ## ✨ Features
 
 ### ⚡ Performance
@@ -97,8 +99,9 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 
 ## ❓ Troubleshooting
 
-**“Windows Defender blocked K-win”**
-→ Click **More info** → **Run anyway** (project is open source)
+**“Windows protected your PC” (SmartScreen)**
+→ Click **More info** → **Run anyway** (the app is unsigned but open source)
+→ If there's no **Run anyway** button: right-click `K-win.exe` → **Properties** → check **Unblock** → **OK**
 
 **“Changes are not applying”**
 → Run K-win as **Administrator**
