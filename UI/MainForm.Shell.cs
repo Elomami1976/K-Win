@@ -18,6 +18,8 @@ namespace KWin.UI
     public partial class MainForm
     {
         private SettingsService _settingsService = null!;
+        private SystemMonitorService _monitor = null!;
+        private FlowLayoutPanel _statusBrand = null!;
 
         private RoundedPanel _sidebar = null!;
         private RoundedPanel _mainArea = null!;
@@ -76,8 +78,10 @@ namespace KWin.UI
             Controls.Add(_mainArea);
             Controls.Add(_sidebar);
 
+            _monitor = new SystemMonitorService(_settingsService.Current.MonitorIntervalSeconds);
             BuildPages();
             ResumeLayout(true);
+            Resize += (s, e) => UpdateMonitoring();
 
             Navigate(initialPage is int p && p >= 0 && p < PageIds.Count ? p : PageIds.Dashboard);
             UpdateLastOptimization();
@@ -236,6 +240,10 @@ namespace KWin.UI
             Ui.Columns(bar, (SizeType.AutoSize, 0), (SizeType.Percent, 100), (SizeType.AutoSize, 0));
 
             var left = new FlowLayoutPanel { AutoSize = true, WrapContents = false, Dock = DockStyle.Fill, Padding = new Padding(0, 11, 0, 0), Margin = new Padding(0) };
+            _statusBrand = left;
+            // The brand text also appears in the sidebar; hide it here when space is short
+            // (long French/Arabic labels at 1366 px), so the status message keeps room.
+            bar.Resize += (s, e) => _statusBrand.Visible = bar.Width >= Draw.S(bar, 1060);
             string[] parts = { "K-Win 1.5", Get("shell.edition"), Get("shell.mit_license") };
             for (int i = 0; i < parts.Length; i++)
             {
@@ -354,7 +362,7 @@ namespace KWin.UI
                     else Navigate(PageIds.Cleanup);
                 },
                 ViewHistory = ShowHistory
-            }, _history);
+            }, _history, _monitor);
 
             // 1.0 pages, hosted unchanged (order matters: the Performance tab creates the startup group).
             _pages[PageIds.Performance] = HostLegacy(BuildPerformanceTab());
@@ -390,7 +398,13 @@ namespace KWin.UI
                 },
                 OpenLogs = () => OpenFolder(Logger.Instance.LogDirectory),
                 OpenBackups = () => OpenFolder(_safety.BackupDirectory),
-                ViewHistory = ShowHistory
+                ViewHistory = ShowHistory,
+                SetMonitorInterval = seconds =>
+                {
+                    _settingsService.Current.MonitorIntervalSeconds = SystemMonitorService.NormalizeInterval(seconds);
+                    _settingsService.Save();
+                    _monitor.SetInterval(seconds);
+                }
             }, _settingsService);
 
             foreach (var page in _pages)
@@ -486,6 +500,7 @@ namespace KWin.UI
             }
             _contentHost.ResumeLayout(true);
             _currentPage = index;
+            UpdateMonitoring();
 
             // Always open a page at the top, and keep keyboard focus in the navigation.
             if (_pages[index] is ScrollableControl sc) sc.AutoScrollPosition = Point.Empty;
@@ -633,6 +648,24 @@ namespace KWin.UI
         {
             base.OnHandleCreated(e);
             ThemeManager.ApplyTitleBar(this);
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            _monitor.Start();
+            UpdateMonitoring();
+        }
+
+        /// <summary>
+        /// Monitoring runs only while someone can see it: paused when the window is minimized
+        /// or another page than the Dashboard is shown.
+        /// </summary>
+        private void UpdateMonitoring()
+        {
+            if (_monitor == null) return;
+            bool visible = WindowState != FormWindowState.Minimized && _currentPage == PageIds.Dashboard;
+            _monitor.SetPaused(!visible);
         }
 
         #endregion

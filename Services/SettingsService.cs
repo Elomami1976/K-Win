@@ -17,6 +17,10 @@ namespace KWin.Services
         [JsonPropertyName("backup_retention_days")]
         public int BackupRetentionDays { get; set; } = 30;
 
+        /// <summary>Dashboard monitoring refresh interval in seconds (1, 2, 3, 5 or 10).</summary>
+        [JsonPropertyName("monitor_interval_seconds")]
+        public int MonitorIntervalSeconds { get; set; } = 2;
+
         [JsonIgnore]
         public bool IsDark => !string.Equals(Theme, "light", StringComparison.OrdinalIgnoreCase);
     }
@@ -44,6 +48,7 @@ namespace KWin.Services
                 if (!File.Exists(_path)) return new AppSettings();
                 var s = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(_path), JsonOptions) ?? new AppSettings();
                 s.BackupRetentionDays = Math.Clamp(s.BackupRetentionDays, 1, 365);
+                s.MonitorIntervalSeconds = SystemMonitorService.NormalizeInterval(s.MonitorIntervalSeconds);
                 return s;
             }
             catch (Exception ex)

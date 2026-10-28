@@ -94,7 +94,13 @@ namespace KWin.Controls
             DrawMode = DrawMode.OwnerDrawFixed;
             DropDownStyle = ComboBoxStyle.DropDownList;
             FlatStyle = FlatStyle.Flat;
-            ItemHeight = 22;
+            ItemHeight = Font.Height + 6;
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            ItemHeight = Font.Height + 6; // follows the scaled font at 125% / 150%
         }
 
         public void ApplyTheme(ThemePalette p)

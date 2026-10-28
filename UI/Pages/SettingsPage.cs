@@ -16,6 +16,7 @@ namespace KWin.UI.Pages
         public required Action OpenLogs { get; init; }
         public required Action OpenBackups { get; init; }
         public required Action ViewHistory { get; init; }
+        public required Action<int> SetMonitorInterval { get; init; }
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ namespace KWin.UI.Pages
         private readonly ThemedComboBox _language;
         private readonly CheckBox _restorePoint;
         private readonly NumericUpDown _retention;
+        private readonly ThemedComboBox _interval;
         private bool _syncing;
 
         public SettingsPage(SettingsActions actions, SettingsService settings)
@@ -43,7 +45,7 @@ namespace KWin.UI.Pages
 
             var root = Ui.Grid(2, 3);
             Ui.Columns(root, (SizeType.Percent, 50), (SizeType.Percent, 50));
-            Ui.Rows(root, (SizeType.Absolute, 200), (SizeType.Absolute, 220), (SizeType.Percent, 100));
+            Ui.Rows(root, (SizeType.Absolute, 200), (SizeType.Absolute, 220), (SizeType.Absolute, 220));
 
             // ---- Appearance ----
             var appearance = Section(Glyphs.Moon, Get("set.appearance"), new Padding(0, 6, 6, 6), out var aBody);
@@ -112,7 +114,21 @@ namespace KWin.UI.Pages
             root.Controls.Add(data, 1, 1);
 
             // ---- About ----
-            var about = Section(Glyphs.Info, Get("set.about"), new Padding(0, 6, 0, 6), out var abBody);
+            // ---- Monitoring ----
+            var monitoring = Section(Glyphs.Cpu, Get("set.monitoring"), new Padding(0, 6, 6, 6), out var mBody);
+            _interval = new ThemedComboBox { Font = UiFonts.Regular(10f), Width = 200, Margin = new Padding(0, 6, 0, 6) };
+            foreach (int sec in SystemMonitorService.AllowedIntervalsSeconds)
+                _interval.Items.Add(new IntervalItem(sec, Get("set.every_seconds", sec)));
+            _interval.SelectedIndexChanged += (s, e) =>
+            {
+                if (!_syncing && _interval.SelectedItem is IntervalItem it) _actions.SetMonitorInterval(it.Seconds);
+            };
+            mBody.Controls.Add(Ui.Text(Get("set.interval"), UiFonts.Regular(10f)), 0, 0);
+            mBody.Controls.Add(_interval, 0, 1);
+            mBody.Controls.Add(Ui.Text(Get("set.monitoring_note"), UiFonts.Regular(9f), TextRole.Muted, wrap: true), 0, 2);
+            root.Controls.Add(monitoring, 0, 2);
+
+            var about = Section(Glyphs.Info, Get("set.about"), new Padding(6, 6, 0, 6), out var abBody);
             string version = Application.ProductVersion.Split('+')[0];
             abBody.Controls.Add(Ui.Text(Get("set.about_line", version), UiFonts.Semibold(10.5f)), 0, 0);
             abBody.Controls.Add(Ui.Text(Get("set.license_line"), UiFonts.Regular(9.5f), TextRole.Muted, wrap: true), 0, 1);
@@ -130,12 +146,16 @@ namespace KWin.UI.Pages
                 abBody.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
                 abBody.Controls.Add(dev, 0, 3);
             }
-            root.Controls.Add(about, 0, 2);
-            root.SetColumnSpan(about, 2);
+            root.Controls.Add(about, 1, 2);
 
             Controls.Add(root);
-            AutoScrollMinSize = new Size(820, 640);
+            Ui.KeepMinScrollSize(this, new Size(820, 660));
             SyncFromSettings();
+        }
+
+        private sealed record IntervalItem(int Seconds, string Name)
+        {
+            public override string ToString() => Name;
         }
 
         private sealed record LanguageItem(string Code, string Name)
@@ -185,6 +205,8 @@ namespace KWin.UI.Pages
                 _light.Checked = !_settings.Current.IsDark;
                 _restorePoint.Checked = _settings.Current.AutoRestorePoint;
                 _retention.Value = Math.Clamp(_settings.Current.BackupRetentionDays, 1, 365);
+                _interval.SelectedItem = _interval.Items.Cast<IntervalItem>()
+                    .FirstOrDefault(i => i.Seconds == _settings.Current.MonitorIntervalSeconds);
                 _language.SelectedItem = _language.Items.Cast<LanguageItem>().FirstOrDefault(i => i.Code == Loc.CurrentLanguage)
                                          ?? _language.Items.Cast<LanguageItem>().FirstOrDefault();
             }

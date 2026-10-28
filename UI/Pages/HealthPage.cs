@@ -82,7 +82,7 @@ namespace KWin.UI.Pages
             root.SetColumnSpan(note, 2);
 
             Controls.Add(root);
-            AutoScrollMinSize = new Size(860, 620);
+            Ui.KeepMinScrollSize(this, new Size(860, 620));
             VisibleChanged += async (s, e) => { if (Visible) await RefreshDataAsync(); };
         }
 

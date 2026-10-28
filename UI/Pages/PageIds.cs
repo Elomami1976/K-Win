@@ -34,6 +34,20 @@ namespace KWin.UI.Pages
             return t;
         }
 
+        /// <summary>
+        /// Sets a page's minimum scroll size in 96-DPI units and keeps it scaled to the current DPI
+        /// (125%, 150%, moving between monitors).
+        /// </summary>
+        public static void KeepMinScrollSize(ScrollableControl page, Size logical)
+        {
+            void Apply() => page.AutoScrollMinSize = new Size(
+                (int)Math.Round(logical.Width * page.DeviceDpi / 96f),
+                (int)Math.Round(logical.Height * page.DeviceDpi / 96f));
+            Apply();
+            page.HandleCreated += (s, e) => Apply();
+            page.DpiChangedAfterParent += (s, e) => Apply();
+        }
+
         public static void Columns(TableLayoutPanel t, params (SizeType Type, float Value)[] cols)
         {
             t.ColumnStyles.Clear();

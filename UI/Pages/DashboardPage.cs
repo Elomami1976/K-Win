@@ -31,10 +31,9 @@ namespace KWin.UI.Pages
 
         private readonly DashboardActions _actions;
         private readonly OperationHistoryService _history;
-        private readonly CpuUsageSampler _cpu = new();
-        private readonly System.Windows.Forms.Timer _timer = new() { Interval = 2000 };
+        private readonly SystemMonitorService _monitor;
         private StaticSystemInfo? _info;
-        private int _tick;
+        private DateTime _lastDiskRefresh = DateTime.MinValue;
 
         // System card
         private readonly ThemedLabel _osTitle, _osVersion, _osDevice, _osCpu, _osRam, _osGpu;
@@ -53,16 +52,17 @@ namespace KWin.UI.Pages
         private readonly (Control Row, ThemedLabel Name, UsageBar Bar, ThemedLabel Used, ThemedLabel Percent)[] _disks =
             new (Control, ThemedLabel, UsageBar, ThemedLabel, ThemedLabel)[DiskRows];
 
-        public DashboardPage(DashboardActions actions, OperationHistoryService history)
+        public DashboardPage(DashboardActions actions, OperationHistoryService history, SystemMonitorService monitor)
         {
             _actions = actions;
             _history = history;
+            _monitor = monitor;
             DoubleBuffered = true;
             AutoScroll = true;
             Padding = new Padding(0);
 
             var root = Ui.Grid(1, 4);
-            Ui.Rows(root, (SizeType.Absolute, 168), (SizeType.Absolute, 128), (SizeType.Absolute, 140), (SizeType.Percent, 100));
+            Ui.Rows(root, (SizeType.Absolute, 168), (SizeType.Absolute, 156), (SizeType.Absolute, 140), (SizeType.Percent, 100));
             Ui.Columns(root, (SizeType.Percent, 100));
 
             // ---------------- System card ----------------
@@ -131,10 +131,10 @@ namespace KWin.UI.Pages
             // ---------------- Metric tiles ----------------
             var tiles = Ui.Grid(4, 1);
             Ui.Columns(tiles, (SizeType.Percent, 25), (SizeType.Percent, 25), (SizeType.Percent, 25), (SizeType.Percent, 25));
-            _cpuTile = new MetricTile(Glyphs.Cpu, Get("dash.cpu"), () => ThemeManager.Current.Accent);
-            _memTile = new MetricTile(Glyphs.Memory, Get("dash.memory"), () => ThemeManager.Current.Purple);
-            _diskTile = new MetricTile(Glyphs.Disk, Get("dash.disk", SystemInfoService.SystemDriveRoot.TrimEnd('\\')), () => ThemeManager.Current.Success);
-            _gpuTile = new MetricTile(Glyphs.Gpu, Get("dash.gpu"), () => ThemeManager.Current.Warning);
+            _cpuTile = new MetricTile(Glyphs.Cpu, Get("dash.cpu"), () => ThemeManager.Current.Accent, monitor.CpuHistory);
+            _memTile = new MetricTile(Glyphs.Memory, Get("dash.memory"), () => ThemeManager.Current.Purple, monitor.MemoryHistory);
+            _diskTile = new MetricTile(Glyphs.Disk, Get("dash.disk", SystemInfoService.SystemDriveRoot.TrimEnd('\\')), () => ThemeManager.Current.Success, monitor.DiskHistory);
+            _gpuTile = new MetricTile(Glyphs.Gpu, Get("dash.gpu"), () => ThemeManager.Current.Warning, monitor.GpuHistory);
             _cpuTile.Margin = new Padding(0, 6, 6, 6);
             _memTile.Margin = new Padding(6, 6, 6, 6);
             _diskTile.Margin = new Padding(6, 6, 6, 6);
@@ -235,13 +235,16 @@ namespace KWin.UI.Pages
             root.Controls.Add(bottom, 0, 3);
 
             Controls.Add(root);
-            AutoScrollMinSize = new Size(900, 700);
+            Ui.KeepMinScrollSize(this, new Size(900, 730));
 
-            _timer.Tick += (s, e) => RefreshLive();
             _history.Changed += OnHistoryChanged;
+            _monitor.SampleReady += OnSample;
             VisibleChanged += (s, e) =>
             {
-                if (Visible) { RefreshLive(force: true); RefreshRecent(); }
+                if (!Visible) return;
+                if (_monitor.Latest is MonitorSample latest) ApplySample(latest);
+                RefreshDisks();
+                RefreshRecent();
             };
         }
 
@@ -314,8 +317,6 @@ namespace KWin.UI.Pages
         protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            _cpu.Sample(); // baseline for the first real measurement
-            _timer.Start();
             try
             {
                 _info = await SystemInfoService.LoadStaticAsync();
@@ -326,7 +327,8 @@ namespace KWin.UI.Pages
                 Logger.Instance.Error("Dashboard.LoadStatic", "SystemInfo", ex);
                 _osTitle.Text = Get("dash.not_available");
             }
-            RefreshLive(force: true);
+            if (_monitor.Latest is MonitorSample latest) ApplySample(latest);
+            RefreshDisks();
             RefreshRecent();
         }
 
@@ -341,43 +343,55 @@ namespace KWin.UI.Pages
             _osCpu.Text = Get("dash.cpu_line", _info.CpuName ?? na);
             _osRam.Text = Get("dash.ram_line", _info.TotalRamBytes > 0 ? Loc.Ltr(SystemInfoService.FormatBytes(_info.TotalRamBytes)) : na);
             _osGpu.Text = Get("dash.gpu_line", _info.Gpus.Count > 0 ? string.Join(", ", _info.Gpus) : na);
-
-            _cpuTile.SetSubtitle(Get("dash.logical_processors", _info.LogicalProcessors));
-            _gpuTile.SetValue(null, _info.Gpus.Count > 0 ? _info.Gpus[0] : na);
-            _gpuTile.SetNote(Get("dash.gpu_usage_unavailable"));
+            if (_monitor.Latest is MonitorSample latest) ApplySample(latest);
         }
 
-        private void RefreshLive(bool force = false)
+        /// <summary>Called on the monitor's background thread; hands the sample to the UI thread.</summary>
+        private void OnSample(MonitorSample sample)
         {
-            if (!force && (!Visible || FindForm()?.WindowState == FormWindowState.Minimized))
-                return;
-            _tick++;
+            if (IsDisposed || !IsHandleCreated || !Visible) return;
+            try { BeginInvoke(() => { if (!IsDisposed) ApplySample(sample); }); }
+            catch (InvalidOperationException) { /* window closing */ }
+        }
 
-            double? cpu = _cpu.Sample();
-            if (cpu is double c) _cpuTile.SetValue(c, null);
-            else if (force && _cpuTile.Value == null) _cpuTile.SetValue(null, null);
+        private void ApplySample(MonitorSample s)
+        {
+            string unavailable = Get("dash.unavailable");
+            int logical = _info?.LogicalProcessors ?? Environment.ProcessorCount;
 
-            var mem = MemoryManager.GetMemoryInfo();
-            if (mem.Success)
-            {
-                var m = mem.Data!;
-                _memTile.SetValue(m.MemoryLoadPercent,
-                    Loc.Ltr($"{SystemInfoService.FormatBytes(m.UsedPhysicalMB * 1048576.0)} / {SystemInfoService.FormatBytes(m.TotalPhysicalMB * 1048576.0)}"));
-            }
+            // CPU
+            _cpuTile.SetValue(s.CpuPercent, s.CpuCurrentMhz is double mhz
+                ? Get("dash.cpu_sub_freq", Loc.Ltr($"{mhz / 1000.0:0.00} GHz"), logical)
+                : Get("dash.logical_processors", logical));
+            _cpuTile.SetCaption(s.CpuPercent == null ? Get("dash.usage_unavailable") : "");
 
-            DriveInfo? sysDrive = null;
-            try { sysDrive = new DriveInfo(SystemInfoService.SystemDriveRoot); } catch { }
-            double? sysFreePct = null;
-            if (sysDrive is { IsReady: true })
-            {
-                long used = sysDrive.TotalSize - sysDrive.TotalFreeSpace;
-                double pct = used * 100.0 / sysDrive.TotalSize;
-                sysFreePct = 100 - pct;
-                _diskTile.SetValue(pct, Loc.Ltr($"{SystemInfoService.FormatBytes(used)} / {SystemInfoService.FormatBytes(sysDrive.TotalSize)}"));
-            }
+            // Memory: used / total and available
+            _memTile.SetValue(s.MemoryPercent, s.MemoryUsedBytes is ulong used && s.MemoryTotalBytes is ulong total && s.MemoryAvailableBytes is ulong avail
+                ? Get("dash.mem_sub", Loc.Ltr($"{SystemInfoService.FormatBytes(used)} / {SystemInfoService.FormatBytes(total)}"), Loc.Ltr(SystemInfoService.FormatBytes(avail)))
+                : unavailable);
+            _memTile.SetCaption("");
 
-            if (force || _tick % 15 == 0) RefreshDisks();
-            UpdateStatus(sysFreePct, mem.Success ? mem.Data!.MemoryLoadPercent : null);
+            // Disk: space used on the system drive; the chart shows disk activity
+            _diskTile.SetValue(s.DiskUsedPercent, s.DiskUsedBytes is long dUsed && s.DiskTotalBytes is long dTotal
+                ? Loc.Ltr($"{SystemInfoService.FormatBytes(dUsed)} / {SystemInfoService.FormatBytes(dTotal)}")
+                : unavailable);
+            _diskTile.SetCaption(s.DiskActivePercent is double act
+                ? Get("dash.disk_activity", $"{act:0}")
+                : Get("dash.disk_activity_unavailable"));
+
+            // GPU: usage from GPU Engine counters when the driver provides them
+            string gpuName = _info?.Gpus.Count > 0 ? _info.Gpus[0] : unavailable;
+            _gpuTile.SetValue(s.GpuPercent, gpuName);
+            _gpuTile.SetCaption(s.GpuPercent == null ? Get("dash.gpu_usage_unavailable") : "");
+
+            _cpuTile.RefreshChart();
+            _memTile.RefreshChart();
+            _diskTile.RefreshChart();
+            _gpuTile.RefreshChart();
+
+            if ((DateTime.UtcNow - _lastDiskRefresh).TotalSeconds >= 30) RefreshDisks();
+            UpdateStatus(s.DiskUsedPercent is double dp ? 100 - dp : null,
+                s.MemoryPercent is double mp ? (uint)Math.Round(mp) : null);
         }
 
         /// <summary>Basic, real checks only. The text says which checks were made.</summary>
@@ -407,6 +421,7 @@ namespace KWin.UI.Pages
 
         private void RefreshDisks()
         {
+            _lastDiskRefresh = DateTime.UtcNow;
             var drives = SystemInfoService.GetFixedDrives();
             for (int i = 0; i < DiskRows; i++)
             {
@@ -482,31 +497,34 @@ namespace KWin.UI.Pages
         {
             if (disposing)
             {
-                _timer.Stop();
-                _timer.Dispose();
+                _monitor.SampleReady -= OnSample;
                 _history.Changed -= OnHistoryChanged;
             }
             base.Dispose(disposing);
         }
     }
 
-    /// <summary>Dashboard tile: icon, title, measured value, details and a ring gauge.</summary>
+    /// <summary>
+    /// Dashboard tile: icon, title, measured value (or "Unavailable"), details, ring gauge and a
+    /// history chart fed by <see cref="SystemMonitorService"/>.
+    /// </summary>
     public class MetricTile : RoundedPanel
     {
         private readonly Func<Color> _color;
         private readonly IconBadge _icon;
-        private readonly ThemedLabel _value, _subtitle, _note;
+        private readonly ThemedLabel _value, _subtitle;
         private readonly RingGauge _ring;
+        private readonly Sparkline _chart;
 
         public double? Value { get; private set; }
 
-        public MetricTile(string glyph, string title, Func<Color> color)
+        public MetricTile(string glyph, string title, Func<Color> color, MetricHistory history)
         {
             _color = color;
             Dock = DockStyle.Fill;
-            var grid = Ui.Grid(3, 4, new Padding(14, 10, 10, 6));
+            var grid = Ui.Grid(3, 4, new Padding(14, 10, 10, 8));
             Ui.Columns(grid, (SizeType.Absolute, 46), (SizeType.Percent, 100), (SizeType.Absolute, 70));
-            Ui.Rows(grid, (SizeType.Absolute, 22), (SizeType.Absolute, 36), (SizeType.Absolute, 20), (SizeType.Percent, 100));
+            Ui.Rows(grid, (SizeType.Absolute, 22), (SizeType.Absolute, 34), (SizeType.Absolute, 20), (SizeType.Percent, 100));
 
             _icon = new IconBadge { Glyph = glyph, GlyphSize = 18f, Dock = DockStyle.Fill, Margin = new Padding(0, 0, 8, 0) };
             grid.Controls.Add(_icon, 0, 0);
@@ -518,35 +536,56 @@ namespace KWin.UI.Pages
             grid.Controls.Add(_value, 1, 1);
             _subtitle = Ui.Text("", UiFonts.Regular(9f), TextRole.Muted);
             grid.Controls.Add(_subtitle, 0, 2);
-            grid.SetColumnSpan(_subtitle, 2);
-            _note = Ui.Text("", UiFonts.Regular(8.5f), TextRole.Muted);
-            grid.Controls.Add(_note, 0, 3);
-            grid.SetColumnSpan(_note, 3);
+            grid.SetColumnSpan(_subtitle, 3);
 
             _ring = new RingGauge { Dock = DockStyle.Fill, Margin = new Padding(4, 0, 0, 0) };
             grid.Controls.Add(_ring, 2, 0);
-            grid.SetRowSpan(_ring, 3);
+            grid.SetRowSpan(_ring, 2);
+
+            _chart = new Sparkline { Source = history, Dock = DockStyle.Fill, Margin = new Padding(0, 4, 0, 0) };
+            grid.Controls.Add(_chart, 0, 3);
+            grid.SetColumnSpan(_chart, 3);
 
             Controls.Add(grid);
         }
 
-        /// <summary>Sets a measured value (0-100) or null for "not available".</summary>
+        /// <summary>Sets a measured value (0-100), or null to show "Unavailable".</summary>
         public void SetValue(double? percent, string? subtitle)
         {
             Value = percent;
-            _value.Text = percent is double v ? $"{v:0}%" : "—";
+            if (percent is double v)
+            {
+                _value.Text = $"{v:0}%";
+                _value.Font = UiFonts.Semibold(18f);
+                _value.Role = TextRole.Primary;
+            }
+            else
+            {
+                _value.Text = Loc.Get("dash.unavailable");
+                _value.Font = UiFonts.Semibold(11f);
+                _value.Role = TextRole.Muted;
+            }
             _ring.Value = percent;
             if (subtitle != null) _subtitle.Text = subtitle;
         }
 
         public void SetSubtitle(string subtitle) => _subtitle.Text = subtitle;
-        public void SetNote(string note) => _note.Text = note;
+
+        public void SetCaption(string caption)
+        {
+            if (_chart.Caption == caption) return;
+            _chart.Caption = caption;
+            _chart.Invalidate();
+        }
+
+        public void RefreshChart() => _chart.Invalidate();
 
         public override void ApplyTheme(ThemePalette p)
         {
             base.ApplyTheme(p);
             _icon.Tint = _color();
             _ring.RingColor = _color();
+            _chart.LineColor = _color();
         }
     }
 }

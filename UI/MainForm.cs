@@ -5104,6 +5104,7 @@ namespace KWin.UI
             _ramTimer?.Dispose();
             _undoToolTip.Dispose();
             _history.Changed -= OnHistoryChangedForShell;
+            _monitor?.Dispose();
             Logger.Instance.Info("Application", "MainForm", "closing");
             Logger.Instance.Dispose();
             base.OnFormClosing(e);
