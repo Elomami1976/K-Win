@@ -29,6 +29,12 @@
     <InternalsVisibleTo Include="KWin.Tests" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <!-- English strings are in Resources/Strings.resx; fr and ar are satellite resources. -->
+    <NeutralLanguage>en</NeutralLanguage>
+    <SatelliteResourceLanguages>fr;ar</SatelliteResourceLanguages>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="8.0.1" />

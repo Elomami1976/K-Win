@@ -1,0 +1,2802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app.title" xml:space="preserve">
+    <value>K-win — أداة تحسين ويندوز 11</value>
+  </data>
+  <data name="app.name" xml:space="preserve">
+    <value>K-win</value>
+  </data>
+  <data name="app.subtitle" xml:space="preserve">
+    <value>أداة تحسين ويندوز 11</value>
+  </data>
+  <data name="app.settings" xml:space="preserve">
+    <value>⚙ الإعدادات</value>
+  </data>
+  <data name="app.ready" xml:space="preserve">
+    <value>جاهز</value>
+  </data>
+  <data name="app.undo" xml:space="preserve">
+    <value>↶ تراجع</value>
+  </data>
+  <data name="app.undo_n" xml:space="preserve">
+    <value>↶ تراجع ({0})</value>
+  </data>
+  <data name="app.logs" xml:space="preserve">
+    <value>📋 السجلات</value>
+  </data>
+  <data name="tab.performance" xml:space="preserve">
+    <value>⚡ الأداء</value>
+  </data>
+  <data name="tab.privacy" xml:space="preserve">
+    <value>🔒 الخصوصية</value>
+  </data>
+  <data name="tab.cleanup" xml:space="preserve">
+    <value>🧹 التنظيف</value>
+  </data>
+  <data name="tab.tweaks" xml:space="preserve">
+    <value>🔧 التعديلات</value>
+  </data>
+  <data name="tab.apps" xml:space="preserve">
+    <value>📦 التطبيقات</value>
+  </data>
+  <data name="tab.ram" xml:space="preserve">
+    <value>🧠 الذاكرة</value>
+  </data>
+  <data name="common.checking" xml:space="preserve">
+    <value>جارٍ الفحص...</value>
+  </data>
+  <data name="common.calculating" xml:space="preserve">
+    <value>جارٍ الحساب...</value>
+  </data>
+  <data name="common.loading" xml:space="preserve">
+    <value>جارٍ التحميل...</value>
+  </data>
+  <data name="common.apply" xml:space="preserve">
+    <value>تطبيق</value>
+  </data>
+  <data name="common.cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="common.save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="common.refresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="common.enable" xml:space="preserve">
+    <value>تفعيل</value>
+  </data>
+  <data name="common.disable" xml:space="preserve">
+    <value>تعطيل</value>
+  </data>
+  <data name="common.show" xml:space="preserve">
+    <value>إظهار</value>
+  </data>
+  <data name="common.hide" xml:space="preserve">
+    <value>إخفاء</value>
+  </data>
+  <data name="common.yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="common.no" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="common.status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="common.error" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+  <data name="common.warning" xml:space="preserve">
+    <value>تحذير</value>
+  </data>
+  <data name="common.confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="common.unable_determine" xml:space="preserve">
+    <value>الحالة: تعذّر التحديد</value>
+  </data>
+  <data name="common.select_all" xml:space="preserve">
+    <value>تحديد الكل</value>
+  </data>
+  <data name="perf.power_plan" xml:space="preserve">
+    <value>خطة الطاقة</value>
+  </data>
+  <data name="perf.power_note" xml:space="preserve">
+    <value>⚠ الأداء العالي قد يزيد استهلاك الطاقة على الأجهزة المحمولة.</value>
+  </data>
+  <data name="perf.create_ultimate" xml:space="preserve">
+    <value>＋ إنشاء Ultimate Performance</value>
+  </data>
+  <data name="perf.visual_effects" xml:space="preserve">
+    <value>التأثيرات البصرية</value>
+  </data>
+  <data name="perf.best_perf" xml:space="preserve">
+    <value>أفضل أداء (تعطيل التأثيرات)</value>
+  </data>
+  <data name="perf.also_disable_transparency" xml:space="preserve">
+    <value>تعطيل تأثيرات الشفافية أيضاً</value>
+  </data>
+  <data name="perf.disable_animations" xml:space="preserve">
+    <value>تعطيل حركات النوافذ</value>
+  </data>
+  <data name="perf.disable_shadows" xml:space="preserve">
+    <value>تعطيل الظلال على النوافذ</value>
+  </data>
+  <data name="perf.restore_visual" xml:space="preserve">
+    <value>استعادة التأثيرات البصرية الافتراضية</value>
+  </data>
+  <data name="perf.startup_programs" xml:space="preserve">
+    <value>برامج بدء التشغيل</value>
+  </data>
+  <data name="perf.disable_selected" xml:space="preserve">
+    <value>تعطيل المحدد</value>
+  </data>
+  <data name="perf.quick_actions" xml:space="preserve">
+    <value>إجراءات سريعة</value>
+  </data>
+  <data name="perf.one_click_boost" xml:space="preserve">
+    <value>🚀 تعزيز بنقرة واحدة</value>
+  </data>
+  <data name="perf.boost_info" xml:space="preserve">
+    <value>يُطبّق: خطة الأداء العالي + أفضل تأثيرات بصرية + تعطيل الشفافية</value>
+  </data>
+  <data name="perf.game_mode" xml:space="preserve">
+    <value>وضع الألعاب</value>
+  </data>
+  <data name="perf.enable_game_mode" xml:space="preserve">
+    <value>تفعيل وضع الألعاب</value>
+  </data>
+  <data name="perf.disable_game_mode" xml:space="preserve">
+    <value>تعطيل وضع الألعاب</value>
+  </data>
+  <data name="perf.game_mode_note" xml:space="preserve">
+    <value>وضع الألعاب يُعطي الأولوية للمعالج وكرت الشاشة للألعاب ويوقف المهام الخلفية مثل Windows Update.</value>
+  </data>
+  <data name="perf.fast_startup" xml:space="preserve">
+    <value>بدء التشغيل السريع</value>
+  </data>
+  <data name="perf.enable_fast_startup" xml:space="preserve">
+    <value>تفعيل بدء التشغيل السريع</value>
+  </data>
+  <data name="perf.disable_fast_startup" xml:space="preserve">
+    <value>تعطيل بدء التشغيل السريع</value>
+  </data>
+  <data name="perf.fast_startup_note" xml:space="preserve">
+    <value>⚠ بدء التشغيل السريع يستخدم الإسبات. تعطيله قد يحل مشاكل الإقلاع المزدوج أو التعريفات.</value>
+  </data>
+  <data name="perf.desc_default" xml:space="preserve">
+    <value>اختر تحسيناً من القائمة لعرض تفاصيله هنا.
+
+جميع التغييرات تُنشئ نقطة استعادة ويمكن التراجع عنها.</value>
+  </data>
+  <data name="perf.gamemode_enabled" xml:space="preserve">
+    <value>الحالة: وضع الألعاب مُفعّل ✓</value>
+  </data>
+  <data name="perf.gamemode_disabled" xml:space="preserve">
+    <value>الحالة: وضع الألعاب مُعطّل</value>
+  </data>
+  <data name="perf.faststartup_enabled" xml:space="preserve">
+    <value>الحالة: بدء التشغيل السريع مُفعّل ✓</value>
+  </data>
+  <data name="perf.faststartup_disabled" xml:space="preserve">
+    <value>الحالة: بدء التشغيل السريع مُعطّل</value>
+  </data>
+  <data name="perf.faststartup_default" xml:space="preserve">
+    <value>الحالة: غير مُهيّأ (مُفعّل افتراضياً على الأرجح)</value>
+  </data>
+  <data name="perf.op.create_ultimate" xml:space="preserve">
+    <value>إنشاء خطة الطاقة Ultimate Performance عبر powercfg /duplicatescheme</value>
+  </data>
+  <data name="perf.op.create_ultimate_appear" xml:space="preserve">
+    <value>ستظهر الخطة في منتقي خطط الطاقة بعد الإنشاء</value>
+  </data>
+  <data name="perf.op.create_ultimate_title" xml:space="preserve">
+    <value>إنشاء خطة Ultimate Performance</value>
+  </data>
+  <data name="perf.op.ultimate_created" xml:space="preserve">
+    <value>تم إنشاء خطة Ultimate Performance</value>
+  </data>
+  <data name="perf.op.change_power_plan" xml:space="preserve">
+    <value>تغيير خطة الطاقة</value>
+  </data>
+  <data name="perf.op.set_plan_to" xml:space="preserve">
+    <value>تعيين خطة الطاقة النشطة إلى: {0} ({1})</value>
+  </data>
+  <data name="perf.op.battery_warning" xml:space="preserve">
+    <value>⚠ تحذير: أنت تعمل على البطارية. خطط الأداء العالي تزيد استهلاك الطاقة.</value>
+  </data>
+  <data name="perf.op.power_plan_set" xml:space="preserve">
+    <value>تم تعيين خطة الطاقة إلى {0}</value>
+  </data>
+  <data name="perf.op.revert_power_plan" xml:space="preserve">
+    <value>الرجوع إلى خطة الطاقة {0}</value>
+  </data>
+  <data name="perf.op.visual_effects_title" xml:space="preserve">
+    <value>تحسين التأثيرات البصرية</value>
+  </data>
+  <data name="perf.op.visual_optimized" xml:space="preserve">
+    <value>تم تحسين التأثيرات البصرية لأفضل أداء</value>
+  </data>
+  <data name="perf.op.revert_visual" xml:space="preserve">
+    <value>التراجع عن تغييرات التأثيرات البصرية</value>
+  </data>
+  <data name="perf.op.restore_visual_title" xml:space="preserve">
+    <value>استعادة التأثيرات البصرية الافتراضية</value>
+  </data>
+  <data name="perf.op.visual_restored" xml:space="preserve">
+    <value>تمت استعادة التأثيرات البصرية إلى إعدادات ويندوز الافتراضية</value>
+  </data>
+  <data name="perf.op.revert_to_optimized_visual" xml:space="preserve">
+    <value>الرجوع إلى التأثيرات البصرية المُحسّنة</value>
+  </data>
+  <data name="perf.op.no_startup_selected" xml:space="preserve">
+    <value>لم يتم تحديد برامج بدء تشغيل.</value>
+  </data>
+  <data name="perf.op.disable_startup_title" xml:space="preserve">
+    <value>تعطيل برامج بدء التشغيل</value>
+  </data>
+  <data name="perf.op.startup_will_disable" xml:space="preserve">
+    <value>سيتم تعطيل برامج بدء التشغيل التالية:</value>
+  </data>
+  <data name="perf.op.startup_warning" xml:space="preserve">
+    <value>⚠ تأكد أنها ليست خدمات نظام حرجة.</value>
+  </data>
+  <data name="perf.op.reenable_startup" xml:space="preserve">
+    <value>إعادة تفعيل {0} برنامج(برامج) بدء تشغيل</value>
+  </data>
+  <data name="perf.op.disabled_startup" xml:space="preserve">
+    <value>تم تعطيل {0} برنامج(برامج) بدء تشغيل</value>
+  </data>
+  <data name="perf.op.one_click_title" xml:space="preserve">
+    <value>تعزيز الأداء بنقرة واحدة</value>
+  </data>
+  <data name="perf.op.one_click_1" xml:space="preserve">
+    <value>1. تعيين خطة الطاقة على الأداء العالي</value>
+  </data>
+  <data name="perf.op.one_click_2" xml:space="preserve">
+    <value>2. تعيين التأثيرات البصرية على أفضل أداء (VisualFXSetting = 2)</value>
+  </data>
+  <data name="perf.op.one_click_3" xml:space="preserve">
+    <value>3. تعطيل تأثيرات الشفافية (EnableTransparency = 0)</value>
+  </data>
+  <data name="perf.op.one_click_rp" xml:space="preserve">
+    <value>إنشاء نقطة استعادة قبل جميع التغييرات</value>
+  </data>
+  <data name="perf.op.battery_boost_warning" xml:space="preserve">
+    <value>⚠ أنت تعمل على البطارية. خطة الأداء العالي ستزيد استهلاك الطاقة.</value>
+  </data>
+  <data name="perf.op.revert_boost" xml:space="preserve">
+    <value>التراجع عن تعزيز الأداء بنقرة واحدة</value>
+  </data>
+  <data name="perf.op.boost_applied" xml:space="preserve">
+    <value>تم تطبيق تعزيز الأداء بنقرة واحدة!</value>
+  </data>
+  <data name="perf.op.gamemode_prioritizes" xml:space="preserve">
+    <value>وضع الألعاب يُعطي الأولوية لموارد النظام للألعاب.</value>
+  </data>
+  <data name="perf.op.gamemode_restores" xml:space="preserve">
+    <value>تعطيل وضع الألعاب يُعيد التوزيع الطبيعي للموارد.</value>
+  </data>
+  <data name="perf.op.gamemode_set" xml:space="preserve">
+    <value>وضع الألعاب {0}</value>
+  </data>
+  <data name="perf.op.revert_gamemode" xml:space="preserve">
+    <value>الرجوع إلى وضع الألعاب {0}</value>
+  </data>
+  <data name="perf.op.fast_startup_hibernate" xml:space="preserve">
+    <value>بدء التشغيل السريع يستخدم ملف إسبات جزئي لتسريع الإقلاع.</value>
+  </data>
+  <data name="perf.op.fast_startup_disable_note" xml:space="preserve">
+    <value>تعطيل بدء التشغيل السريع يفرض إيقاف تشغيل كامل، مما قد يحل مشاكل الإقلاع المزدوج/التعريفات.</value>
+  </data>
+  <data name="perf.op.fast_startup_longer_boot" xml:space="preserve">
+    <value>⚠ قد تكون أوقات الإقلاع أطول قليلاً بعد التعطيل.</value>
+  </data>
+  <data name="perf.op.revert_fast_startup" xml:space="preserve">
+    <value>الرجوع إلى بدء التشغيل السريع {0}</value>
+  </data>
+  <data name="perf.op.fast_startup_set" xml:space="preserve">
+    <value>بدء التشغيل السريع {0}</value>
+  </data>
+  <data name="perf.op.create_rp" xml:space="preserve">
+    <value>إنشاء نقطة استعادة قبل التغييرات</value>
+  </data>
+  <data name="priv.telemetry" xml:space="preserve">
+    <value>القياس عن بُعد</value>
+  </data>
+  <data name="priv.reduce_telemetry" xml:space="preserve">
+    <value>تقليل القياس عن بُعد إلى المستوى الأساسي</value>
+  </data>
+  <data name="priv.telemetry_note" xml:space="preserve">
+    <value>⚠ يُعيّن القياس عن بُعد على أساسي (1). القيمة 0 قد تُعطّل Windows Update.</value>
+  </data>
+  <data name="priv.ad_id" xml:space="preserve">
+    <value>معرّف الإعلانات</value>
+  </data>
+  <data name="priv.disable_ad_id" xml:space="preserve">
+    <value>تعطيل معرّف الإعلانات</value>
+  </data>
+  <data name="priv.reset_ad_id" xml:space="preserve">
+    <value>إعادة تعيين معرّف الإعلانات</value>
+  </data>
+  <data name="priv.activity_history" xml:space="preserve">
+    <value>سجل النشاط</value>
+  </data>
+  <data name="priv.clear_activity" xml:space="preserve">
+    <value>مسح سجل النشاط</value>
+  </data>
+  <data name="priv.activity_note" xml:space="preserve">
+    <value>⚠ يحذف المخطط الزمني والعناصر الحديثة وقوائم الوصول السريع وسجل الحافظة. يُعطّل أيضاً جمع النشاط المستقبلي عبر السجل.</value>
+  </data>
+  <data name="priv.recall" xml:space="preserve">
+    <value>Windows Recall / الذكاء الاصطناعي (24H2+)</value>
+  </data>
+  <data name="priv.recall_checking" xml:space="preserve">
+    <value>جارٍ فحص حالة Recall...</value>
+  </data>
+  <data name="priv.recall_unavailable" xml:space="preserve">
+    <value>غير متوفر على هذا الإصدار من ويندوز</value>
+  </data>
+  <data name="priv.disable_recall" xml:space="preserve">
+    <value>تعطيل Windows Recall</value>
+  </data>
+  <data name="priv.security" xml:space="preserve">
+    <value>أمان ويندوز</value>
+  </data>
+  <data name="priv.open_security" xml:space="preserve">
+    <value>فتح أمان ويندوز</value>
+  </data>
+  <data name="priv.security_note" xml:space="preserve">
+    <value>يفتح إعدادات أمان ويندوز (للقراءة فقط، بدون تغييرات).</value>
+  </data>
+  <data name="priv.telemetry_security" xml:space="preserve">
+    <value>الحالة: أمان (0) — الأكثر تقييداً</value>
+  </data>
+  <data name="priv.telemetry_basic" xml:space="preserve">
+    <value>الحالة: أساسي (1) — قياس عن بُعد مُخفّض</value>
+  </data>
+  <data name="priv.telemetry_enhanced" xml:space="preserve">
+    <value>الحالة: مُحسّن (2)</value>
+  </data>
+  <data name="priv.telemetry_full" xml:space="preserve">
+    <value>الحالة: كامل (3) — أقصى قياس عن بُعد</value>
+  </data>
+  <data name="priv.telemetry_unknown" xml:space="preserve">
+    <value>الحالة: غير معروف ({0})</value>
+  </data>
+  <data name="priv.telemetry_default" xml:space="preserve">
+    <value>الحالة: افتراضي (لم يتم تهيئته بواسطة سياسة)</value>
+  </data>
+  <data name="priv.ad_disabled" xml:space="preserve">
+    <value>الحالة: معرّف الإعلانات مُعطّل ✓</value>
+  </data>
+  <data name="priv.ad_enabled" xml:space="preserve">
+    <value>الحالة: معرّف الإعلانات مُفعّل</value>
+  </data>
+  <data name="priv.ad_current" xml:space="preserve">
+    <value>المعرّف الحالي: {0}</value>
+  </data>
+  <data name="priv.ad_not_set" xml:space="preserve">
+    <value>المعرّف الحالي: (غير مُعيّن)</value>
+  </data>
+  <data name="priv.ad_unable_read" xml:space="preserve">
+    <value>المعرّف الحالي: تعذّرت القراءة</value>
+  </data>
+  <data name="priv.recall_disabled" xml:space="preserve">
+    <value>الحالة: Windows Recall مُعطّل ✓</value>
+  </data>
+  <data name="priv.recall_active" xml:space="preserve">
+    <value>الحالة: قد يكون Windows Recall نشطاً</value>
+  </data>
+  <data name="priv.op.reduce_telemetry_title" xml:space="preserve">
+    <value>تقليل القياس عن بُعد</value>
+  </data>
+  <data name="priv.op.telemetry_may_affect" xml:space="preserve">
+    <value>⚠ قد يؤثر على جمع بيانات تشخيص Windows Update.</value>
+  </data>
+  <data name="priv.op.revert_telemetry" xml:space="preserve">
+    <value>التراجع عن تغييرات القياس عن بُعد</value>
+  </data>
+  <data name="priv.op.telemetry_reduced" xml:space="preserve">
+    <value>تم تقليل القياس عن بُعد إلى المستوى الأساسي</value>
+  </data>
+  <data name="priv.op.disable_ad_title" xml:space="preserve">
+    <value>تعطيل معرّف الإعلانات</value>
+  </data>
+  <data name="priv.op.ad_prevents_apps" xml:space="preserve">
+    <value>يمنع التطبيقات من استخدام معرّف الإعلانات الخاص بك للإعلانات المخصصة.</value>
+  </data>
+  <data name="priv.op.reenable_ad" xml:space="preserve">
+    <value>إعادة تفعيل معرّف الإعلانات</value>
+  </data>
+  <data name="priv.op.ad_disabled" xml:space="preserve">
+    <value>تم تعطيل معرّف الإعلانات</value>
+  </data>
+  <data name="priv.op.reset_ad_title" xml:space="preserve">
+    <value>إعادة تعيين معرّف الإعلانات</value>
+  </data>
+  <data name="priv.op.ad_new_guid" xml:space="preserve">
+    <value>يُنشئ معرّف إعلانات عشوائي جديد، مما يقطع ربط التتبع الإعلاني.</value>
+  </data>
+  <data name="priv.op.ad_backup_note" xml:space="preserve">
+    <value>سيتم حفظ معرّفك القديم ويمكن استعادته عبر التراجع.</value>
+  </data>
+  <data name="priv.op.ad_replaces_warning" xml:space="preserve">
+    <value>⚠ سيستبدل معرّف الإعلانات الحالي بمعرّف عشوائي جديد.</value>
+  </data>
+  <data name="priv.op.revert_ad_reset" xml:space="preserve">
+    <value>التراجع عن إعادة تعيين معرّف الإعلانات</value>
+  </data>
+  <data name="priv.op.ad_reset_done" xml:space="preserve">
+    <value>تم إعادة تعيين معرّف الإعلانات بقيمة عشوائية جديدة</value>
+  </data>
+  <data name="priv.op.clear_activity_confirm" xml:space="preserve">
+    <value>سيؤدي هذا إلى حذف بيانات سجل النشاط نهائياً.
+
+يشمل ذلك:
+• سجلات النشاط وقاعدة البيانات
+• بيانات منصة الأجهزة المتصلة
+• العناصر الحديثة وقوائم الوصول السريع
+• سجل الحافظة
+• تتبع الملفات الحديثة في المستكشف
+
+تغييرات السجل (قابلة للتراجع):
+• تعطيل جمع المخطط الزمني
+• تعطيل نشر سجل النشاط
+
+حذف الملفات لا يمكن التراجع عنه. هل تريد المتابعة؟</value>
+  </data>
+  <data name="priv.op.confirm_irreversible" xml:space="preserve">
+    <value>K-win — تأكيد إجراء لا رجعة فيه</value>
+  </data>
+  <data name="priv.op.revert_activity_registry" xml:space="preserve">
+    <value>التراجع عن إعدادات سجل النشاط (لا يمكن التراجع عن حذف الملفات)</value>
+  </data>
+  <data name="priv.op.activity_cleared" xml:space="preserve">
+    <value>تم مسح سجل النشاط ({0} ملفات محذوفة، {1} مفاتيح سجل مُعدّلة)</value>
+  </data>
+  <data name="priv.op.disable_recall_title" xml:space="preserve">
+    <value>تعطيل Windows Recall</value>
+  </data>
+  <data name="priv.op.recall_disables_ai" xml:space="preserve">
+    <value>يُعطّل ميزات Windows Recall / لقطات الذكاء الاصطناعي على ويندوز 11 24H2+.</value>
+  </data>
+  <data name="priv.op.reenable_recall" xml:space="preserve">
+    <value>إعادة تفعيل Windows Recall</value>
+  </data>
+  <data name="priv.op.recall_disabled" xml:space="preserve">
+    <value>تم تعطيل Windows Recall</value>
+  </data>
+  <data name="priv.dns" xml:space="preserve">
+    <value>خادم DNS</value>
+  </data>
+  <data name="priv.dns_auto" xml:space="preserve">
+    <value>تلقائي (DHCP)</value>
+  </data>
+  <data name="priv.dns_note" xml:space="preserve">
+    <value>تغيير DNS يمكن أن يُحسّن السرعة والخصوصية. Cloudflare و Quad9 يركزان على الخصوصية.</value>
+  </data>
+  <data name="priv.dns_no_adapter" xml:space="preserve">
+    <value>الحالة: لم يتم العثور على محول شبكة نشط</value>
+  </data>
+  <data name="priv.dns_status_auto" xml:space="preserve">
+    <value>الحالة: DNS تلقائي (DHCP)</value>
+  </data>
+  <data name="priv.dns_status_set" xml:space="preserve">
+    <value>الحالة: {0} ({1}) ✓</value>
+  </data>
+  <data name="priv.dns_status_custom" xml:space="preserve">
+    <value>الحالة: DNS مخصص ({0})</value>
+  </data>
+  <data name="priv.dns_resetting" xml:space="preserve">
+    <value>جارٍ إعادة تعيين DNS إلى تلقائي...</value>
+  </data>
+  <data name="priv.dns_set_auto" xml:space="preserve">
+    <value>تم إعادة تعيين DNS إلى تلقائي (DHCP)</value>
+  </data>
+  <data name="priv.dns_applying" xml:space="preserve">
+    <value>جارٍ تعيين DNS إلى {0}...</value>
+  </data>
+  <data name="priv.dns_set_ok" xml:space="preserve">
+    <value>تم تعيين DNS إلى {0}</value>
+  </data>
+  <data name="priv.op.dns_title" xml:space="preserve">
+    <value>تغيير خادم DNS</value>
+  </data>
+  <data name="priv.op.dns_set_desc" xml:space="preserve">
+    <value>تعيين DNS إلى {0} (أساسي: {1}، ثانوي: {2})</value>
+  </data>
+  <data name="priv.hosts_blocker" xml:space="preserve">
+    <value>حاجب الإعلانات (Hosts)</value>
+  </data>
+  <data name="priv.hosts_enable" xml:space="preserve">
+    <value>🛡 تفعيل حاجب الإعلانات</value>
+  </data>
+  <data name="priv.hosts_disable" xml:space="preserve">
+    <value>تعطيل حاجب الإعلانات</value>
+  </data>
+  <data name="priv.hosts_note" xml:space="preserve">
+    <value>يحجب الإعلانات والمتتبعات على مستوى النظام عبر ملف hosts (قائمة Steven Black).</value>
+  </data>
+  <data name="priv.hosts_active" xml:space="preserve">
+    <value>الحالة: نشط — {0} نطاق محجوب ✓</value>
+  </data>
+  <data name="priv.hosts_inactive" xml:space="preserve">
+    <value>الحالة: غير نشط</value>
+  </data>
+  <data name="priv.hosts_downloading" xml:space="preserve">
+    <value>جارٍ تحميل قائمة الحجب...</value>
+  </data>
+  <data name="priv.hosts_removing" xml:space="preserve">
+    <value>جارٍ إزالة إدخالات الحجب...</value>
+  </data>
+  <data name="priv.hosts_enabled_ok" xml:space="preserve">
+    <value>تم تفعيل حاجب الإعلانات — {0} نطاق محجوب</value>
+  </data>
+  <data name="priv.hosts_disabled_ok" xml:space="preserve">
+    <value>تم تعطيل حاجب الإعلانات</value>
+  </data>
+  <data name="priv.op.hosts_title" xml:space="preserve">
+    <value>تفعيل حاجب الإعلانات (Hosts)</value>
+  </data>
+  <data name="priv.op.hosts_add_desc" xml:space="preserve">
+    <value>تحميل قائمة Steven Black وإضافة قواعد الحجب إلى ملف hosts في ويندوز</value>
+  </data>
+  <data name="priv.op.hosts_domains" xml:space="preserve">
+    <value>يحجب أكثر من 60,000 نطاق إعلاني/متتبع بتوجيهها إلى 0.0.0.0</value>
+  </data>
+  <data name="clean.temp_files" xml:space="preserve">
+    <value>الملفات المؤقتة</value>
+  </data>
+  <data name="clean.clean_temp" xml:space="preserve">
+    <value>تنظيف الملفات المؤقتة</value>
+  </data>
+  <data name="clean.browser_cache" xml:space="preserve">
+    <value>ذاكرة التخزين المؤقت للمتصفح</value>
+  </data>
+  <data name="clean.clean_browser" xml:space="preserve">
+    <value>تنظيف ذاكرة المتصفح</value>
+  </data>
+  <data name="clean.store_cache" xml:space="preserve">
+    <value>ذاكرة تخزين Microsoft Store</value>
+  </data>
+  <data name="clean.reset_store" xml:space="preserve">
+    <value>إعادة تعيين ذاكرة Store</value>
+  </data>
+  <data name="clean.store_note" xml:space="preserve">
+    <value>يُشغّل wsreset.exe لمسح ذاكرة Microsoft Store. مهلة 30 ثانية.</value>
+  </data>
+  <data name="clean.recycle_bin" xml:space="preserve">
+    <value>سلة المحذوفات</value>
+  </data>
+  <data name="clean.empty_recycle" xml:space="preserve">
+    <value>تفريغ سلة المحذوفات</value>
+  </data>
+  <data name="clean.sfc" xml:space="preserve">
+    <value>مدقق ملفات النظام</value>
+  </data>
+  <data name="clean.run_sfc" xml:space="preserve">
+    <value>تشغيل sfc /scannow</value>
+  </data>
+  <data name="clean.sfc_note" xml:space="preserve">
+    <value>يفحص ويُصلح ملفات نظام ويندوز. قد يستغرق عدة دقائق.
+لا يمكن إلغاؤه بعد البدء.</value>
+  </data>
+  <data name="clean.dism" xml:space="preserve">
+    <value>تنظيف مكونات DISM</value>
+  </data>
+  <data name="clean.run_dism" xml:space="preserve">
+    <value>تشغيل تنظيف DISM</value>
+  </data>
+  <data name="clean.dism_note" xml:space="preserve">
+    <value>يُنظّف إصدارات مكونات ويندوز القديمة. قد يستغرق عدة دقائق.</value>
+  </data>
+  <data name="clean.no_browser_cache" xml:space="preserve">
+    <value>لم يتم العثور على ذاكرة تخزين مؤقت للمتصفح.</value>
+  </data>
+  <data name="clean.unable_calculate" xml:space="preserve">
+    <value>تعذّر الحساب.</value>
+  </data>
+  <data name="clean.estimated" xml:space="preserve">
+    <value>التقدير: يمكن تحرير {0}</value>
+  </data>
+  <data name="clean.recycle_items" xml:space="preserve">
+    <value>تحتوي على {0} عنصر(عناصر)، {1}</value>
+  </data>
+  <data name="clean.recycle_empty" xml:space="preserve">
+    <value>سلة المحذوفات فارغة</value>
+  </data>
+  <data name="clean.recycle_unable" xml:space="preserve">
+    <value>تعذّر تحديد الحجم</value>
+  </data>
+  <data name="clean.calculating_size" xml:space="preserve">
+    <value>جارٍ حساب الحجم...</value>
+  </data>
+  <data name="clean.op.clean_temp_title" xml:space="preserve">
+    <value>تنظيف الملفات المؤقتة</value>
+  </data>
+  <data name="clean.op.total_estimated" xml:space="preserve">
+    <value>الإجمالي المُقدّر: {0}</value>
+  </data>
+  <data name="clean.op.cleaning_temp" xml:space="preserve">
+    <value>جارٍ تنظيف الملفات المؤقتة...</value>
+  </data>
+  <data name="clean.op.cleaned_files" xml:space="preserve">
+    <value>تم تنظيف {0} ملفات، تم تحرير {1}</value>
+  </data>
+  <data name="clean.op.cleanup_failed" xml:space="preserve">
+    <value>فشل التنظيف: {0}</value>
+  </data>
+  <data name="clean.op.clean_browser_title" xml:space="preserve">
+    <value>تنظيف ذاكرة المتصفح</value>
+  </data>
+  <data name="clean.op.browser_running_warning" xml:space="preserve">
+    <value>⚠ متصفح واحد أو أكثر قيد التشغيل. بعض الملفات قد تكون مقفلة.</value>
+  </data>
+  <data name="clean.op.cleaning_browser" xml:space="preserve">
+    <value>جارٍ تنظيف ذاكرة التخزين المؤقت للمتصفحات...</value>
+  </data>
+  <data name="clean.op.reset_store_title" xml:space="preserve">
+    <value>إعادة تعيين ذاكرة Store</value>
+  </data>
+  <data name="clean.op.store_run_wsreset" xml:space="preserve">
+    <value>تشغيل wsreset.exe لمسح ذاكرة Microsoft Store</value>
+  </data>
+  <data name="clean.op.store_window_appear" xml:space="preserve">
+    <value>ستظهر نافذة Microsoft Store لفترة وجيزة</value>
+  </data>
+  <data name="clean.op.store_timeout" xml:space="preserve">
+    <value>مهلة 30 ثانية</value>
+  </data>
+  <data name="clean.op.resetting_store" xml:space="preserve">
+    <value>جارٍ إعادة تعيين ذاكرة Microsoft Store...</value>
+  </data>
+  <data name="clean.op.store_reset_ok" xml:space="preserve">
+    <value>تمت إعادة تعيين ذاكرة Microsoft Store بنجاح</value>
+  </data>
+  <data name="clean.op.store_reset_fail" xml:space="preserve">
+    <value>فشلت إعادة تعيين ذاكرة Store: {0}</value>
+  </data>
+  <data name="clean.op.recycle_confirm" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد تفريغ سلة المحذوفات نهائياً؟
+
+لا يمكن التراجع عن هذا الإجراء.</value>
+  </data>
+  <data name="clean.op.recycle_emptied" xml:space="preserve">
+    <value>تم تفريغ سلة المحذوفات</value>
+  </data>
+  <data name="clean.op.sfc_title" xml:space="preserve">
+    <value>مدقق ملفات النظام</value>
+  </data>
+  <data name="clean.op.sfc_run" xml:space="preserve">
+    <value>تشغيل: sfc.exe /scannow</value>
+  </data>
+  <data name="clean.op.sfc_scans" xml:space="preserve">
+    <value>يفحص جميع ملفات النظام المحمية ويستبدل الملفات التالفة</value>
+  </data>
+  <data name="clean.op.sfc_time" xml:space="preserve">
+    <value>قد يستغرق 10-15 دقيقة</value>
+  </data>
+  <data name="clean.op.sfc_no_cancel" xml:space="preserve">
+    <value>لا يمكن إلغاؤه بعد البدء</value>
+  </data>
+  <data name="clean.op.running_sfc" xml:space="preserve">
+    <value>جارٍ تشغيل مدقق ملفات النظام (قد يستغرق عدة دقائق)...</value>
+  </data>
+  <data name="clean.op.sfc_complete" xml:space="preserve">
+    <value>اكتمل فحص ملفات النظام</value>
+  </data>
+  <data name="clean.op.sfc_results" xml:space="preserve">
+    <value>K-win — نتائج SFC</value>
+  </data>
+  <data name="clean.op.dism_title" xml:space="preserve">
+    <value>تنظيف مكونات DISM</value>
+  </data>
+  <data name="clean.op.dism_run" xml:space="preserve">
+    <value>تشغيل: dism.exe /Online /Cleanup-Image /StartComponentCleanup</value>
+  </data>
+  <data name="clean.op.dism_removes" xml:space="preserve">
+    <value>يزيل إصدارات مكونات ويندوز القديمة</value>
+  </data>
+  <data name="clean.op.dism_time" xml:space="preserve">
+    <value>قد يستغرق 10-15 دقيقة</value>
+  </data>
+  <data name="clean.op.running_dism" xml:space="preserve">
+    <value>جارٍ تشغيل تنظيف DISM (قد يستغرق عدة دقائق)...</value>
+  </data>
+  <data name="clean.op.dism_complete" xml:space="preserve">
+    <value>اكتمل تنظيف DISM</value>
+  </data>
+  <data name="tweak.dark_mode" xml:space="preserve">
+    <value>الوضع الداكن / الفاتح</value>
+  </data>
+  <data name="tweak.enable_dark" xml:space="preserve">
+    <value>🌙 تفعيل الوضع الداكن</value>
+  </data>
+  <data name="tweak.enable_light" xml:space="preserve">
+    <value>☀ تفعيل الوضع الفاتح</value>
+  </data>
+  <data name="tweak.transparency" xml:space="preserve">
+    <value>تأثيرات الشفافية</value>
+  </data>
+  <data name="tweak.enable_transparency" xml:space="preserve">
+    <value>تفعيل الشفافية</value>
+  </data>
+  <data name="tweak.disable_transparency" xml:space="preserve">
+    <value>تعطيل الشفافية</value>
+  </data>
+  <data name="tweak.file_ext" xml:space="preserve">
+    <value>امتدادات الملفات</value>
+  </data>
+  <data name="tweak.show_ext" xml:space="preserve">
+    <value>إظهار امتدادات الملفات</value>
+  </data>
+  <data name="tweak.hide_ext" xml:space="preserve">
+    <value>إخفاء امتدادات الملفات</value>
+  </data>
+  <data name="tweak.ext_note" xml:space="preserve">
+    <value>إظهار الامتدادات يساعد في تحديد أنواع الملفات واكتشاف الملفات المشبوهة.</value>
+  </data>
+  <data name="tweak.widgets" xml:space="preserve">
+    <value>الأدوات</value>
+  </data>
+  <data name="tweak.disable_widgets" xml:space="preserve">
+    <value>تعطيل الأدوات</value>
+  </data>
+  <data name="tweak.enable_widgets" xml:space="preserve">
+    <value>تفعيل الأدوات</value>
+  </data>
+  <data name="tweak.chat" xml:space="preserve">
+    <value>أيقونة المحادثة (شريط المهام)</value>
+  </data>
+  <data name="tweak.hide_chat" xml:space="preserve">
+    <value>إخفاء أيقونة المحادثة</value>
+  </data>
+  <data name="tweak.show_chat" xml:space="preserve">
+    <value>إظهار أيقونة المحادثة</value>
+  </data>
+  <data name="tweak.menu_delay" xml:space="preserve">
+    <value>تأخير عرض القائمة</value>
+  </data>
+  <data name="tweak.instant_menus" xml:space="preserve">
+    <value>قوائم فورية (0 مللي ثانية)</value>
+  </data>
+  <data name="tweak.default_delay" xml:space="preserve">
+    <value>افتراضي (400 مللي ثانية)</value>
+  </data>
+  <data name="tweak.menu_note" xml:space="preserve">
+    <value>يتحكم في مدة انتظار ويندوز قبل عرض القوائم الفرعية. الافتراضي: 400 مللي ثانية.</value>
+  </data>
+  <data name="tweak.shutdown_speed" xml:space="preserve">
+    <value>سرعة إيقاف التشغيل</value>
+  </data>
+  <data name="tweak.optimize_shutdown" xml:space="preserve">
+    <value>تحسين سرعة إيقاف التشغيل</value>
+  </data>
+  <data name="tweak.restore_defaults" xml:space="preserve">
+    <value>استعادة الإعدادات الافتراضية</value>
+  </data>
+  <data name="tweak.shutdown_note" xml:space="preserve">
+    <value>يُقلّل وقت انتظار ويندوز لإغلاق التطبيقات/الخدمات أثناء إيقاف التشغيل.</value>
+  </data>
+  <data name="tweak.autoendtask" xml:space="preserve">
+    <value>AutoEndTask (إنهاء التطبيقات المعلّقة)</value>
+  </data>
+  <data name="tweak.enable_autoend" xml:space="preserve">
+    <value>تفعيل AutoEndTask</value>
+  </data>
+  <data name="tweak.disable_autoend" xml:space="preserve">
+    <value>تعطيل AutoEndTask</value>
+  </data>
+  <data name="tweak.autoend_note" xml:space="preserve">
+    <value>يُنهي تلقائياً التطبيقات التي لا تستجيب أثناء إيقاف التشغيل بدلاً من عرض حوار.</value>
+  </data>
+  <data name="tweak.dark_active" xml:space="preserve">
+    <value>الحالة: الوضع الداكن نشط ✓</value>
+  </data>
+  <data name="tweak.light_active" xml:space="preserve">
+    <value>الحالة: الوضع الفاتح نشط</value>
+  </data>
+  <data name="tweak.dark_default" xml:space="preserve">
+    <value>الحالة: افتراضي (فاتح)</value>
+  </data>
+  <data name="tweak.trans_enabled" xml:space="preserve">
+    <value>الحالة: الشفافية مُفعّلة ✓</value>
+  </data>
+  <data name="tweak.trans_disabled" xml:space="preserve">
+    <value>الحالة: الشفافية مُعطّلة</value>
+  </data>
+  <data name="tweak.trans_default" xml:space="preserve">
+    <value>الحالة: افتراضي (مُفعّلة)</value>
+  </data>
+  <data name="tweak.ext_visible" xml:space="preserve">
+    <value>الحالة: امتدادات الملفات ظاهرة ✓</value>
+  </data>
+  <data name="tweak.ext_hidden" xml:space="preserve">
+    <value>الحالة: امتدادات الملفات مخفية</value>
+  </data>
+  <data name="tweak.ext_default" xml:space="preserve">
+    <value>الحالة: افتراضي (مخفية)</value>
+  </data>
+  <data name="tweak.widgets_disabled" xml:space="preserve">
+    <value>الحالة: الأدوات مُعطّلة ✓</value>
+  </data>
+  <data name="tweak.widgets_enabled" xml:space="preserve">
+    <value>الحالة: الأدوات مُفعّلة</value>
+  </data>
+  <data name="tweak.widgets_default" xml:space="preserve">
+    <value>الحالة: افتراضي (مُفعّلة)</value>
+  </data>
+  <data name="tweak.chat_hidden" xml:space="preserve">
+    <value>الحالة: أيقونة المحادثة مخفية ✓</value>
+  </data>
+  <data name="tweak.chat_visible" xml:space="preserve">
+    <value>الحالة: أيقونة المحادثة ظاهرة</value>
+  </data>
+  <data name="tweak.chat_default" xml:space="preserve">
+    <value>الحالة: افتراضي (ظاهرة)</value>
+  </data>
+  <data name="tweak.menu_status" xml:space="preserve">
+    <value>الحالة: التأخير الحالي = {0} مللي ثانية</value>
+  </data>
+  <data name="tweak.menu_default" xml:space="preserve">
+    <value>الحالة: افتراضي (400 مللي ثانية)</value>
+  </data>
+  <data name="tweak.shutdown_status" xml:space="preserve">
+    <value>مهلة التطبيقات: {0} مللي ثانية | مهلة الخدمات: {1} مللي ثانية</value>
+  </data>
+  <data name="tweak.autoend_enabled" xml:space="preserve">
+    <value>الحالة: AutoEndTask مُفعّل ✓</value>
+  </data>
+  <data name="tweak.autoend_disabled" xml:space="preserve">
+    <value>الحالة: AutoEndTask مُعطّل</value>
+  </data>
+  <data name="tweak.autoend_default" xml:space="preserve">
+    <value>الحالة: افتراضي (مُعطّل)</value>
+  </data>
+  <data name="tweak.context_menu" xml:space="preserve">
+    <value>نمط قائمة النقر الأيمن</value>
+  </data>
+  <data name="tweak.ctx_old" xml:space="preserve">
+    <value>كلاسيكي (Win10)</value>
+  </data>
+  <data name="tweak.ctx_new" xml:space="preserve">
+    <value>حديث (Win11)</value>
+  </data>
+  <data name="tweak.ctx_note" xml:space="preserve">
+    <value>يستعيد قائمة النقر الأيمن الكاملة من ويندوز 10. يتطلب إعادة تشغيل المستكشف.</value>
+  </data>
+  <data name="tweak.ctx_old_active" xml:space="preserve">
+    <value>الحالة: قائمة كلاسيكية (Win10) ✓</value>
+  </data>
+  <data name="tweak.ctx_new_active" xml:space="preserve">
+    <value>الحالة: قائمة حديثة (Win11)</value>
+  </data>
+  <data name="tweak.op.switch_mode" xml:space="preserve">
+    <value>التبديل إلى الوضع {0}</value>
+  </data>
+  <data name="tweak.op.switches_to" xml:space="preserve">
+    <value>يُبدّل ويندوز إلى الوضع {0} للتطبيقات والنظام.</value>
+  </data>
+  <data name="tweak.op.revert_mode" xml:space="preserve">
+    <value>الرجوع إلى الوضع {0}</value>
+  </data>
+  <data name="tweak.op.switched_to" xml:space="preserve">
+    <value>تم التبديل إلى الوضع {0}</value>
+  </data>
+  <data name="tweak.op.trans_enable_desc" xml:space="preserve">
+    <value>يُفعّل تأثيرات الشفافية لشريط المهام وقائمة ابدأ ومركز الإجراءات.</value>
+  </data>
+  <data name="tweak.op.trans_disable_desc" xml:space="preserve">
+    <value>تعطيل الشفافية قد يُحسّن الأداء قليلاً على الأجهزة القديمة.</value>
+  </data>
+  <data name="tweak.op.revert_trans" xml:space="preserve">
+    <value>الرجوع إلى الشفافية {0}</value>
+  </data>
+  <data name="tweak.op.trans_set" xml:space="preserve">
+    <value>الشفافية {0}</value>
+  </data>
+  <data name="tweak.op.ext_show_desc" xml:space="preserve">
+    <value>ستكون امتدادات الملفات مرئية في المستكشف (مثال: document.pdf بدلاً من document).</value>
+  </data>
+  <data name="tweak.op.ext_hide_desc" xml:space="preserve">
+    <value>ستكون امتدادات الملفات مخفية في المستكشف.</value>
+  </data>
+  <data name="tweak.op.revert_ext" xml:space="preserve">
+    <value>الرجوع إلى امتدادات الملفات {0}</value>
+  </data>
+  <data name="tweak.op.ext_set" xml:space="preserve">
+    <value>امتدادات الملفات {0} — أعد تشغيل المستكشف لتطبيق التغييرات</value>
+  </data>
+  <data name="tweak.op.widgets_enable_desc" xml:space="preserve">
+    <value>يُعيد تفعيل زر الأدوات في شريط المهام.</value>
+  </data>
+  <data name="tweak.op.widgets_disable_desc" xml:space="preserve">
+    <value>يزيل زر الأدوات من شريط المهام.</value>
+  </data>
+  <data name="tweak.op.revert_widgets" xml:space="preserve">
+    <value>الرجوع إلى الأدوات {0}</value>
+  </data>
+  <data name="tweak.op.widgets_set" xml:space="preserve">
+    <value>الأدوات {0}</value>
+  </data>
+  <data name="tweak.op.chat_show_desc" xml:space="preserve">
+    <value>يُعيد تفعيل أيقونة المحادثة (Teams) في شريط المهام.</value>
+  </data>
+  <data name="tweak.op.chat_hide_desc" xml:space="preserve">
+    <value>يزيل أيقونة المحادثة (Teams) من شريط المهام.</value>
+  </data>
+  <data name="tweak.op.revert_chat" xml:space="preserve">
+    <value>الرجوع إلى أيقونة المحادثة {0}</value>
+  </data>
+  <data name="tweak.op.chat_set" xml:space="preserve">
+    <value>أيقونة المحادثة {0}</value>
+  </data>
+  <data name="tweak.op.menu_instant" xml:space="preserve">
+    <value>ستظهر القوائم فوراً بدون تأخير.</value>
+  </data>
+  <data name="tweak.op.menu_delay_set" xml:space="preserve">
+    <value>تأخير القائمة مُعيّن على {0} مللي ثانية (افتراضي ويندوز: 400).</value>
+  </data>
+  <data name="tweak.op.set_menu_title" xml:space="preserve">
+    <value>تعيين تأخير القائمة على {0} مللي ثانية</value>
+  </data>
+  <data name="tweak.op.revert_menu" xml:space="preserve">
+    <value>التراجع عن MenuShowDelay</value>
+  </data>
+  <data name="tweak.op.menu_set" xml:space="preserve">
+    <value>تأخير عرض القائمة مُعيّن على {0} مللي ثانية</value>
+  </data>
+  <data name="tweak.op.shutdown_title" xml:space="preserve">
+    <value>تحسين سرعة إيقاف التشغيل</value>
+  </data>
+  <data name="tweak.op.shutdown_reduces" xml:space="preserve">
+    <value>يُقلّل مدة انتظار ويندوز للتطبيقات/الخدمات غير المستجيبة قبل إغلاقها.</value>
+  </data>
+  <data name="tweak.op.revert_shutdown" xml:space="preserve">
+    <value>التراجع عن تحسين سرعة إيقاف التشغيل</value>
+  </data>
+  <data name="tweak.op.shutdown_optimized" xml:space="preserve">
+    <value>تم تحسين سرعة إيقاف التشغيل</value>
+  </data>
+  <data name="tweak.op.restore_shutdown_title" xml:space="preserve">
+    <value>استعادة سرعة إيقاف التشغيل الافتراضية</value>
+  </data>
+  <data name="tweak.op.shutdown_restores" xml:space="preserve">
+    <value>يستعيد مهلات إيقاف التشغيل الافتراضية لويندوز.</value>
+  </data>
+  <data name="tweak.op.revert_shutdown_optimized" xml:space="preserve">
+    <value>الرجوع إلى سرعة إيقاف التشغيل المُحسّنة</value>
+  </data>
+  <data name="tweak.op.shutdown_restored" xml:space="preserve">
+    <value>تمت استعادة سرعة إيقاف التشغيل إلى الإعدادات الافتراضية</value>
+  </data>
+  <data name="tweak.op.autoend_enable_desc" xml:space="preserve">
+    <value>سيُنهي ويندوز تلقائياً التطبيقات غير المستجيبة أثناء إيقاف التشغيل/تسجيل الخروج.</value>
+  </data>
+  <data name="tweak.op.autoend_disable_desc" xml:space="preserve">
+    <value>سيطلب ويندوز منك الانتظار/الإغلاق عندما لا تستجيب التطبيقات أثناء إيقاف التشغيل.</value>
+  </data>
+  <data name="tweak.op.revert_autoend" xml:space="preserve">
+    <value>الرجوع إلى AutoEndTask {0}</value>
+  </data>
+  <data name="tweak.op.autoend_set" xml:space="preserve">
+    <value>AutoEndTask {0}</value>
+  </data>
+  <data name="tweak.op.ctx_old_desc" xml:space="preserve">
+    <value>ينشئ مفتاح سجل لفرض قائمة النقر الأيمن الكلاسيكية من ويندوز 10.</value>
+  </data>
+  <data name="tweak.op.ctx_new_desc" xml:space="preserve">
+    <value>يحذف تجاوز السجل لاستعادة قائمة النقر الأيمن الحديثة من ويندوز 11.</value>
+  </data>
+  <data name="tweak.op.ctx_restart_explorer" xml:space="preserve">
+    <value>سيتم إعادة تشغيل المستكشف ليأخذ التغيير مفعوله فوراً.</value>
+  </data>
+  <data name="tweak.op.revert_ctx" xml:space="preserve">
+    <value>الرجوع إلى قائمة النقر الأيمن {0}</value>
+  </data>
+  <data name="tweak.op.ctx_set" xml:space="preserve">
+    <value>تم تعيين قائمة النقر الأيمن إلى {0}</value>
+  </data>
+  <data name="apps.show" xml:space="preserve">
+    <value>عرض:</value>
+  </data>
+  <data name="apps.all_store" xml:space="preserve">
+    <value>جميع تطبيقات Store</value>
+  </data>
+  <data name="apps.bloatware_only" xml:space="preserve">
+    <value>البرامج غير المرغوبة فقط</value>
+  </data>
+  <data name="apps.desktop_apps" xml:space="preserve">
+    <value>تطبيقات سطح المكتب (Win32)</value>
+  </data>
+  <data name="apps.search" xml:space="preserve">
+    <value>🔍 البحث عن تطبيقات...</value>
+  </data>
+  <data name="apps.refresh" xml:space="preserve">
+    <value>↻ تحديث</value>
+  </data>
+  <data name="apps.actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="apps.uninstall_selected" xml:space="preserve">
+    <value>🗑 إلغاء تثبيت المحدد</value>
+  </data>
+  <data name="apps.bloatware_remover" xml:space="preserve">
+    <value>🧹 إزالة البرامج غير المرغوبة بنقرة واحدة</value>
+  </data>
+  <data name="apps.remove_all_users" xml:space="preserve">
+    <value>إزالة لجميع المستخدمين</value>
+  </data>
+  <data name="apps.loading" xml:space="preserve">
+    <value>جارٍ تحميل التطبيقات...</value>
+  </data>
+  <data name="apps.protected_warning" xml:space="preserve">
+    <value>⚠ تطبيقات النظام المحمية (قائمة ابدأ، المستكشف، Store، الأمان) مخفية ولا يمكن إزالتها.</value>
+  </data>
+  <data name="apps.col_name" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="apps.col_publisher" xml:space="preserve">
+    <value>الناشر</value>
+  </data>
+  <data name="apps.col_version" xml:space="preserve">
+    <value>الإصدار</value>
+  </data>
+  <data name="apps.col_type" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="apps.col_size" xml:space="preserve">
+    <value>الحجم</value>
+  </data>
+  <data name="apps.count" xml:space="preserve">
+    <value>{0} تطبيقات معروضة</value>
+  </data>
+  <data name="apps.count_selected" xml:space="preserve">
+    <value>{0} تطبيقات معروضة، {1} محددة</value>
+  </data>
+  <data name="apps.loaded" xml:space="preserve">
+    <value>تم تحميل {0} تطبيقات</value>
+  </data>
+  <data name="apps.loading_apps" xml:space="preserve">
+    <value>جارٍ تحميل التطبيقات المثبتة...</value>
+  </data>
+  <data name="apps.op.no_selected" xml:space="preserve">
+    <value>لم يتم تحديد تطبيقات. حدد المربعات بجانب التطبيقات التي تريد إلغاء تثبيتها.</value>
+  </data>
+  <data name="apps.op.uninstall_title" xml:space="preserve">
+    <value>إلغاء تثبيت التطبيقات</value>
+  </data>
+  <data name="apps.op.will_uninstall" xml:space="preserve">
+    <value>سيتم إلغاء تثبيت {0} تطبيق(تطبيقات) التالية:</value>
+  </data>
+  <data name="apps.op.desktop_note" xml:space="preserve">
+    <value>⚠ إلغاء تثبيت تطبيقات سطح المكتب قد يعرض حواراتها الخاصة. تطبيقات Store تُزال بصمت.</value>
+  </data>
+  <data name="apps.op.uninstalling" xml:space="preserve">
+    <value>جارٍ إلغاء التثبيت: {0}...</value>
+  </data>
+  <data name="apps.op.done_results" xml:space="preserve">
+    <value>انتهى: {0} تمت إزالتها، {1} فشلت</value>
+  </data>
+  <data name="apps.op.errors_title" xml:space="preserve">
+    <value>اكتمل مع {0} خطأ(أخطاء):
+
+{1}</value>
+  </data>
+  <data name="apps.op.success_uninstall" xml:space="preserve">
+    <value>تم إلغاء تثبيت {0} تطبيق(تطبيقات) بنجاح</value>
+  </data>
+  <data name="apps.op.uninstalled_n" xml:space="preserve">
+    <value>تم إلغاء تثبيت {0} تطبيق(تطبيقات)</value>
+  </data>
+  <data name="apps.op.scanning_bloat" xml:space="preserve">
+    <value>جارٍ البحث عن البرامج غير المرغوبة...</value>
+  </data>
+  <data name="apps.op.no_bloatware" xml:space="preserve">
+    <value>لم يتم اكتشاف برامج غير مرغوبة! نظامك نظيف.</value>
+  </data>
+  <data name="apps.op.bloat_found" xml:space="preserve">
+    <value>تم العثور على {0} تطبيق(تطبيقات) غير مرغوبة للإزالة:</value>
+  </data>
+  <data name="apps.op.bloat_current_user" xml:space="preserve">
+    <value>سيتم إزالة التطبيقات للمستخدم الحالي.</value>
+  </data>
+  <data name="apps.op.bloat_provisioned" xml:space="preserve">
+    <value>سيتم أيضاً إزالة الحزم المُوفّرة لمنع إعادة التثبيت.</value>
+  </data>
+  <data name="apps.op.bloat_title" xml:space="preserve">
+    <value>إزالة البرامج غير المرغوبة بنقرة واحدة</value>
+  </data>
+  <data name="apps.op.bloat_warning" xml:space="preserve">
+    <value>⚠ لا يمكن التراجع عن هذا الإجراء. يمكن إعادة تثبيت التطبيقات المُزالة من Microsoft Store.</value>
+  </data>
+  <data name="apps.op.removing" xml:space="preserve">
+    <value>[{0}/{1}] جارٍ إزالة {2}...</value>
+  </data>
+  <data name="apps.op.bloat_complete" xml:space="preserve">
+    <value>اكتملت إزالة البرامج غير المرغوبة
+
+تمت الإزالة: {0}
+فشلت: {1}
+
+التفاصيل:
+{2}</value>
+  </data>
+  <data name="apps.op.bloat_results_title" xml:space="preserve">
+    <value>K-win — إزالة البرامج غير المرغوبة</value>
+  </data>
+  <data name="apps.op.bloat_status" xml:space="preserve">
+    <value>إزالة البرامج غير المرغوبة: {0} تمت إزالتها، {1} فشلت</value>
+  </data>
+  <data name="apps.op.no_selected_short" xml:space="preserve">
+    <value>لم يتم تحديد تطبيقات.</value>
+  </data>
+  <data name="apps.op.store_only" xml:space="preserve">
+    <value>فقط تطبيقات Store/UWP يمكن إزالتها لجميع المستخدمين.
+تطبيقات سطح المكتب (Win32) يجب إلغاء تثبيتها فردياً.</value>
+  </data>
+  <data name="apps.op.remove_all_title" xml:space="preserve">
+    <value>إزالة لجميع المستخدمين</value>
+  </data>
+  <data name="apps.op.remove_all_desc" xml:space="preserve">
+    <value>إزالة {0} تطبيق(تطبيقات) لجميع المستخدمين على هذا الكمبيوتر:</value>
+  </data>
+  <data name="apps.op.remove_all_provisioned" xml:space="preserve">
+    <value>يزيل الحزمة المُوفّرة لمنع إعادة التثبيت للمستخدمين الجدد.</value>
+  </data>
+  <data name="apps.op.remove_all_warning" xml:space="preserve">
+    <value>⚠ يتطلب صلاحيات المسؤول. لا يمكن التراجع عن هذا الإجراء.</value>
+  </data>
+  <data name="apps.op.removing_all" xml:space="preserve">
+    <value>جارٍ الإزالة لجميع المستخدمين: {0}...</value>
+  </data>
+  <data name="apps.op.done_all" xml:space="preserve">
+    <value>انتهى: {0} تمت إزالتها لجميع المستخدمين، {1} فشلت</value>
+  </data>
+  <data name="apps.op.removed_all" xml:space="preserve">
+    <value>تمت إزالة {0} تطبيق(تطبيقات) لجميع المستخدمين</value>
+  </data>
+  <data name="apps.op.scan_fail" xml:space="preserve">
+    <value>فشل الفحص: {0}</value>
+  </data>
+  <data name="apps.op.uninstall_results_title" xml:space="preserve">
+    <value>K-win — نتائج إلغاء التثبيت</value>
+  </data>
+  <data name="ram.usage_live" xml:space="preserve">
+    <value>استخدام الذاكرة (مباشر)</value>
+  </data>
+  <data name="ram.clear_cached" xml:space="preserve">
+    <value>تفريغ الذاكرة المخبّأة</value>
+  </data>
+  <data name="ram.empty_working" xml:space="preserve">
+    <value>🧹 تفريغ مجموعات العمل</value>
+  </data>
+  <data name="ram.frees_cached" xml:space="preserve">
+    <value>يُحرّر الذاكرة المخبّأة التي تحتفظ بها العمليات.</value>
+  </data>
+  <data name="ram.safe_note" xml:space="preserve">
+    <value>عملية آمنة — ويندوز يُعيد تحميل البيانات حسب الحاجة.
+قد يُبطئ التطبيقات مؤقتاً أثناء إعادة التحميل.</value>
+  </data>
+  <data name="ram.top_processes" xml:space="preserve">
+    <value>أكثر العمليات استهلاكاً للذاكرة</value>
+  </data>
+  <data name="ram.col_process" xml:space="preserve">
+    <value>العملية</value>
+  </data>
+  <data name="ram.col_ram_mb" xml:space="preserve">
+    <value>الذاكرة (ميجابايت)</value>
+  </data>
+  <data name="ram.col_private_mb" xml:space="preserve">
+    <value>خاص (ميجابايت)</value>
+  </data>
+  <data name="ram.col_pid" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="ram.sysmain" xml:space="preserve">
+    <value>SysMain (Superfetch)</value>
+  </data>
+  <data name="ram.enable_sysmain" xml:space="preserve">
+    <value>تفعيل SysMain</value>
+  </data>
+  <data name="ram.disable_sysmain" xml:space="preserve">
+    <value>تعطيل SysMain</value>
+  </data>
+  <data name="ram.sysmain_note" xml:space="preserve">
+    <value>SysMain يُخبّئ البيانات المستخدمة بكثرة.
+تعطيله قد يساعد على أنظمة SSD + 16 جيجابايت+ ذاكرة.</value>
+  </data>
+  <data name="ram.compression" xml:space="preserve">
+    <value>ضغط الذاكرة</value>
+  </data>
+  <data name="ram.enable_compression" xml:space="preserve">
+    <value>تفعيل الضغط</value>
+  </data>
+  <data name="ram.disable_compression" xml:space="preserve">
+    <value>تعطيل الضغط</value>
+  </data>
+  <data name="ram.compression_note" xml:space="preserve">
+    <value>يضغط صفحات الذاكرة لاستيعاب المزيد. التعطيل قد
+يُحسّن الأداء على أنظمة 32 جيجابايت+. يتطلب إعادة تشغيل.</value>
+  </data>
+  <data name="ram.used_info" xml:space="preserve">
+    <value>مُستخدم: {0} / {1}  |  متاح: {2}</value>
+  </data>
+  <data name="ram.pagefile_auto" xml:space="preserve">
+    <value>ملف الصفحة: مُدار تلقائياً  |  الموقع: {0}</value>
+  </data>
+  <data name="ram.pagefile_custom" xml:space="preserve">
+    <value>ملف الصفحة: مخصص  |  {0}</value>
+  </data>
+  <data name="ram.sysmain_status" xml:space="preserve">
+    <value>الحالة: {0} ({1})</value>
+  </data>
+  <data name="ram.comp_enabled" xml:space="preserve">
+    <value>الحالة: ضغط الذاكرة مُفعّل ✓</value>
+  </data>
+  <data name="ram.comp_disabled" xml:space="preserve">
+    <value>الحالة: ضغط الذاكرة مُعطّل</value>
+  </data>
+  <data name="ram.op.empty_title" xml:space="preserve">
+    <value>تفريغ مجموعات العمل</value>
+  </data>
+  <data name="ram.op.empty_calls" xml:space="preserve">
+    <value>يستدعي EmptyWorkingSet() على جميع العمليات القابلة للوصول عبر psapi.dll</value>
+  </data>
+  <data name="ram.op.empty_frees" xml:space="preserve">
+    <value>يُحرّر الذاكرة المخبّأة/غير المستخدمة للنظام</value>
+  </data>
+  <data name="ram.op.empty_safe" xml:space="preserve">
+    <value>آمن: ويندوز سيُعيد تحميل البيانات حسب الحاجة</value>
+  </data>
+  <data name="ram.op.empty_warning" xml:space="preserve">
+    <value>⚠ قد تتباطأ التطبيقات مؤقتاً أثناء إعادة تحميل بياناتها</value>
+  </data>
+  <data name="ram.op.clearing" xml:space="preserve">
+    <value>جارٍ تفريغ الذاكرة المخبّأة...</value>
+  </data>
+  <data name="ram.op.cleared" xml:space="preserve">
+    <value>تم تفريغ {0} عملية، تم تحرير ~{1} ميجابايت</value>
+  </data>
+  <data name="ram.op.ram_cleared" xml:space="preserve">
+    <value>تم تفريغ الذاكرة: {0} عملية، ~{1} ميجابايت تم تحريرها</value>
+  </data>
+  <data name="ram.op.sysmain_auto" xml:space="preserve">
+    <value>سيتم تشغيل الخدمة وتعيينها للبدء التلقائي</value>
+  </data>
+  <data name="ram.op.sysmain_stop" xml:space="preserve">
+    <value>سيتم إيقاف الخدمة وتعطيلها</value>
+  </data>
+  <data name="ram.op.sysmain_preloads" xml:space="preserve">
+    <value>SysMain يُحمّل مسبقاً التطبيقات المستخدمة بكثرة في الذاكرة.</value>
+  </data>
+  <data name="ram.op.sysmain_ssd" xml:space="preserve">
+    <value>قد يُحسّن الأداء على أنظمة SSD مع 16+ جيجابايت ذاكرة.</value>
+  </data>
+  <data name="ram.op.revert_sysmain" xml:space="preserve">
+    <value>الرجوع إلى SysMain {0}</value>
+  </data>
+  <data name="ram.op.sysmain_set" xml:space="preserve">
+    <value>SysMain {0}</value>
+  </data>
+  <data name="ram.op.comp_enable_desc" xml:space="preserve">
+    <value>يُعيد تفعيل ضغط الذاكرة — ويندوز يضغط صفحات الذاكرة لاستيعاب المزيد من البيانات.</value>
+  </data>
+  <data name="ram.op.comp_disable_desc" xml:space="preserve">
+    <value>يُعطّل ضغط الذاكرة — قد يُقلّل عبء المعالج على أنظمة الذاكرة العالية (32 جيجابايت+).</value>
+  </data>
+  <data name="ram.op.comp_restart" xml:space="preserve">
+    <value>⚠ يتطلب إعادة تشغيل النظام لتفعيل هذا التغيير.</value>
+  </data>
+  <data name="ram.op.comp_restart_warning" xml:space="preserve">
+    <value>⚠ يتطلب إعادة تشغيل النظام ليأخذ مفعوله.</value>
+  </data>
+  <data name="ram.op.revert_comp" xml:space="preserve">
+    <value>الرجوع إلى ضغط الذاكرة {0}</value>
+  </data>
+  <data name="ram.op.comp_set" xml:space="preserve">
+    <value>ضغط الذاكرة {0} — يتطلب إعادة تشغيل</value>
+  </data>
+  <data name="safety.applying" xml:space="preserve">
+    <value>جارٍ التطبيق: {0}...</value>
+  </data>
+  <data name="safety.creating_rp" xml:space="preserve">
+    <value>جارٍ إنشاء نقطة استعادة...</value>
+  </data>
+  <data name="safety.error_title" xml:space="preserve">
+    <value>K-win — خطأ</value>
+  </data>
+  <data name="safety.error_msg" xml:space="preserve">
+    <value>حدث خطأ أثناء '{0}':
+
+{1}
+
+تغييرات السجل التي تمت قبل الخطأ محفوظة ويمكن التراجع عنها.</value>
+  </data>
+  <data name="safety.no_undo" xml:space="preserve">
+    <value>لا توجد إجراءات للتراجع عنها.</value>
+  </data>
+  <data name="safety.undo_confirm" xml:space="preserve">
+    <value>تراجع: {0}
+
+هل تريد المتابعة؟</value>
+  </data>
+  <data name="safety.undo_title" xml:space="preserve">
+    <value>K-win — تراجع</value>
+  </data>
+  <data name="safety.undoing" xml:space="preserve">
+    <value>جارٍ التراجع عن الإجراء الأخير...</value>
+  </data>
+  <data name="safety.undo_ok" xml:space="preserve">
+    <value>تم التراجع بنجاح</value>
+  </data>
+  <data name="safety.undo_fail" xml:space="preserve">
+    <value>فشل التراجع: {0}</value>
+  </data>
+  <data name="settings.title" xml:space="preserve">
+    <value>K-win — الإعدادات</value>
+  </data>
+  <data name="settings.appearance" xml:space="preserve">
+    <value>المظهر</value>
+  </data>
+  <data name="settings.dark_mode" xml:space="preserve">
+    <value>الوضع الداكن (يتبع سمة ويندوز افتراضياً)</value>
+  </data>
+  <data name="settings.safety" xml:space="preserve">
+    <value>الأمان</value>
+  </data>
+  <data name="settings.create_rp" xml:space="preserve">
+    <value>إنشاء نقطة استعادة قبل التغييرات</value>
+  </data>
+  <data name="settings.auto_clean" xml:space="preserve">
+    <value>تنظيف تلقائي لملفات النسخ الاحتياطي القديمة بعد:</value>
+  </data>
+  <data name="settings.days" xml:space="preserve">
+    <value>أيام</value>
+  </data>
+  <data name="settings.data_locations" xml:space="preserve">
+    <value>مواقع البيانات</value>
+  </data>
+  <data name="settings.open_log" xml:space="preserve">
+    <value>فتح مجلد السجلات</value>
+  </data>
+  <data name="settings.open_backup" xml:space="preserve">
+    <value>فتح مجلد النسخ الاحتياطي</value>
+  </data>
+  <data name="settings.version_info" xml:space="preserve">
+    <value>K-win v1.0.0 — {0}
+أداة تحسين ويندوز 11</value>
+  </data>
+  <data name="settings.language" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="settings.change_language" xml:space="preserve">
+    <value>تغيير اللغة</value>
+  </data>
+  <data name="preview.title" xml:space="preserve">
+    <value>K-win — معاينة: {0}</value>
+  </data>
+  <data name="preview.summary" xml:space="preserve">
+    <value>سيتم تطبيق {0} تغيير(تغييرات) التالية:</value>
+  </data>
+  <data name="preview.col_num" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="preview.col_desc" xml:space="preserve">
+    <value>وصف التغيير</value>
+  </data>
+  <data name="preview.apply" xml:space="preserve">
+    <value>✓ تطبيق التغييرات</value>
+  </data>
+  <data name="program.error_title" xml:space="preserve">
+    <value>K-win — خطأ</value>
+  </data>
+  <data name="program.error_msg" xml:space="preserve">
+    <value>حدث خطأ غير متوقع:
+
+{0}
+
+تم تسجيل الخطأ. يرجى مراجعة ملف السجل للتفاصيل.</value>
+  </data>
+  <data name="program.compat_title" xml:space="preserve">
+    <value>K-win — خطأ في التوافق</value>
+  </data>
+  <data name="program.admin_msg" xml:space="preserve">
+    <value>K-win يتطلب صلاحيات المسؤول لتحسين إعدادات ويندوز.
+
+يرجى النقر بزر الماوس الأيمن على K-win.exe واختيار 'تشغيل كمسؤول'.</value>
+  </data>
+  <data name="program.admin_title" xml:space="preserve">
+    <value>K-win — مطلوب صلاحيات المسؤول</value>
+  </data>
+  <data name="langpicker.title" xml:space="preserve">
+    <value>K-win — اختر اللغة</value>
+  </data>
+  <data name="langpicker.welcome" xml:space="preserve">
+    <value>مرحباً بك في K-win</value>
+  </data>
+  <data name="langpicker.choose" xml:space="preserve">
+    <value>اختر لغتك:</value>
+  </data>
+  <data name="langpicker.continue" xml:space="preserve">
+    <value>← متابعة</value>
+  </data>
+  <data name="word.enabled" xml:space="preserve">
+    <value>مُفعّل</value>
+  </data>
+  <data name="word.disabled" xml:space="preserve">
+    <value>مُعطّل</value>
+  </data>
+  <data name="word.shown" xml:space="preserve">
+    <value>معروض</value>
+  </data>
+  <data name="word.hidden" xml:space="preserve">
+    <value>مخفي</value>
+  </data>
+  <data name="word.visible" xml:space="preserve">
+    <value>مرئي</value>
+  </data>
+  <data name="word.dark" xml:space="preserve">
+    <value>داكن</value>
+  </data>
+  <data name="word.light" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="dialog.kwin" xml:space="preserve">
+    <value>K-win</value>
+  </data>
+  <data name="dialog.kwin_confirm" xml:space="preserve">
+    <value>K-win — تأكيد</value>
+  </data>
+  <data name="dialog.kwin_warnings" xml:space="preserve">
+    <value>K-win — تحذيرات</value>
+  </data>
+  <data name="dialog.kwin_uninstall_results" xml:space="preserve">
+    <value>K-win — نتائج إلغاء التثبيت</value>
+  </data>
+  <data name="failed" xml:space="preserve">
+    <value>فشل: {0}</value>
+  </data>
+  <data name="elev.status_admin" xml:space="preserve">
+    <value>🛡 يعمل بصلاحيات المسؤول</value>
+  </data>
+  <data name="elev.status_user" xml:space="preserve">
+    <value>مستخدم عادي · إعادة التشغيل كمسؤول</value>
+  </data>
+  <data name="elev.generic_op" xml:space="preserve">
+    <value>التغييرات التي تتطلب صلاحيات المسؤول</value>
+  </data>
+  <data name="elev.required_title" xml:space="preserve">
+    <value>K-win — مطلوب صلاحيات المسؤول</value>
+  </data>
+  <data name="elev.required_msg" xml:space="preserve">
+    <value>"{0}" يغيّر إعدادات على مستوى النظام ويتطلب صلاحيات المسؤول.
+
+هل تريد إعادة تشغيل K-win كمسؤول الآن؟ سيطلب ويندوز الإذن. سيتم الاحتفاظ بسجل التراجع.</value>
+  </data>
+  <data name="elev.not_started" xml:space="preserve">
+    <value>لم تتم إعادة تشغيل K-win كمسؤول.</value>
+  </data>
+  <data name="safety.rp_failed_title" xml:space="preserve">
+    <value>K-win — لم يتم إنشاء نقطة استعادة</value>
+  </data>
+  <data name="safety.rp_failed_continue" xml:space="preserve">
+    <value>تعذّر إنشاء نقطة استعادة للنظام:
+
+{0}
+
+لا يزال K-win يحفظ نسخة احتياطية من كل قيمة يغيّرها في السجل، لذا يمكن التراجع عن تغييرات السجل. أما التغييرات الأخرى فقد لا يمكن التراجع عنها.
+
+هل تريد المتابعة بدون نقطة استعادة؟</value>
+  </data>
+  <data name="safety.cancelled_no_rp" xml:space="preserve">
+    <value>تم الإلغاء: تعذّر إنشاء نقطة استعادة.</value>
+  </data>
+  <data name="safety.done_rp_recent" xml:space="preserve">
+    <value>تم: {0}. استخدم ويندوز نقطة استعادة من آخر 24 ساعة بدلاً من إنشاء نقطة جديدة.</value>
+  </data>
+  <data name="safety.partial_failure_status" xml:space="preserve">
+    <value>فشل {0} تغيير/تغييرات. راجع التفاصيل.</value>
+  </data>
+  <data name="safety.partial_failure" xml:space="preserve">
+    <value>لم تكتمل العملية "{0}" بالكامل.
+
+التغييرات المطبّقة والقابلة للتراجع: {1}
+
+التغييرات الفاشلة:
+{2}</value>
+  </data>
+  <data name="safety.undo_partial_note" xml:space="preserve">
+    <value>ملاحظة: جزء من هذا الإجراء (خطة الطاقة أو حالة خدمة) كان يمكن التراجع عنه فقط قبل إعادة تشغيل K-win. سيتم التراجع عن تغييرات السجل فقط.</value>
+  </data>
+  <data name="priv.hosts_download_disabled" xml:space="preserve">
+    <value>تنزيل قوائم حظر الإعلانات معطّل في هذا الإصدار.
+
+كان K-win 1.0 ينزّل قائمة من طرف ثالث من الإنترنت ويكتبها في ملف hosts دون التحقق منها. ستبقى هذه الميزة معطّلة حتى يتوفر مصدر موثوق.
+
+لا يزال بإمكانك إزالة قائمة الحظر التي أضافها إصدار سابق باستخدام "تعطيل".</value>
+  </data>
+  <data name="clean.op.scanning" xml:space="preserve">
+    <value>جارٍ الفحص...</value>
+  </data>
+  <data name="clean.op.temp_age_note" xml:space="preserve">
+    <value>يتم الاحتفاظ بالملفات التي تغيّرت خلال آخر 24 ساعة (قد تكون قيد الاستخدام).</value>
+  </data>
+  <data name="clean.op.irreversible_note" xml:space="preserve">
+    <value>لا يستطيع K-win استعادة الملفات المحذوفة.</value>
+  </data>
+  <data name="clean.op.browser_keeps_data" xml:space="preserve">
+    <value>يتم حذف ملفات التخزين المؤقت فقط. كلمات المرور وملفات تعريف الارتباط والسجل والجلسات تبقى كما هي.</value>
+  </data>
+  <data name="clean.op.cleaned_files_skipped" xml:space="preserve">
+    <value>تم تنظيف {0} ملفات وتحرير {1}. تم تخطي {2} ملفات (قيد الاستخدام أو محمية).</value>
+  </data>
+  <data name="clean.op.recycle_title" xml:space="preserve">
+    <value>إفراغ سلة المحذوفات</value>
+  </data>
+  <data name="apps.op.bloat_all_users_optional" xml:space="preserve">
+    <value>اختياري (سيُسأل عنه لاحقاً): الإزالة لجميع المستخدمين أيضاً.</value>
+  </data>
+  <data name="apps.op.bloat_all_users_q" xml:space="preserve">
+    <value>خيار متقدم: هل تريد إزالة هذه التطبيقات لجميع المستخدمين على هذا الجهاز أيضاً؟
+
+سيتم حذف الحزم المُوفّرة فلن تحصل عليها الحسابات الجديدة. يتطلب صلاحيات المسؤول، ولا يمكن التراجع عنه إلا بإعادة التثبيت من متجر Microsoft.
+
+اختر "لا" للإزالة من حسابك فقط.</value>
+  </data>
+  <data name="apps.op.remove_all_confirm" xml:space="preserve">
+    <value>هل تريد إزالة {0} تطبيق/تطبيقات لجميع المستخدمين على هذا الجهاز؟
+
+لا يستطيع K-win التراجع عن ذلك. لا يمكن إعادة التطبيقات إلا بتثبيتها من متجر Microsoft.</value>
+  </data>
+  <data name="hist.dns_revert_hint" xml:space="preserve">
+    <value>للتراجع، اختر "DHCP (تلقائي)".</value>
+  </data>
+  <data name="hist.backup_at" xml:space="preserve">
+    <value>تم حفظ النسخة الاحتياطية في {0}</value>
+  </data>
+  <data name="hist.undo_of" xml:space="preserve">
+    <value>تراجع: {0}</value>
+  </data>
+  <data name="nav.dashboard" xml:space="preserve">
+    <value>لوحة التحكم</value>
+  </data>
+  <data name="nav.performance" xml:space="preserve">
+    <value>الأداء</value>
+  </data>
+  <data name="nav.cleanup" xml:space="preserve">
+    <value>التنظيف</value>
+  </data>
+  <data name="nav.privacy" xml:space="preserve">
+    <value>الخصوصية</value>
+  </data>
+  <data name="nav.startup" xml:space="preserve">
+    <value>برامج بدء التشغيل</value>
+  </data>
+  <data name="nav.health" xml:space="preserve">
+    <value>صحة النظام</value>
+  </data>
+  <data name="nav.tools" xml:space="preserve">
+    <value>الأدوات</value>
+  </data>
+  <data name="nav.settings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+  <data name="page.dashboard_sub" xml:space="preserve">
+    <value>نظرة عامة على النظام وأدوات التحسين السريع</value>
+  </data>
+  <data name="page.performance_sub" xml:space="preserve">
+    <value>خطط الطاقة والتأثيرات المرئية ووضع الألعاب وبدء التشغيل السريع</value>
+  </data>
+  <data name="page.cleanup_sub" xml:space="preserve">
+    <value>الملفات المؤقتة وذاكرة المتصفحات وأدوات إصلاح ويندوز</value>
+  </data>
+  <data name="page.privacy_sub" xml:space="preserve">
+    <value>القياس عن بُعد ومعرّف الإعلانات وسجل النشاط وDNS</value>
+  </data>
+  <data name="page.startup_sub" xml:space="preserve">
+    <value>التطبيقات التي تعمل مع بدء تشغيل ويندوز</value>
+  </data>
+  <data name="page.health_sub" xml:space="preserve">
+    <value>معلومات ويندوز والتخزين وأدوات الإصلاح</value>
+  </data>
+  <data name="page.tools_sub" xml:space="preserve">
+    <value>تعديلات الواجهة والتطبيقات المثبتة والذاكرة</value>
+  </data>
+  <data name="page.settings_sub" xml:space="preserve">
+    <value>المظهر واللغة والأمان ومعلومات البرنامج</value>
+  </data>
+  <data name="shell.edition" xml:space="preserve">
+    <value>الإصدار المحسّن</value>
+  </data>
+  <data name="shell.free_open_source" xml:space="preserve">
+    <value>مجاني ومفتوح المصدر</value>
+  </data>
+  <data name="shell.mit_license" xml:space="preserve">
+    <value>رخصة MIT</value>
+  </data>
+  <data name="shell.dark_mode" xml:space="preserve">
+    <value>الوضع الداكن</value>
+  </data>
+  <data name="shell.light_mode" xml:space="preserve">
+    <value>الوضع الفاتح</value>
+  </data>
+  <data name="shell.admin_yes" xml:space="preserve">
+    <value>المسؤول: نعم</value>
+  </data>
+  <data name="shell.admin_no" xml:space="preserve">
+    <value>المسؤول: لا</value>
+  </data>
+  <data name="shell.admin_restart_tip" xml:space="preserve">
+    <value>انقر لإعادة تشغيل K-win كمسؤول</value>
+  </data>
+  <data name="shell.never" xml:space="preserve">
+    <value>أبداً</value>
+  </data>
+  <data name="shell.today_at" xml:space="preserve">
+    <value>اليوم {0}</value>
+  </data>
+  <data name="shell.last_optimization" xml:space="preserve">
+    <value>آخر تحسين: {0}</value>
+  </data>
+  <data name="shell.restart_language" xml:space="preserve">
+    <value>يحتاج K-win إلى إعادة التشغيل لتغيير اللغة. هل تريد إعادة التشغيل الآن؟</value>
+  </data>
+  <data name="dev.preview_title" xml:space="preserve">
+    <value>معاينة التطوير</value>
+  </data>
+  <data name="dev.preview_badge" xml:space="preserve">
+    <value>معاينة تطوير</value>
+  </data>
+  <data name="dev.preview_banner" xml:space="preserve">
+    <value>معاينة التطوير (إصدار Debug فقط): للقراءة فقط، لا يتم إجراء أي تغيير على النظام.</value>
+  </data>
+  <data name="dev.blocked" xml:space="preserve">
+    <value>"{0}" معطّل في معاينة التطوير.
+
+هذا الوضع للقراءة فقط: لا يُجري K-win أي تغيير على النظام أثناء تفعيله.</value>
+  </data>
+  <data name="dash.loading" xml:space="preserve">
+    <value>جارٍ تحميل معلومات النظام…</value>
+  </data>
+  <data name="dash.not_available" xml:space="preserve">
+    <value>غير متوفر</value>
+  </data>
+  <data name="dash.version_line" xml:space="preserve">
+    <value>الإصدار: {0} (البنية {1})</value>
+  </data>
+  <data name="dash.device_line" xml:space="preserve">
+    <value>الجهاز: {0}</value>
+  </data>
+  <data name="dash.cpu_line" xml:space="preserve">
+    <value>المعالج: {0}</value>
+  </data>
+  <data name="dash.ram_line" xml:space="preserve">
+    <value>الذاكرة: {0}</value>
+  </data>
+  <data name="dash.gpu_line" xml:space="preserve">
+    <value>بطاقة الرسومات: {0}</value>
+  </data>
+  <data name="dash.system_status" xml:space="preserve">
+    <value>حالة النظام</value>
+  </data>
+  <data name="dash.status_good" xml:space="preserve">
+    <value>جيدة</value>
+  </data>
+  <data name="dash.status_good_desc" xml:space="preserve">
+    <value>اجتازت الفحوصات الأساسية: المساحة الحرة واستخدام الذاكرة ضمن النطاق الطبيعي.</value>
+  </data>
+  <data name="dash.status_attention" xml:space="preserve">
+    <value>تنبيه</value>
+  </data>
+  <data name="dash.issue_disk" xml:space="preserve">
+    <value>قرص النظام لا يحتوي إلا على {0}% مساحة حرة.</value>
+  </data>
+  <data name="dash.issue_memory" xml:space="preserve">
+    <value>استخدام الذاكرة مرتفع ({0}%).</value>
+  </data>
+  <data name="dash.optimize_now" xml:space="preserve">
+    <value>حسّن الآن</value>
+  </data>
+  <data name="dash.optimize_caption" xml:space="preserve">
+    <value>معاينة التحسينات الموصى بها وتطبيقها</value>
+  </data>
+  <data name="dash.menu_boost" xml:space="preserve">
+    <value>تحسين الأداء بنقرة واحدة…</value>
+  </data>
+  <data name="dash.menu_clean_temp" xml:space="preserve">
+    <value>تنظيف الملفات المؤقتة…</value>
+  </data>
+  <data name="dash.menu_performance_page" xml:space="preserve">
+    <value>فتح صفحة الأداء</value>
+  </data>
+  <data name="dash.cpu" xml:space="preserve">
+    <value>المعالج</value>
+  </data>
+  <data name="dash.memory" xml:space="preserve">
+    <value>الذاكرة</value>
+  </data>
+  <data name="dash.disk" xml:space="preserve">
+    <value>القرص ({0})</value>
+  </data>
+  <data name="dash.gpu" xml:space="preserve">
+    <value>بطاقة الرسومات</value>
+  </data>
+  <data name="dash.logical_processors" xml:space="preserve">
+    <value>{0} معالجات منطقية</value>
+  </data>
+  <data name="dash.gpu_usage_unavailable" xml:space="preserve">
+    <value>لا يوفّر هذا التعريف عدادات استخدام بطاقة الرسومات</value>
+  </data>
+  <data name="dash.quick_actions" xml:space="preserve">
+    <value>إجراءات سريعة</value>
+  </data>
+  <data name="dash.quick_actions_sub" xml:space="preserve">
+    <value>مهام التحسين الشائعة</value>
+  </data>
+  <data name="dash.qa_performance" xml:space="preserve">
+    <value>تحسين
+الأداء</value>
+  </data>
+  <data name="dash.qa_cleanup" xml:space="preserve">
+    <value>تنظيف
+الملفات غير المهمة</value>
+  </data>
+  <data name="dash.qa_privacy" xml:space="preserve">
+    <value>تعزيز
+الخصوصية</value>
+  </data>
+  <data name="dash.qa_startup" xml:space="preserve">
+    <value>إدارة تطبيقات
+بدء التشغيل</value>
+  </data>
+  <data name="dash.qa_health" xml:space="preserve">
+    <value>فحص
+صحة النظام</value>
+  </data>
+  <data name="dash.recent_actions" xml:space="preserve">
+    <value>الإجراءات الأخيرة</value>
+  </data>
+  <data name="dash.view_all" xml:space="preserve">
+    <value>عرض الكل</value>
+  </data>
+  <data name="dash.no_actions" xml:space="preserve">
+    <value>لا توجد إجراءات بعد. ستظهر هنا التغييرات التي تجريها باستخدام K-win.</value>
+  </data>
+  <data name="dash.disk_space" xml:space="preserve">
+    <value>مساحة القرص</value>
+  </data>
+  <data name="dash.see_details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="dash.local_disk" xml:space="preserve">
+    <value>قرص محلي</value>
+  </data>
+  <data name="dash.used_of" xml:space="preserve">
+    <value>{0} مستخدمة من {1}</value>
+  </data>
+  <data name="clean.estimate" xml:space="preserve">
+    <value>التقدير: يمكن تحرير {0}</value>
+  </data>
+  <data name="dash.unavailable" xml:space="preserve">
+    <value>غير متوفر</value>
+  </data>
+  <data name="dash.usage_unavailable" xml:space="preserve">
+    <value>الاستخدام غير متوفر</value>
+  </data>
+  <data name="dash.cpu_sub_freq" xml:space="preserve">
+    <value>{0} · {1} معالجات منطقية</value>
+  </data>
+  <data name="dash.mem_sub" xml:space="preserve">
+    <value>{0} · {1} متاحة</value>
+  </data>
+  <data name="dash.disk_activity" xml:space="preserve">
+    <value>كل الأقراص: النشاط {0}%</value>
+  </data>
+  <data name="dash.disk_activity_unavailable" xml:space="preserve">
+    <value>كل الأقراص: النشاط غير متوفر</value>
+  </data>
+  <data name="set.monitoring" xml:space="preserve">
+    <value>المراقبة</value>
+  </data>
+  <data name="set.interval" xml:space="preserve">
+    <value>فترة تحديث لوحة التحكم</value>
+  </data>
+  <data name="set.every_seconds" xml:space="preserve">
+    <value>كل {0} ث</value>
+  </data>
+  <data name="set.monitoring_note" xml:space="preserve">
+    <value>المراقبة للقراءة فقط، وتتوقف مؤقتاً عند تصغير K-win أو فتح صفحة أخرى.</value>
+  </data>
+  <data name="health.os_title" xml:space="preserve">
+    <value>نظام التشغيل</value>
+  </data>
+  <data name="health.storage_title" xml:space="preserve">
+    <value>التخزين</value>
+  </data>
+  <data name="health.smart_unavailable" xml:space="preserve">
+    <value>صحة القرص (SMART): غير متوفرة</value>
+  </data>
+  <data name="health.repair_title" xml:space="preserve">
+    <value>أدوات إصلاح ويندوز</value>
+  </data>
+  <data name="health.sfc_title" xml:space="preserve">
+    <value>مدقق ملفات النظام (SFC)</value>
+  </data>
+  <data name="health.sfc_desc" xml:space="preserve">
+    <value>يفحص ملفات ويندوز المحمية ويصلح التالف منها. يتطلب صلاحيات المسؤول، وقد يستغرق 10–20 دقيقة.</value>
+  </data>
+  <data name="health.dism_title" xml:space="preserve">
+    <value>تنظيف مكونات DISM</value>
+  </data>
+  <data name="health.dism_desc" xml:space="preserve">
+    <value>يزيل مكونات التحديثات القديمة. يتطلب صلاحيات المسؤول، وقد يستغرق عدة دقائق.</value>
+  </data>
+  <data name="health.rp_title" xml:space="preserve">
+    <value>استعادة النظام</value>
+  </data>
+  <data name="health.rp_desc" xml:space="preserve">
+    <value>فتح حماية النظام في ويندوز لعرض نقاط الاستعادة أو إنشائها أو استخدامها.</value>
+  </data>
+  <data name="health.run" xml:space="preserve">
+    <value>تشغيل…</value>
+  </data>
+  <data name="health.open" xml:space="preserve">
+    <value>فتح</value>
+  </data>
+  <data name="health.scope_note" xml:space="preserve">
+    <value>تعرض هذه الصفحة معلومات وأدوات أساسية، وليست تقييماً كاملاً لصحة جهازك.</value>
+  </data>
+  <data name="health.edition" xml:space="preserve">
+    <value>الإصدار</value>
+  </data>
+  <data name="health.version" xml:space="preserve">
+    <value>النسخة</value>
+  </data>
+  <data name="health.build" xml:space="preserve">
+    <value>البنية</value>
+  </data>
+  <data name="health.architecture" xml:space="preserve">
+    <value>المعمارية</value>
+  </data>
+  <data name="health.device" xml:space="preserve">
+    <value>الجهاز</value>
+  </data>
+  <data name="health.uptime" xml:space="preserve">
+    <value>مدة التشغيل</value>
+  </data>
+  <data name="health.uptime_value" xml:space="preserve">
+    <value>{0} يوم {1} ساعة {2} دقيقة</value>
+  </data>
+  <data name="health.admin" xml:space="preserve">
+    <value>المسؤول</value>
+  </data>
+  <data name="health.free_of" xml:space="preserve">
+    <value>{0} حرة من {1} ({2}% حرة)</value>
+  </data>
+  <data name="health.low_space" xml:space="preserve">
+    <value>مساحة القرص منخفضة</value>
+  </data>
+  <data name="word.yes" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="word.no" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="set.appearance" xml:space="preserve">
+    <value>المظهر</value>
+  </data>
+  <data name="set.dark" xml:space="preserve">
+    <value>الوضع الداكن</value>
+  </data>
+  <data name="set.light" xml:space="preserve">
+    <value>الوضع الفاتح</value>
+  </data>
+  <data name="set.theme_note" xml:space="preserve">
+    <value>يُطبّق فوراً ويتم حفظه.</value>
+  </data>
+  <data name="set.language" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="set.language_note" xml:space="preserve">
+    <value>يُعاد تشغيل K-win لتطبيق اللغة الجديدة.</value>
+  </data>
+  <data name="set.safety" xml:space="preserve">
+    <value>الأمان</value>
+  </data>
+  <data name="set.restore_point" xml:space="preserve">
+    <value>إنشاء نقطة استعادة قبل تغييرات النظام (موصى به)</value>
+  </data>
+  <data name="set.retention" xml:space="preserve">
+    <value>الاحتفاظ بنسخ السجل الاحتياطية (أيام):</value>
+  </data>
+  <data name="set.clean_backups" xml:space="preserve">
+    <value>حذف النسخ القديمة</value>
+  </data>
+  <data name="set.safety_note" xml:space="preserve">
+    <value>لا يتم أبداً حذف النسخ الاحتياطية التي لا يزال التراجع يحتاجها.</value>
+  </data>
+  <data name="set.data" xml:space="preserve">
+    <value>البيانات والسجلات</value>
+  </data>
+  <data name="set.open_logs" xml:space="preserve">
+    <value>فتح مجلد السجلات</value>
+  </data>
+  <data name="set.open_backups" xml:space="preserve">
+    <value>فتح مجلد النسخ الاحتياطية</value>
+  </data>
+  <data name="set.view_history" xml:space="preserve">
+    <value>سجل العمليات</value>
+  </data>
+  <data name="set.data_note" xml:space="preserve">
+    <value>تبقى جميع بيانات K-win على هذا الجهاز في {0}. لا حساب ولا قياس عن بُعد.</value>
+  </data>
+  <data name="set.about" xml:space="preserve">
+    <value>حول البرنامج</value>
+  </data>
+  <data name="set.about_line" xml:space="preserve">
+    <value>K-Win {0} · الإصدار المحسّن · أداة تحسين ويندوز 11</value>
+  </data>
+  <data name="set.license_line" xml:space="preserve">
+    <value>مجاني ومفتوح المصدر بموجب رخصة MIT.</value>
+  </data>
+  <data name="set.backups_cleaned" xml:space="preserve">
+    <value>تم حذف {0} من ملفات النسخ الاحتياطية القديمة.</value>
+  </data>
+  <data name="tools.tweaks" xml:space="preserve">
+    <value>التعديلات</value>
+  </data>
+  <data name="tools.apps" xml:space="preserve">
+    <value>التطبيقات</value>
+  </data>
+  <data name="tools.ram" xml:space="preserve">
+    <value>الذاكرة</value>
+  </data>
+  <data name="hist.title" xml:space="preserve">
+    <value>K-win — سجل العمليات</value>
+  </data>
+  <data name="hist.col_time" xml:space="preserve">
+    <value>الوقت</value>
+  </data>
+  <data name="hist.col_operation" xml:space="preserve">
+    <value>العملية</value>
+  </data>
+  <data name="hist.col_result" xml:space="preserve">
+    <value>النتيجة</value>
+  </data>
+  <data name="hist.col_undo" xml:space="preserve">
+    <value>التراجع</value>
+  </data>
+  <data name="hist.col_restore_point" xml:space="preserve">
+    <value>نقطة الاستعادة</value>
+  </data>
+  <data name="hist.col_details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="hist.registry_changes" xml:space="preserve">
+    <value>{0} تغيير/تغييرات في السجل</value>
+  </data>
+  <data name="hist.summary" xml:space="preserve">
+    <value>{0} عملية. محفوظة في {1}</value>
+  </data>
+  <data name="hist.close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="hist.status_completed" xml:space="preserve">
+    <value>مكتملة</value>
+  </data>
+  <data name="hist.status_failed" xml:space="preserve">
+    <value>فشلت</value>
+  </data>
+  <data name="hist.status_cancelled" xml:space="preserve">
+    <value>أُلغيت</value>
+  </data>
+  <data name="hist.status_skipped" xml:space="preserve">
+    <value>تم تخطيها</value>
+  </data>
+  <data name="hist.status_restart" xml:space="preserve">
+    <value>تتطلب إعادة التشغيل</value>
+  </data>
+  <data name="hist.rev_full" xml:space="preserve">
+    <value>كامل</value>
+  </data>
+  <data name="hist.rev_partial" xml:space="preserve">
+    <value>جزئي</value>
+  </data>
+  <data name="hist.rev_none" xml:space="preserve">
+    <value>غير قابل للتراجع</value>
+  </data>
+  <data name="hist.rp_created" xml:space="preserve">
+    <value>تم الإنشاء</value>
+  </data>
+  <data name="hist.rp_recent" xml:space="preserve">
+    <value>أُعيد استخدام نقطة حديثة</value>
+  </data>
+  <data name="hist.rp_not_admin" xml:space="preserve">
+    <value>غير لازمة (مستوى المستخدم)</value>
+  </data>
+  <data name="hist.rp_failed" xml:space="preserve">
+    <value>فشلت</value>
+  </data>
+  <data name="card.recommended" xml:space="preserve">
+    <value>الموصى به</value>
+  </data>
+  <data name="card.benefit" xml:space="preserve">
+    <value>الفائدة</value>
+  </data>
+  <data name="card.side_effects" xml:space="preserve">
+    <value>الآثار الجانبية</value>
+  </data>
+  <data name="card.requires" xml:space="preserve">
+    <value>يتطلب</value>
+  </data>
+  <data name="card.undo" xml:space="preserve">
+    <value>التراجع</value>
+  </data>
+  <data name="card.current" xml:space="preserve">
+    <value>الحالي: {0}</value>
+  </data>
+  <data name="card.preference" xml:space="preserve">
+    <value>حسب تفضيلك (لا توجد توصية)</value>
+  </data>
+  <data name="card.requires_admin" xml:space="preserve">
+    <value>صلاحيات المسؤول</value>
+  </data>
+  <data name="card.requires_user" xml:space="preserve">
+    <value>لا يتطلب صلاحيات المسؤول</value>
+  </data>
+  <data name="card.restart_needed" xml:space="preserve">
+    <value>يسري بعد إعادة التشغيل</value>
+  </data>
+  <data name="card.signout_needed" xml:space="preserve">
+    <value>يسري بعد تسجيل الخروج</value>
+  </data>
+  <data name="card.undo_full" xml:space="preserve">
+    <value>نعم. يعيد التراجع القيم السابقة بدقة، حتى بعد إعادة التشغيل.</value>
+  </data>
+  <data name="card.undo_mixed" xml:space="preserve">
+    <value>نعم. تُستعاد قيم السجل بدقة؛ أما حالة الخدمة أو الطاقة فتُستعاد فقط ما دام K-win مفتوحاً.</value>
+  </data>
+  <data name="card.undo_session" xml:space="preserve">
+    <value>نعم، ما دام K-win مفتوحاً (بعد ذلك يدوياً).</value>
+  </data>
+  <data name="card.switch_to" xml:space="preserve">
+    <value>التبديل إلى: {0}</value>
+  </data>
+  <data name="card.state_custom" xml:space="preserve">
+    <value>مخصص (تم تغييره خارج K-win)</value>
+  </data>
+  <data name="card.state_unknown" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="card.not_applicable" xml:space="preserve">
+    <value>غير متوفر في إصدار ويندوز هذا</value>
+  </data>
+  <data name="card.managed" xml:space="preserve">
+    <value>تديره مؤسستك</value>
+  </data>
+  <data name="card.managed_desc" xml:space="preserve">
+    <value>هذا الجهاز تديره مؤسسة. لا يغيّر K-win إعدادات نهج المجموعة هنا.</value>
+  </data>
+  <data name="card.preview_change" xml:space="preserve">
+    <value>التغيير إلى: {0}</value>
+  </data>
+  <data name="card.preview_undo" xml:space="preserve">
+    <value>يمكنك التراجع عن ذلك باستخدام زر التراجع.</value>
+  </data>
+  <data name="card.applied" xml:space="preserve">
+    <value>{0}: {1} (تم التحقق)</value>
+  </data>
+  <data name="card.applied_restart" xml:space="preserve">
+    <value>{0}: {1}. أعد تشغيل ويندوز لتطبيقه.</value>
+  </data>
+  <data name="card.apply_failed" xml:space="preserve">
+    <value>لم يتم تطبيق {0}: {1}</value>
+  </data>
+  <data name="hook.diagtrack_stop" xml:space="preserve">
+    <value>الخدمة: إيقاف "تجارب المستخدم المتصل والقياس عن بُعد" (DiagTrack)</value>
+  </data>
+  <data name="hook.diagtrack_start" xml:space="preserve">
+    <value>الخدمة: تشغيل "تجارب المستخدم المتصل والقياس عن بُعد" (DiagTrack)</value>
+  </data>
+  <data name="hook.sysmain_start" xml:space="preserve">
+    <value>الخدمة: تشغيل SysMain</value>
+  </data>
+  <data name="hook.sysmain_stop" xml:space="preserve">
+    <value>الخدمة: إيقاف SysMain</value>
+  </data>
+  <data name="hook.hibernate_on" xml:space="preserve">
+    <value>powercfg /hibernate on (يحتاج بدء التشغيل السريع إلى الإسبات)</value>
+  </data>
+  <data name="hook.hibernate_off" xml:space="preserve">
+    <value>powercfg /hibernate off</value>
+  </data>
+  <data name="hook.explorer_restart" xml:space="preserve">
+    <value>يُعاد تشغيل مستكشف ويندوز (يختفي شريط المهام للحظة)</value>
+  </data>
+  <data name="hook.service_failed" xml:space="preserve">
+    <value>تعذّر تغيير الخدمة {0}: {1}</value>
+  </data>
+  <data name="perfp.power_title" xml:space="preserve">
+    <value>خطة الطاقة</value>
+  </data>
+  <data name="perfp.power_desc" xml:space="preserve">
+    <value>تحدد كيف يوازن ويندوز بين السرعة واستهلاك الطاقة.</value>
+  </data>
+  <data name="perfp.power_recommended" xml:space="preserve">
+    <value>متوازن على الأجهزة المحمولة؛ الأداء العالي عند التوصيل بالكهرباء فقط</value>
+  </data>
+  <data name="perfp.power_benefit" xml:space="preserve">
+    <value>الخطط الأعلى تُبقي المعالج أسرع لاستجابة أفضل</value>
+  </data>
+  <data name="perfp.power_side" xml:space="preserve">
+    <value>استهلاك أكبر للطاقة وحرارة أكثر؛ عمر بطارية أقصر</value>
+  </data>
+  <data name="perfp.power_apply" xml:space="preserve">
+    <value>تطبيق الخطة</value>
+  </data>
+  <data name="perfp.power_ultimate" xml:space="preserve">
+    <value>إضافة الأداء الفائق…</value>
+  </data>
+  <data name="perfp.active" xml:space="preserve">
+    <value>نشطة</value>
+  </data>
+  <data name="perfp.comp_title" xml:space="preserve">
+    <value>ضغط الذاكرة</value>
+  </data>
+  <data name="perfp.comp_desc" xml:space="preserve">
+    <value>يضغط ويندوز الذاكرة قليلة الاستخدام بدلاً من كتابتها على القرص.</value>
+  </data>
+  <data name="perfp.comp_on" xml:space="preserve">
+    <value>مفعّل</value>
+  </data>
+  <data name="perfp.comp_off" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="perfp.comp_benefit" xml:space="preserve">
+    <value>يتسع المزيد في الذاكرة ويقل استخدام ملف الترحيل البطيء</value>
+  </data>
+  <data name="perfp.comp_side" xml:space="preserve">
+    <value>يستهلك قليلاً من وقت المعالج؛ نادراً ما يفيد تعطيله</value>
+  </data>
+  <data name="perfp.comp_detected" xml:space="preserve">
+    <value>تم اكتشافه من عملية ضغط الذاكرة</value>
+  </data>
+  <data name="perfp.boost_title" xml:space="preserve">
+    <value>تحسين الأداء بنقرة واحدة</value>
+  </data>
+  <data name="perfp.boost_desc" xml:space="preserve">
+    <value>خطة الأداء العالي وأفضل أداء للتأثيرات المرئية وإيقاف الشفافية، في خطوة واحدة.</value>
+  </data>
+  <data name="perfp.boost_benefit" xml:space="preserve">
+    <value>واجهة أسرع استجابة على الأجهزة البطيئة</value>
+  </data>
+  <data name="perfp.boost_side" xml:space="preserve">
+    <value>مظهر أبسط؛ استهلاك طاقة أكبر على الأجهزة المحمولة</value>
+  </data>
+  <data name="perfp.boost_run" xml:space="preserve">
+    <value>معاينة وتطبيق…</value>
+  </data>
+  <data name="privp.managed_notice" xml:space="preserve">
+    <value>هذا الجهاز تديره مؤسسة: إعدادات نهج المجموعة معروضة للقراءة فقط.</value>
+  </data>
+  <data name="privp.reset_ad" xml:space="preserve">
+    <value>إعادة تعيين معرّف الإعلانات…</value>
+  </data>
+  <data name="privp.reset_ad_desc" xml:space="preserve">
+    <value>يحصل ويندوز على معرّف إعلانات عشوائي جديد، فلا تستطيع التطبيقات ربط النشاط القديم به.</value>
+  </data>
+  <data name="privp.ad_current_id" xml:space="preserve">
+    <value>المعرّف الحالي</value>
+  </data>
+  <data name="privp.clear_activity" xml:space="preserve">
+    <value>مسح بيانات النشاط الآن…</value>
+  </data>
+  <data name="privp.dns_title" xml:space="preserve">
+    <value>مزوّد DNS</value>
+  </data>
+  <data name="privp.dns_desc" xml:space="preserve">
+    <value>الخوادم التي تترجم أسماء المواقع إلى عناوين لمحوّل الشبكة النشط.</value>
+  </data>
+  <data name="privp.dns_benefit" xml:space="preserve">
+    <value>بعض المزودين يحجبون المواقع الضارة المعروفة أو يحتفظون بسجلات أقل</value>
+  </data>
+  <data name="privp.dns_side" xml:space="preserve">
+    <value>قد تتوقف شبكات الشركات أو بوابات تسجيل الدخول عن العمل مع DNS مخصص</value>
+  </data>
+  <data name="privp.dns_undo" xml:space="preserve">
+    <value>اختر "DHCP (تلقائي)" للعودة إلى DNS الخاص بشبكتك</value>
+  </data>
+  <data name="privp.dns_apply" xml:space="preserve">
+    <value>تطبيق DNS</value>
+  </data>
+  <data name="privp.hosts_title" xml:space="preserve">
+    <value>حظر الإعلانات (ملف hosts)</value>
+  </data>
+  <data name="privp.hosts_desc" xml:space="preserve">
+    <value>تنزيل قوائم الحظر معطّل حتى يتوفر مصدر موثوق. يمكن هنا إزالة قائمة الحظر التي أضافها K-win 1.0.</value>
+  </data>
+  <data name="privp.hosts_recommended" xml:space="preserve">
+    <value>إزالة قائمة K-win 1.0 إن وجدت</value>
+  </data>
+  <data name="privp.hosts_side" xml:space="preserve">
+    <value>لا شيء؛ تبقى إدخالاتك الخاصة</value>
+  </data>
+  <data name="privp.hosts_undo" xml:space="preserve">
+    <value>تُحفظ نسخة من ملف hosts قبل أي تغيير</value>
+  </data>
+  <data name="privp.hosts_remove" xml:space="preserve">
+    <value>إزالة قائمة K-win</value>
+  </data>
+  <data name="privp.hosts_why_off" xml:space="preserve">
+    <value>لماذا التنزيل معطّل؟</value>
+  </data>
+  <data name="privp.security_title" xml:space="preserve">
+    <value>أمان ويندوز</value>
+  </data>
+  <data name="privp.security_desc" xml:space="preserve">
+    <value>مكافحة الفيروسات والجدار الناري وحماية الجهاز يديرها أمان ويندوز. لا يغيّرها K-win أبداً.</value>
+  </data>
+  <data name="privp.security_recommended" xml:space="preserve">
+    <value>إبقاء جميع وسائل الحماية مفعّلة</value>
+  </data>
+  <data name="privp.security_open" xml:space="preserve">
+    <value>فتح أمان ويندوز</value>
+  </data>
+  <data name="startup.search" xml:space="preserve">
+    <value>بحث…</value>
+  </data>
+  <data name="startup.refresh" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="startup.disable" xml:space="preserve">
+    <value>تعطيل المحدد</value>
+  </data>
+  <data name="startup.enable" xml:space="preserve">
+    <value>تفعيل المحدد</value>
+  </data>
+  <data name="startup.explain" xml:space="preserve">
+    <value>التعطيل يعمل مثل إدارة المهام: يبقى الإدخال ويمكن تفعيله مجدداً في أي وقت.</value>
+  </data>
+  <data name="startup.col_name" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="startup.col_status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="startup.col_publisher" xml:space="preserve">
+    <value>الناشر</value>
+  </data>
+  <data name="startup.col_source" xml:space="preserve">
+    <value>المصدر</value>
+  </data>
+  <data name="startup.col_command" xml:space="preserve">
+    <value>الأمر</value>
+  </data>
+  <data name="startup.enabled" xml:space="preserve">
+    <value>مفعّل</value>
+  </data>
+  <data name="startup.disabled" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="startup.missing" xml:space="preserve">
+    <value>الملف غير موجود</value>
+  </data>
+  <data name="startup.unknown_publisher" xml:space="preserve">
+    <value>غير معروف</value>
+  </data>
+  <data name="startup.loading" xml:space="preserve">
+    <value>جارٍ قراءة برامج بدء التشغيل…</value>
+  </data>
+  <data name="startup.summary" xml:space="preserve">
+    <value>{0} إدخالات بدء تشغيل · {1} مفعّلة · {2} معطّلة</value>
+  </data>
+  <data name="startup.nothing_selected" xml:space="preserve">
+    <value>حدد الإدخالات أولاً. الإدخالات التي في هذه الحالة يتم تخطيها.</value>
+  </data>
+  <data name="startup.src_user_run" xml:space="preserve">
+    <value>السجل · المستخدم الحالي</value>
+  </data>
+  <data name="startup.src_machine_run" xml:space="preserve">
+    <value>السجل · جميع المستخدمين (64 بت)</value>
+  </data>
+  <data name="startup.src_machine_run32" xml:space="preserve">
+    <value>السجل · جميع المستخدمين (32 بت)</value>
+  </data>
+  <data name="startup.src_user_folder" xml:space="preserve">
+    <value>مجلد بدء التشغيل · المستخدم الحالي</value>
+  </data>
+  <data name="startup.src_common_folder" xml:space="preserve">
+    <value>مجلد بدء التشغيل · جميع المستخدمين</value>
+  </data>
+  <data name="startup.op_enable" xml:space="preserve">
+    <value>تفعيل {0} من إدخالات بدء التشغيل</value>
+  </data>
+  <data name="startup.op_disable" xml:space="preserve">
+    <value>تعطيل {0} من إدخالات بدء التشغيل</value>
+  </data>
+  <data name="startup.op_enable_desc" xml:space="preserve">
+    <value>ستعمل هذه البرامج مع بدء تشغيل ويندوز مجدداً:</value>
+  </data>
+  <data name="startup.op_disable_desc" xml:space="preserve">
+    <value>لن تعمل هذه البرامج مع بدء تشغيل ويندوز:</value>
+  </data>
+  <data name="startup.op_note" xml:space="preserve">
+    <value>يتغير فقط مؤشر ويندوز "StartupApproved" (كما في إدارة المهام). لا يتم حذف الإدخالات.</value>
+  </data>
+  <data name="startup.op_done" xml:space="preserve">
+    <value>تم تحديث {0} من إدخالات بدء التشغيل والتحقق منها.</value>
+  </data>
+  <data name="startup.op_failed" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="cleanup.scan" xml:space="preserve">
+    <value>فحص</value>
+  </data>
+  <data name="cleanup.clean_selected" xml:space="preserve">
+    <value>تنظيف المحدد…</value>
+  </data>
+  <data name="cleanup.cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="cleanup.step_start" xml:space="preserve">
+    <value>الخطوة 1: افحص لقياس ما يمكن تنظيفه. الفحص لا يحذف أي شيء.</value>
+  </data>
+  <data name="cleanup.scanning" xml:space="preserve">
+    <value>جارٍ الفحص…</value>
+  </data>
+  <data name="cleanup.scan_cancelled" xml:space="preserve">
+    <value>تم إلغاء الفحص.</value>
+  </data>
+  <data name="cleanup.step_review" xml:space="preserve">
+    <value>الخطوة 2: راجع الأحجام المقيسة واختر الفئات، ثم اختر "تنظيف المحدد".</value>
+  </data>
+  <data name="cleanup.cleaning" xml:space="preserve">
+    <value>جارٍ التنظيف: {0}</value>
+  </data>
+  <data name="cleanup.col_category" xml:space="preserve">
+    <value>الفئة</value>
+  </data>
+  <data name="cleanup.col_size" xml:space="preserve">
+    <value>الحجم</value>
+  </data>
+  <data name="cleanup.col_description" xml:space="preserve">
+    <value>ما الذي يُحذف</value>
+  </data>
+  <data name="cleanup.irreversible" xml:space="preserve">
+    <value>لا يستطيع K-win استعادة الملفات المحذوفة. لا يتم أبداً لمس المجلدات الشخصية (المستندات، سطح المكتب، التنزيلات…).</value>
+  </data>
+  <data name="cleanup.items" xml:space="preserve">
+    <value>{0} عنصر</value>
+  </data>
+  <data name="cleanup.needs_admin" xml:space="preserve">
+    <value>يتطلب المسؤول</value>
+  </data>
+  <data name="cleanup.selected_total" xml:space="preserve">
+    <value>{0} فئات محددة · {1}</value>
+  </data>
+  <data name="cleanup.op_name" xml:space="preserve">
+    <value>التنظيف</value>
+  </data>
+  <data name="cleanup.preview_intro" xml:space="preserve">
+    <value>سيتم تنظيف هذه الفئات:</value>
+  </data>
+  <data name="cleanup.preview_recycle" xml:space="preserve">
+    <value>سلة المحذوفات: ستُحذف ملفاتك المحذوفة نهائياً.</value>
+  </data>
+  <data name="cleanup.report_done" xml:space="preserve">
+    <value>تم: حُذف {0} ملفاً وتحرر {1}. تم تخطي {2} ملفاً (قيد الاستخدام أو محمية).</value>
+  </data>
+  <data name="cleanup.report_cancelled" xml:space="preserve">
+    <value>تم الإلغاء: حُذف {0} ملفاً ({1}) قبل التوقف. تم تخطي {2} ملفاً.</value>
+  </data>
+  <data name="cleanup.report_failed" xml:space="preserve">
+    <value>فشل: {0}</value>
+  </data>
+  <data name="cleanup.store_title" xml:space="preserve">
+    <value>ذاكرة متجر Microsoft المؤقتة</value>
+  </data>
+  <data name="cleanup.store_desc" xml:space="preserve">
+    <value>يشغّل أداة wsreset الخاصة بويندوز لإعادة تعيين ذاكرة المتجر المؤقتة.</value>
+  </data>
+  <data name="cleanup.store_run" xml:space="preserve">
+    <value>إعادة تعيين ذاكرة المتجر…</value>
+  </data>
+  <data name="cleanup.cat.user_temp" xml:space="preserve">
+    <value>الملفات المؤقتة</value>
+  </data>
+  <data name="cleanup.cat.user_temp_desc" xml:space="preserve">
+    <value>مجلدك المؤقت (الملفات الأقدم من 24 ساعة)</value>
+  </data>
+  <data name="cleanup.cat.error_reports" xml:space="preserve">
+    <value>تقارير الأخطاء</value>
+  </data>
+  <data name="cleanup.cat.error_reports_desc" xml:space="preserve">
+    <value>ملفات الإبلاغ عن أخطاء ويندوز التي تمت معالجتها</value>
+  </data>
+  <data name="cleanup.cat.windows_temp" xml:space="preserve">
+    <value>ملفات ويندوز المؤقتة</value>
+  </data>
+  <data name="cleanup.cat.windows_temp_desc" xml:space="preserve">
+    <value>C:\Windows\Temp (الملفات الأقدم من 24 ساعة)</value>
+  </data>
+  <data name="cleanup.cat.browser_prefix" xml:space="preserve">
+    <value>ذاكرة المتصفح المؤقتة:</value>
+  </data>
+  <data name="cleanup.cat.browser_desc" xml:space="preserve">
+    <value>الصفحات والصور المخزنة مؤقتاً. تبقى كلمات المرور وملفات تعريف الارتباط والسجل والجلسات.</value>
+  </data>
+  <data name="cleanup.cat.recycle_bin" xml:space="preserve">
+    <value>سلة المحذوفات</value>
+  </data>
+  <data name="cleanup.cat.recycle_bin_desc" xml:space="preserve">
+    <value>الملفات التي حذفتها. غير محددة افتراضياً.</value>
+  </data>
+  <data name="toolsp.apps_note" xml:space="preserve">
+    <value>تستخدم تطبيقات سطح المكتب أدوات إلغاء التثبيت الخاصة بها. تُزال تطبيقات المتجر من حسابك؛ والإزالة لجميع المستخدمين خيار متقدم يطلب التأكيد مجدداً.</value>
+  </data>
+  <data name="toolsp.mem_title" xml:space="preserve">
+    <value>الذاكرة</value>
+  </data>
+  <data name="toolsp.mem_usage" xml:space="preserve">
+    <value>{0}% مستخدمة · {1} من {2} · {3} متاحة</value>
+  </data>
+  <data name="apps.select_all" xml:space="preserve">
+    <value>تحديد الكل</value>
+  </data>
+  <data name="apps.remove_bloatware" xml:space="preserve">
+    <value>إزالة التطبيقات المثبتة مسبقاً…</value>
+  </data>
+  <data name="dash.gpu_scope" xml:space="preserve">
+    <value>المحرك الأكثر نشاطاً، كل بطاقات الرسومات</value>
+  </data>
+  <data name="setting.visual_effects.title" xml:space="preserve">
+    <value>التأثيرات المرئية</value>
+  </data>
+  <data name="setting.visual_effects.desc" xml:space="preserve">
+    <value>يوقف الحركات والظلال التي تبطئ ويندوز على الأجهزة القديمة.</value>
+  </data>
+  <data name="setting.visual_effects.benefit" xml:space="preserve">
+    <value>نوافذ وقوائم أسرع استجابة</value>
+  </data>
+  <data name="setting.visual_effects.side" xml:space="preserve">
+    <value>مظهر أبسط بدون حركات وظلال</value>
+  </data>
+  <data name="setting.visual_effects.on" xml:space="preserve">
+    <value>أفضل أداء</value>
+  </data>
+  <data name="setting.visual_effects.off" xml:space="preserve">
+    <value>الافتراضي في ويندوز</value>
+  </data>
+  <data name="setting.game_mode.title" xml:space="preserve">
+    <value>وضع الألعاب</value>
+  </data>
+  <data name="setting.game_mode.desc" xml:space="preserve">
+    <value>يعطي ويندوز الأولوية للألعاب ويوقف بعض الأعمال في الخلفية أثناء اللعب.</value>
+  </data>
+  <data name="setting.game_mode.benefit" xml:space="preserve">
+    <value>معدل إطارات أكثر ثباتاً في الألعاب</value>
+  </data>
+  <data name="setting.game_mode.side" xml:space="preserve">
+    <value>قد تنتظر مهام الخلفية أثناء تشغيل لعبة</value>
+  </data>
+  <data name="setting.game_mode.on" xml:space="preserve">
+    <value>مفعّل</value>
+  </data>
+  <data name="setting.game_mode.off" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="setting.fast_startup.title" xml:space="preserve">
+    <value>بدء التشغيل السريع</value>
+  </data>
+  <data name="setting.fast_startup.desc" xml:space="preserve">
+    <value>يحفظ ويندوز جزءاً من حالته عند إيقاف التشغيل ليبدأ أسرع في المرة التالية.</value>
+  </data>
+  <data name="setting.fast_startup.benefit" xml:space="preserve">
+    <value>إقلاع أسرع بعد إيقاف التشغيل</value>
+  </data>
+  <data name="setting.fast_startup.side" xml:space="preserve">
+    <value>بعض التحديثات وأنظمة الإقلاع المزدوج تحتاج إلى تعطيله؛ يستخدم الإسبات</value>
+  </data>
+  <data name="setting.fast_startup.on" xml:space="preserve">
+    <value>مفعّل</value>
+  </data>
+  <data name="setting.fast_startup.off" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="setting.telemetry.title" xml:space="preserve">
+    <value>بيانات التشخيص</value>
+  </data>
+  <data name="setting.telemetry.desc" xml:space="preserve">
+    <value>يحدّ بيانات التشخيص التي يرسلها ويندوز إلى Microsoft إلى الحد الأدنى المطلوب.</value>
+  </data>
+  <data name="setting.telemetry.benefit" xml:space="preserve">
+    <value>إرسال بيانات استخدام أقل إلى Microsoft</value>
+  </data>
+  <data name="setting.telemetry.side" xml:space="preserve">
+    <value>بعض ميزات استكشاف الأخطاء والتعليقات ترسل معلومات أقل</value>
+  </data>
+  <data name="setting.telemetry.on" xml:space="preserve">
+    <value>المطلوبة فقط</value>
+  </data>
+  <data name="setting.telemetry.off" xml:space="preserve">
+    <value>الافتراضي في ويندوز</value>
+  </data>
+  <data name="setting.advertising_id.title" xml:space="preserve">
+    <value>معرّف الإعلانات</value>
+  </data>
+  <data name="setting.advertising_id.desc" xml:space="preserve">
+    <value>يمنع التطبيقات من استخدام معرّف الإعلانات الخاص بك للإعلانات المخصصة.</value>
+  </data>
+  <data name="setting.advertising_id.benefit" xml:space="preserve">
+    <value>لا تستطيع التطبيقات ربط نشاطك للإعلانات</value>
+  </data>
+  <data name="setting.advertising_id.side" xml:space="preserve">
+    <value>تبقى الإعلانات لكنها أقل تخصيصاً</value>
+  </data>
+  <data name="setting.advertising_id.on" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="setting.advertising_id.off" xml:space="preserve">
+    <value>الافتراضي في ويندوز</value>
+  </data>
+  <data name="setting.activity_history.title" xml:space="preserve">
+    <value>سجل النشاط</value>
+  </data>
+  <data name="setting.activity_history.desc" xml:space="preserve">
+    <value>يمنع ويندوز من جمع وإرسال التطبيقات والملفات والمواقع التي تستخدمها.</value>
+  </data>
+  <data name="setting.activity_history.benefit" xml:space="preserve">
+    <value>لا يتم تخزين نشاطك أو مزامنته</value>
+  </data>
+  <data name="setting.activity_history.side" xml:space="preserve">
+    <value>تعرض العناصر الحديثة وميزات المخطط الزمني محتوى أقل</value>
+  </data>
+  <data name="setting.activity_history.on" xml:space="preserve">
+    <value>لا يتم الجمع</value>
+  </data>
+  <data name="setting.activity_history.off" xml:space="preserve">
+    <value>الافتراضي في ويندوز</value>
+  </data>
+  <data name="setting.recall.title" xml:space="preserve">
+    <value>Recall (لقطات الذكاء الاصطناعي)</value>
+  </data>
+  <data name="setting.recall.desc" xml:space="preserve">
+    <value>يوقف ميزة Recall التي تحفظ لقطات من شاشتك للبحث بالذكاء الاصطناعي (ويندوز 11 24H2 وما بعده).</value>
+  </data>
+  <data name="setting.recall.benefit" xml:space="preserve">
+    <value>لا يتم حفظ لقطات للشاشة</value>
+  </data>
+  <data name="setting.recall.side" xml:space="preserve">
+    <value>بحث Recall غير متاح</value>
+  </data>
+  <data name="setting.recall.on" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="setting.recall.off" xml:space="preserve">
+    <value>الافتراضي في ويندوز</value>
+  </data>
+  <data name="setting.dark_mode.title" xml:space="preserve">
+    <value>الوضع الداكن</value>
+  </data>
+  <data name="setting.dark_mode.desc" xml:space="preserve">
+    <value>يستخدم ألواناً داكنة لويندوز والتطبيقات التي تتبع سمة النظام.</value>
+  </data>
+  <data name="setting.dark_mode.benefit" xml:space="preserve">
+    <value>أريح للعين في الإضاءة المنخفضة</value>
+  </data>
+  <data name="setting.dark_mode.side" xml:space="preserve">
+    <value>لا شيء</value>
+  </data>
+  <data name="setting.dark_mode.on" xml:space="preserve">
+    <value>داكن</value>
+  </data>
+  <data name="setting.dark_mode.off" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="setting.transparency.title" xml:space="preserve">
+    <value>تأثيرات الشفافية</value>
+  </data>
+  <data name="setting.transparency.desc" xml:space="preserve">
+    <value>تأثيرات شفافة على شريط المهام وقائمة ابدأ والنوافذ.</value>
+  </data>
+  <data name="setting.transparency.benefit" xml:space="preserve">
+    <value>تعطيلها يوفّر قليلاً من عمل الرسومات</value>
+  </data>
+  <data name="setting.transparency.side" xml:space="preserve">
+    <value>تبدو الخلفيات المصمتة أبسط</value>
+  </data>
+  <data name="setting.transparency.on" xml:space="preserve">
+    <value>مفعّلة</value>
+  </data>
+  <data name="setting.transparency.off" xml:space="preserve">
+    <value>معطّلة</value>
+  </data>
+  <data name="setting.file_extensions.title" xml:space="preserve">
+    <value>امتدادات أسماء الملفات</value>
+  </data>
+  <data name="setting.file_extensions.desc" xml:space="preserve">
+    <value>يعرض نهايات مثل .exe أو .pdf في مستكشف الملفات.</value>
+  </data>
+  <data name="setting.file_extensions.benefit" xml:space="preserve">
+    <value>يساعدك على اكتشاف الملفات المتنكرة مثل "invoice.pdf.exe"</value>
+  </data>
+  <data name="setting.file_extensions.side" xml:space="preserve">
+    <value>تبدو أسماء الملفات أطول</value>
+  </data>
+  <data name="setting.file_extensions.on" xml:space="preserve">
+    <value>ظاهرة</value>
+  </data>
+  <data name="setting.file_extensions.off" xml:space="preserve">
+    <value>مخفية</value>
+  </data>
+  <data name="setting.widgets.title" xml:space="preserve">
+    <value>زر الأدوات (Widgets)</value>
+  </data>
+  <data name="setting.widgets.desc" xml:space="preserve">
+    <value>زر الأدوات (الأخبار والطقس) في شريط المهام.</value>
+  </data>
+  <data name="setting.widgets.benefit" xml:space="preserve">
+    <value>إخفاؤه يوفّر مساحة في شريط المهام</value>
+  </data>
+  <data name="setting.widgets.side" xml:space="preserve">
+    <value>بعض إصدارات ويندوز تمنع هذا التغيير؛ وسيُبلغ K-win عن ذلك</value>
+  </data>
+  <data name="setting.widgets.on" xml:space="preserve">
+    <value>ظاهر</value>
+  </data>
+  <data name="setting.widgets.off" xml:space="preserve">
+    <value>مخفي</value>
+  </data>
+  <data name="setting.chat_icon.title" xml:space="preserve">
+    <value>زر الدردشة</value>
+  </data>
+  <data name="setting.chat_icon.desc" xml:space="preserve">
+    <value>زر دردشة Teams في شريط المهام (ويندوز 11 21H2/22H2).</value>
+  </data>
+  <data name="setting.chat_icon.benefit" xml:space="preserve">
+    <value>إخفاؤه يوفّر مساحة في شريط المهام</value>
+  </data>
+  <data name="setting.chat_icon.side" xml:space="preserve">
+    <value>لا شيء</value>
+  </data>
+  <data name="setting.chat_icon.on" xml:space="preserve">
+    <value>ظاهر</value>
+  </data>
+  <data name="setting.chat_icon.off" xml:space="preserve">
+    <value>مخفي</value>
+  </data>
+  <data name="setting.menu_delay.title" xml:space="preserve">
+    <value>تأخير القوائم</value>
+  </data>
+  <data name="setting.menu_delay.desc" xml:space="preserve">
+    <value>المدة التي ينتظرها ويندوز قبل فتح القوائم الفرعية.</value>
+  </data>
+  <data name="setting.menu_delay.benefit" xml:space="preserve">
+    <value>تفتح القوائم فوراً</value>
+  </data>
+  <data name="setting.menu_delay.side" xml:space="preserve">
+    <value>قد تفتح القوائم بمجرد المرور فوقها</value>
+  </data>
+  <data name="setting.menu_delay.on" xml:space="preserve">
+    <value>فوري (0 مللي ثانية)</value>
+  </data>
+  <data name="setting.menu_delay.off" xml:space="preserve">
+    <value>الافتراضي (400 مللي ثانية)</value>
+  </data>
+  <data name="setting.shutdown_speed.title" xml:space="preserve">
+    <value>مهلة إيقاف التشغيل</value>
+  </data>
+  <data name="setting.shutdown_speed.desc" xml:space="preserve">
+    <value>المدة التي ينتظرها ويندوز لإغلاق التطبيقات والخدمات عند إيقاف التشغيل.</value>
+  </data>
+  <data name="setting.shutdown_speed.benefit" xml:space="preserve">
+    <value>إيقاف تشغيل أسرع عند تعلّق التطبيقات</value>
+  </data>
+  <data name="setting.shutdown_speed.side" xml:space="preserve">
+    <value>تحصل التطبيقات على وقت أقل للحفظ؛ قد يضيع العمل غير المحفوظ</value>
+  </data>
+  <data name="setting.shutdown_speed.on" xml:space="preserve">
+    <value>قصيرة (2 ثانية)</value>
+  </data>
+  <data name="setting.shutdown_speed.off" xml:space="preserve">
+    <value>الافتراضي في ويندوز</value>
+  </data>
+  <data name="setting.auto_end_tasks.title" xml:space="preserve">
+    <value>إنهاء التطبيقات المتعلقة تلقائياً</value>
+  </data>
+  <data name="setting.auto_end_tasks.desc" xml:space="preserve">
+    <value>يغلق التطبيقات التي لا تستجيب عند إيقاف التشغيل دون سؤال.</value>
+  </data>
+  <data name="setting.auto_end_tasks.benefit" xml:space="preserve">
+    <value>لا يتوقف إيقاف التشغيل عند رسالة "هذا التطبيق يمنع إيقاف التشغيل"</value>
+  </data>
+  <data name="setting.auto_end_tasks.side" xml:space="preserve">
+    <value>يضيع العمل غير المحفوظ في تلك التطبيقات</value>
+  </data>
+  <data name="setting.auto_end_tasks.on" xml:space="preserve">
+    <value>مفعّل</value>
+  </data>
+  <data name="setting.auto_end_tasks.off" xml:space="preserve">
+    <value>معطّل</value>
+  </data>
+  <data name="setting.classic_context_menu.title" xml:space="preserve">
+    <value>قائمة النقر الأيمن الكلاسيكية</value>
+  </data>
+  <data name="setting.classic_context_menu.desc" xml:space="preserve">
+    <value>يعرض قائمة النقر الأيمن الكاملة بنمط ويندوز 10 بدلاً من القائمة المختصرة في ويندوز 11.</value>
+  </data>
+  <data name="setting.classic_context_menu.benefit" xml:space="preserve">
+    <value>كل الأوامر دون "إظهار المزيد من الخيارات"</value>
+  </data>
+  <data name="setting.classic_context_menu.side" xml:space="preserve">
+    <value>يُعاد تشغيل المستكشف؛ ويختفي نمط قائمة ويندوز 11</value>
+  </data>
+  <data name="setting.classic_context_menu.on" xml:space="preserve">
+    <value>كلاسيكية</value>
+  </data>
+  <data name="setting.classic_context_menu.off" xml:space="preserve">
+    <value>ويندوز 11</value>
+  </data>
+  <data name="setting.sysmain.title" xml:space="preserve">
+    <value>SysMain (Superfetch)</value>
+  </data>
+  <data name="setting.sysmain.desc" xml:space="preserve">
+    <value>خدمة ويندوز تحمّل مسبقاً التطبيقات كثيرة الاستخدام في الذاكرة.</value>
+  </data>
+  <data name="setting.sysmain.benefit" xml:space="preserve">
+    <value>تبدأ التطبيقات التي تستخدمها كثيراً بشكل أسرع</value>
+  </data>
+  <data name="setting.sysmain.side" xml:space="preserve">
+    <value>نادراً ما يفيد تعطيلها؛ قد يقلل نشاط الأقراص الصلبة البطيئة</value>
+  </data>
+  <data name="setting.sysmain.on" xml:space="preserve">
+    <value>قيد التشغيل</value>
+  </data>
+  <data name="setting.sysmain.off" xml:space="preserve">
+    <value>معطّلة</value>
+  </data>
+</root>

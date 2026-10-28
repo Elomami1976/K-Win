@@ -89,14 +89,42 @@ namespace KWin.Tests
             Assert.True(missing.Count == 0, "Missing English strings:\n" + string.Join("\n", missing));
         }
 
-        /// <summary>Every string added in 1.5 is translated into Arabic and French.</summary>
+        /// <summary>Resource completeness: every English string exists in French and Arabic.</summary>
         [Theory]
         [InlineData("ar")]
         [InlineData("fr")]
-        public void All15Strings_AreTranslated(string lang)
+        public void EveryString_IsTranslated(string lang)
         {
-            var missing = Loc.Keys15.Where(k => !Loc.HasKey(lang, k)).OrderBy(k => k).ToList();
-            Assert.True(missing.Count == 0, $"Missing {lang} strings:\n" + string.Join("\n", missing));
+            var en = Loc.KeysOf("en");
+            Assert.True(en.Count > 800, "English resources not found");
+            var missing = en.Where(k => !Loc.HasKey(lang, k)).OrderBy(k => k).ToList();
+            Assert.True(missing.Count == 0, $"Missing {lang} strings:{Environment.NewLine}" + string.Join(Environment.NewLine, missing));
+            var extra = Loc.KeysOf(lang).Where(k => !Loc.HasKey("en", k)).ToList();
+            Assert.True(extra.Count == 0, $"{lang} has keys that English lacks:{Environment.NewLine}" + string.Join(Environment.NewLine, extra));
+        }
+
+        /// <summary>Every translation uses the same {0}, {1}... placeholders as English.</summary>
+        [Theory]
+        [InlineData("ar")]
+        [InlineData("fr")]
+        public void Placeholders_MatchEnglish(string lang)
+        {
+            var rx = new Regex(@"\{(\d+)[^}]*\}");
+            var problems = new List<string>();
+            foreach (var key in Loc.KeysOf("en"))
+            {
+                var en = rx.Matches(Loc.RawValue("en", key) ?? "").Select(m => m.Groups[1].Value).ToHashSet();
+                var tr = rx.Matches(Loc.RawValue(lang, key) ?? "").Select(m => m.Groups[1].Value).ToHashSet();
+                if (!en.SetEquals(tr)) problems.Add($"{key}: en {{{string.Join(",", en)}}} vs {lang} {{{string.Join(",", tr)}}}");
+            }
+            Assert.True(problems.Count == 0, string.Join(Environment.NewLine, problems));
+        }
+
+        [Fact]
+        public void Get_FallsBackAndFormats()
+        {
+            Assert.Equal("no.such.key", Loc.Get("no.such.key"));
+            Assert.Contains("42", Loc.Get("startup.op_done", 42));
         }
 
         [Fact]

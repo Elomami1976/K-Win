@@ -1,0 +1,2802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="app.title" xml:space="preserve">
+    <value>K-win — Windows 11 Optimization Tool</value>
+  </data>
+  <data name="app.name" xml:space="preserve">
+    <value>K-win</value>
+  </data>
+  <data name="app.subtitle" xml:space="preserve">
+    <value>Windows 11 Optimization Tool</value>
+  </data>
+  <data name="app.settings" xml:space="preserve">
+    <value>⚙ Settings</value>
+  </data>
+  <data name="app.ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="app.undo" xml:space="preserve">
+    <value>↶ Undo</value>
+  </data>
+  <data name="app.undo_n" xml:space="preserve">
+    <value>↶ Undo ({0})</value>
+  </data>
+  <data name="app.logs" xml:space="preserve">
+    <value>📋 Logs</value>
+  </data>
+  <data name="tab.performance" xml:space="preserve">
+    <value>⚡ Performance</value>
+  </data>
+  <data name="tab.privacy" xml:space="preserve">
+    <value>🔒 Privacy</value>
+  </data>
+  <data name="tab.cleanup" xml:space="preserve">
+    <value>🧹 Cleanup</value>
+  </data>
+  <data name="tab.tweaks" xml:space="preserve">
+    <value>🔧 Tweaks</value>
+  </data>
+  <data name="tab.apps" xml:space="preserve">
+    <value>📦 Apps</value>
+  </data>
+  <data name="tab.ram" xml:space="preserve">
+    <value>🧠 RAM</value>
+  </data>
+  <data name="common.checking" xml:space="preserve">
+    <value>Checking...</value>
+  </data>
+  <data name="common.calculating" xml:space="preserve">
+    <value>Calculating...</value>
+  </data>
+  <data name="common.loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="common.apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="common.cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="common.save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="common.refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="common.enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="common.disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="common.show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="common.hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="common.yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="common.no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="common.status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="common.error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="common.warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="common.confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="common.unable_determine" xml:space="preserve">
+    <value>Status: Unable to determine</value>
+  </data>
+  <data name="common.select_all" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="perf.power_plan" xml:space="preserve">
+    <value>Power Plan</value>
+  </data>
+  <data name="perf.power_note" xml:space="preserve">
+    <value>⚠ High Performance may increase power consumption on laptops.</value>
+  </data>
+  <data name="perf.create_ultimate" xml:space="preserve">
+    <value>＋ Create Ultimate Performance</value>
+  </data>
+  <data name="perf.visual_effects" xml:space="preserve">
+    <value>Visual Effects</value>
+  </data>
+  <data name="perf.best_perf" xml:space="preserve">
+    <value>Best Performance (disable effects)</value>
+  </data>
+  <data name="perf.also_disable_transparency" xml:space="preserve">
+    <value>Also disable transparency effects</value>
+  </data>
+  <data name="perf.disable_animations" xml:space="preserve">
+    <value>Disable window animations</value>
+  </data>
+  <data name="perf.disable_shadows" xml:space="preserve">
+    <value>Disable drop shadows on windows</value>
+  </data>
+  <data name="perf.restore_visual" xml:space="preserve">
+    <value>Restore Default Visual Effects</value>
+  </data>
+  <data name="perf.startup_programs" xml:space="preserve">
+    <value>Startup Programs</value>
+  </data>
+  <data name="perf.disable_selected" xml:space="preserve">
+    <value>Disable Selected</value>
+  </data>
+  <data name="perf.quick_actions" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="perf.one_click_boost" xml:space="preserve">
+    <value>🚀 One-Click Performance Boost</value>
+  </data>
+  <data name="perf.boost_info" xml:space="preserve">
+    <value>Applies: High Performance plan + Best visual effects + Disable transparency</value>
+  </data>
+  <data name="perf.game_mode" xml:space="preserve">
+    <value>Game Mode</value>
+  </data>
+  <data name="perf.enable_game_mode" xml:space="preserve">
+    <value>Enable Game Mode</value>
+  </data>
+  <data name="perf.disable_game_mode" xml:space="preserve">
+    <value>Disable Game Mode</value>
+  </data>
+  <data name="perf.game_mode_note" xml:space="preserve">
+    <value>Game Mode prioritizes GPU/CPU for games and stops background tasks like Windows Update.</value>
+  </data>
+  <data name="perf.fast_startup" xml:space="preserve">
+    <value>Fast Startup</value>
+  </data>
+  <data name="perf.enable_fast_startup" xml:space="preserve">
+    <value>Enable Fast Startup</value>
+  </data>
+  <data name="perf.disable_fast_startup" xml:space="preserve">
+    <value>Disable Fast Startup</value>
+  </data>
+  <data name="perf.fast_startup_note" xml:space="preserve">
+    <value>⚠ Fast Startup uses hibernation. Disabling may fix dual-boot or driver issues.</value>
+  </data>
+  <data name="perf.desc_default" xml:space="preserve">
+    <value>Select an optimization on the left to see its details here.
+
+All changes create a System Restore Point and can be undone.</value>
+  </data>
+  <data name="perf.gamemode_enabled" xml:space="preserve">
+    <value>Status: Game Mode is enabled ✓</value>
+  </data>
+  <data name="perf.gamemode_disabled" xml:space="preserve">
+    <value>Status: Game Mode is disabled</value>
+  </data>
+  <data name="perf.faststartup_enabled" xml:space="preserve">
+    <value>Status: Fast Startup is enabled ✓</value>
+  </data>
+  <data name="perf.faststartup_disabled" xml:space="preserve">
+    <value>Status: Fast Startup is disabled</value>
+  </data>
+  <data name="perf.faststartup_default" xml:space="preserve">
+    <value>Status: Not configured (likely enabled by default)</value>
+  </data>
+  <data name="perf.op.create_ultimate" xml:space="preserve">
+    <value>Create the Ultimate Performance power plan using powercfg /duplicatescheme</value>
+  </data>
+  <data name="perf.op.create_ultimate_appear" xml:space="preserve">
+    <value>The plan will appear in the power plan selector after creation</value>
+  </data>
+  <data name="perf.op.create_ultimate_title" xml:space="preserve">
+    <value>Create Ultimate Performance Plan</value>
+  </data>
+  <data name="perf.op.ultimate_created" xml:space="preserve">
+    <value>Ultimate Performance plan created</value>
+  </data>
+  <data name="perf.op.change_power_plan" xml:space="preserve">
+    <value>Change Power Plan</value>
+  </data>
+  <data name="perf.op.set_plan_to" xml:space="preserve">
+    <value>Set active power plan to: {0} ({1})</value>
+  </data>
+  <data name="perf.op.battery_warning" xml:space="preserve">
+    <value>⚠ WARNING: You are on battery power. High performance plans increase power consumption.</value>
+  </data>
+  <data name="perf.op.power_plan_set" xml:space="preserve">
+    <value>Power plan set to {0}</value>
+  </data>
+  <data name="perf.op.revert_power_plan" xml:space="preserve">
+    <value>Revert power plan to {0}</value>
+  </data>
+  <data name="perf.op.visual_effects_title" xml:space="preserve">
+    <value>Visual Effects Optimization</value>
+  </data>
+  <data name="perf.op.visual_optimized" xml:space="preserve">
+    <value>Visual effects optimized for best performance</value>
+  </data>
+  <data name="perf.op.revert_visual" xml:space="preserve">
+    <value>Revert visual effects changes</value>
+  </data>
+  <data name="perf.op.restore_visual_title" xml:space="preserve">
+    <value>Restore Default Visual Effects</value>
+  </data>
+  <data name="perf.op.visual_restored" xml:space="preserve">
+    <value>Visual effects restored to Windows defaults</value>
+  </data>
+  <data name="perf.op.revert_to_optimized_visual" xml:space="preserve">
+    <value>Revert to optimized visual effects</value>
+  </data>
+  <data name="perf.op.no_startup_selected" xml:space="preserve">
+    <value>No startup programs selected.</value>
+  </data>
+  <data name="perf.op.disable_startup_title" xml:space="preserve">
+    <value>Disable Startup Programs</value>
+  </data>
+  <data name="perf.op.startup_will_disable" xml:space="preserve">
+    <value>The following startup programs will be disabled:</value>
+  </data>
+  <data name="perf.op.startup_warning" xml:space="preserve">
+    <value>⚠ Make sure these are not critical system services.</value>
+  </data>
+  <data name="perf.op.reenable_startup" xml:space="preserve">
+    <value>Re-enable {0} startup program(s)</value>
+  </data>
+  <data name="perf.op.disabled_startup" xml:space="preserve">
+    <value>Disabled {0} startup program(s)</value>
+  </data>
+  <data name="perf.op.one_click_title" xml:space="preserve">
+    <value>One-Click Performance Boost</value>
+  </data>
+  <data name="perf.op.one_click_1" xml:space="preserve">
+    <value>1. Set power plan to High Performance</value>
+  </data>
+  <data name="perf.op.one_click_2" xml:space="preserve">
+    <value>2. Set visual effects to Best Performance (VisualFXSetting = 2)</value>
+  </data>
+  <data name="perf.op.one_click_3" xml:space="preserve">
+    <value>3. Disable transparency effects (EnableTransparency = 0)</value>
+  </data>
+  <data name="perf.op.one_click_rp" xml:space="preserve">
+    <value>Create System Restore Point before all changes</value>
+  </data>
+  <data name="perf.op.battery_boost_warning" xml:space="preserve">
+    <value>⚠ You are on battery power. High Performance plan will increase power consumption.</value>
+  </data>
+  <data name="perf.op.revert_boost" xml:space="preserve">
+    <value>Revert One-Click Performance Boost</value>
+  </data>
+  <data name="perf.op.boost_applied" xml:space="preserve">
+    <value>One-Click Performance Boost applied!</value>
+  </data>
+  <data name="perf.op.gamemode_prioritizes" xml:space="preserve">
+    <value>Game Mode prioritizes system resources for games.</value>
+  </data>
+  <data name="perf.op.gamemode_restores" xml:space="preserve">
+    <value>Disabling Game Mode restores normal resource allocation.</value>
+  </data>
+  <data name="perf.op.gamemode_set" xml:space="preserve">
+    <value>Game Mode {0}</value>
+  </data>
+  <data name="perf.op.revert_gamemode" xml:space="preserve">
+    <value>Revert Game Mode to {0}</value>
+  </data>
+  <data name="perf.op.fast_startup_hibernate" xml:space="preserve">
+    <value>Fast Startup uses a partial hibernation file to speed up boot.</value>
+  </data>
+  <data name="perf.op.fast_startup_disable_note" xml:space="preserve">
+    <value>Disabling Fast Startup forces a full shutdown, which may fix dual-boot/driver issues.</value>
+  </data>
+  <data name="perf.op.fast_startup_longer_boot" xml:space="preserve">
+    <value>⚠ Boot times may be slightly longer after disabling.</value>
+  </data>
+  <data name="perf.op.revert_fast_startup" xml:space="preserve">
+    <value>Revert Fast Startup to {0}</value>
+  </data>
+  <data name="perf.op.fast_startup_set" xml:space="preserve">
+    <value>Fast Startup {0}</value>
+  </data>
+  <data name="perf.op.create_rp" xml:space="preserve">
+    <value>Create System Restore Point before changes</value>
+  </data>
+  <data name="priv.telemetry" xml:space="preserve">
+    <value>Telemetry</value>
+  </data>
+  <data name="priv.reduce_telemetry" xml:space="preserve">
+    <value>Reduce Telemetry to Basic</value>
+  </data>
+  <data name="priv.telemetry_note" xml:space="preserve">
+    <value>⚠ Sets telemetry to Basic (1). Setting to 0 may break Windows Update.</value>
+  </data>
+  <data name="priv.ad_id" xml:space="preserve">
+    <value>Advertising ID</value>
+  </data>
+  <data name="priv.disable_ad_id" xml:space="preserve">
+    <value>Disable Advertising ID</value>
+  </data>
+  <data name="priv.reset_ad_id" xml:space="preserve">
+    <value>Reset Advertising ID</value>
+  </data>
+  <data name="priv.activity_history" xml:space="preserve">
+    <value>Activity History</value>
+  </data>
+  <data name="priv.clear_activity" xml:space="preserve">
+    <value>Clear Activity History</value>
+  </data>
+  <data name="priv.activity_note" xml:space="preserve">
+    <value>⚠ Deletes timeline, recent items, jump lists, clipboard history. Also disables future activity collection via registry.</value>
+  </data>
+  <data name="priv.recall" xml:space="preserve">
+    <value>Windows Recall / AI (24H2+)</value>
+  </data>
+  <data name="priv.recall_checking" xml:space="preserve">
+    <value>Checking Recall status...</value>
+  </data>
+  <data name="priv.recall_unavailable" xml:space="preserve">
+    <value>Not available on this Windows version</value>
+  </data>
+  <data name="priv.disable_recall" xml:space="preserve">
+    <value>Disable Windows Recall</value>
+  </data>
+  <data name="priv.security" xml:space="preserve">
+    <value>Windows Security</value>
+  </data>
+  <data name="priv.open_security" xml:space="preserve">
+    <value>Open Windows Security</value>
+  </data>
+  <data name="priv.security_note" xml:space="preserve">
+    <value>Opens Windows Security settings (read-only, no changes made).</value>
+  </data>
+  <data name="priv.telemetry_security" xml:space="preserve">
+    <value>Status: Security (0) — Most restrictive</value>
+  </data>
+  <data name="priv.telemetry_basic" xml:space="preserve">
+    <value>Status: Basic (1) — Reduced telemetry</value>
+  </data>
+  <data name="priv.telemetry_enhanced" xml:space="preserve">
+    <value>Status: Enhanced (2)</value>
+  </data>
+  <data name="priv.telemetry_full" xml:space="preserve">
+    <value>Status: Full (3) — Maximum telemetry</value>
+  </data>
+  <data name="priv.telemetry_unknown" xml:space="preserve">
+    <value>Status: Unknown ({0})</value>
+  </data>
+  <data name="priv.telemetry_default" xml:space="preserve">
+    <value>Status: Default (not configured by policy)</value>
+  </data>
+  <data name="priv.ad_disabled" xml:space="preserve">
+    <value>Status: Advertising ID is disabled ✓</value>
+  </data>
+  <data name="priv.ad_enabled" xml:space="preserve">
+    <value>Status: Advertising ID is enabled</value>
+  </data>
+  <data name="priv.ad_current" xml:space="preserve">
+    <value>Current ID: {0}</value>
+  </data>
+  <data name="priv.ad_not_set" xml:space="preserve">
+    <value>Current ID: (not set)</value>
+  </data>
+  <data name="priv.ad_unable_read" xml:space="preserve">
+    <value>Current ID: unable to read</value>
+  </data>
+  <data name="priv.recall_disabled" xml:space="preserve">
+    <value>Status: Windows Recall is disabled ✓</value>
+  </data>
+  <data name="priv.recall_active" xml:space="preserve">
+    <value>Status: Windows Recall may be active</value>
+  </data>
+  <data name="priv.op.reduce_telemetry_title" xml:space="preserve">
+    <value>Reduce Telemetry</value>
+  </data>
+  <data name="priv.op.telemetry_may_affect" xml:space="preserve">
+    <value>⚠ May affect Windows Update diagnostic data collection.</value>
+  </data>
+  <data name="priv.op.revert_telemetry" xml:space="preserve">
+    <value>Revert telemetry changes</value>
+  </data>
+  <data name="priv.op.telemetry_reduced" xml:space="preserve">
+    <value>Telemetry reduced to Basic level</value>
+  </data>
+  <data name="priv.op.disable_ad_title" xml:space="preserve">
+    <value>Disable Advertising ID</value>
+  </data>
+  <data name="priv.op.ad_prevents_apps" xml:space="preserve">
+    <value>This prevents apps from using your advertising ID for personalized ads.</value>
+  </data>
+  <data name="priv.op.reenable_ad" xml:space="preserve">
+    <value>Re-enable Advertising ID</value>
+  </data>
+  <data name="priv.op.ad_disabled" xml:space="preserve">
+    <value>Advertising ID disabled</value>
+  </data>
+  <data name="priv.op.reset_ad_title" xml:space="preserve">
+    <value>Reset Advertising ID</value>
+  </data>
+  <data name="priv.op.ad_new_guid" xml:space="preserve">
+    <value>This generates a new random Advertising ID, breaking ad tracking linkage.</value>
+  </data>
+  <data name="priv.op.ad_backup_note" xml:space="preserve">
+    <value>Your old Advertising ID will be backed up and can be restored via Undo.</value>
+  </data>
+  <data name="priv.op.ad_replaces_warning" xml:space="preserve">
+    <value>⚠ This replaces your current Advertising ID with a new random one.</value>
+  </data>
+  <data name="priv.op.revert_ad_reset" xml:space="preserve">
+    <value>Revert Advertising ID reset</value>
+  </data>
+  <data name="priv.op.ad_reset_done" xml:space="preserve">
+    <value>Advertising ID reset to new random value</value>
+  </data>
+  <data name="priv.op.clear_activity_confirm" xml:space="preserve">
+    <value>This will permanently delete your Activity History data.
+
+This includes:
+• Timeline activity records &amp; database
+• Connected Devices Platform data
+• Recent Items &amp; Jump List data
+• Clipboard history
+• Explorer recent files tracking
+
+Registry changes (reversible via Undo):
+• Disable Timeline collection
+• Disable Activity History publishing
+
+File deletions CANNOT be undone. Continue?</value>
+  </data>
+  <data name="priv.op.confirm_irreversible" xml:space="preserve">
+    <value>K-win — Confirm Irreversible Action</value>
+  </data>
+  <data name="priv.op.revert_activity_registry" xml:space="preserve">
+    <value>Revert Activity History registry settings (file deletions cannot be undone)</value>
+  </data>
+  <data name="priv.op.activity_cleared" xml:space="preserve">
+    <value>Activity history cleared ({0} files removed, {1} registry keys changed)</value>
+  </data>
+  <data name="priv.op.disable_recall_title" xml:space="preserve">
+    <value>Disable Windows Recall</value>
+  </data>
+  <data name="priv.op.recall_disables_ai" xml:space="preserve">
+    <value>This disables Windows Recall / AI snapshot features on Windows 11 24H2+.</value>
+  </data>
+  <data name="priv.op.reenable_recall" xml:space="preserve">
+    <value>Re-enable Windows Recall</value>
+  </data>
+  <data name="priv.op.recall_disabled" xml:space="preserve">
+    <value>Windows Recall disabled</value>
+  </data>
+  <data name="priv.dns" xml:space="preserve">
+    <value>DNS Server</value>
+  </data>
+  <data name="priv.dns_auto" xml:space="preserve">
+    <value>Automatic (DHCP)</value>
+  </data>
+  <data name="priv.dns_note" xml:space="preserve">
+    <value>Changing DNS can improve speed and privacy. Cloudflare &amp; Quad9 are privacy-focused.</value>
+  </data>
+  <data name="priv.dns_no_adapter" xml:space="preserve">
+    <value>Status: No active network adapter found</value>
+  </data>
+  <data name="priv.dns_status_auto" xml:space="preserve">
+    <value>Status: Using automatic DNS (DHCP)</value>
+  </data>
+  <data name="priv.dns_status_set" xml:space="preserve">
+    <value>Status: {0} ({1}) ✓</value>
+  </data>
+  <data name="priv.dns_status_custom" xml:space="preserve">
+    <value>Status: Custom DNS ({0})</value>
+  </data>
+  <data name="priv.dns_resetting" xml:space="preserve">
+    <value>Resetting DNS to automatic...</value>
+  </data>
+  <data name="priv.dns_set_auto" xml:space="preserve">
+    <value>DNS reset to automatic (DHCP)</value>
+  </data>
+  <data name="priv.dns_applying" xml:space="preserve">
+    <value>Setting DNS to {0}...</value>
+  </data>
+  <data name="priv.dns_set_ok" xml:space="preserve">
+    <value>DNS set to {0}</value>
+  </data>
+  <data name="priv.op.dns_title" xml:space="preserve">
+    <value>Change DNS Server</value>
+  </data>
+  <data name="priv.op.dns_set_desc" xml:space="preserve">
+    <value>Set DNS to {0} (Primary: {1}, Secondary: {2})</value>
+  </data>
+  <data name="priv.hosts_blocker" xml:space="preserve">
+    <value>Ad Blocker (Hosts)</value>
+  </data>
+  <data name="priv.hosts_enable" xml:space="preserve">
+    <value>🛡 Enable Ad Blocker</value>
+  </data>
+  <data name="priv.hosts_disable" xml:space="preserve">
+    <value>Disable Ad Blocker</value>
+  </data>
+  <data name="priv.hosts_note" xml:space="preserve">
+    <value>Blocks ads &amp; trackers system-wide using the hosts file (Steven Black list).</value>
+  </data>
+  <data name="priv.hosts_active" xml:space="preserve">
+    <value>Status: Active — {0} domains blocked ✓</value>
+  </data>
+  <data name="priv.hosts_inactive" xml:space="preserve">
+    <value>Status: Not active</value>
+  </data>
+  <data name="priv.hosts_downloading" xml:space="preserve">
+    <value>Downloading ad block list...</value>
+  </data>
+  <data name="priv.hosts_removing" xml:space="preserve">
+    <value>Removing ad block entries...</value>
+  </data>
+  <data name="priv.hosts_enabled_ok" xml:space="preserve">
+    <value>Ad blocker enabled — {0} domains blocked</value>
+  </data>
+  <data name="priv.hosts_disabled_ok" xml:space="preserve">
+    <value>Ad blocker disabled</value>
+  </data>
+  <data name="priv.op.hosts_title" xml:space="preserve">
+    <value>Enable Hosts-based Ad Blocker</value>
+  </data>
+  <data name="priv.op.hosts_add_desc" xml:space="preserve">
+    <value>Download Steven Black's hosts list and add blocking rules to Windows hosts file</value>
+  </data>
+  <data name="priv.op.hosts_domains" xml:space="preserve">
+    <value>Blocks ~60,000+ ad/tracker domains by redirecting them to 0.0.0.0</value>
+  </data>
+  <data name="clean.temp_files" xml:space="preserve">
+    <value>Temporary Files</value>
+  </data>
+  <data name="clean.clean_temp" xml:space="preserve">
+    <value>Clean Temp Files</value>
+  </data>
+  <data name="clean.browser_cache" xml:space="preserve">
+    <value>Browser Cache</value>
+  </data>
+  <data name="clean.clean_browser" xml:space="preserve">
+    <value>Clean Browser Cache</value>
+  </data>
+  <data name="clean.store_cache" xml:space="preserve">
+    <value>Microsoft Store Cache</value>
+  </data>
+  <data name="clean.reset_store" xml:space="preserve">
+    <value>Reset Store Cache</value>
+  </data>
+  <data name="clean.store_note" xml:space="preserve">
+    <value>Runs wsreset.exe to clear Microsoft Store cache. 30s timeout.</value>
+  </data>
+  <data name="clean.recycle_bin" xml:space="preserve">
+    <value>Recycle Bin</value>
+  </data>
+  <data name="clean.empty_recycle" xml:space="preserve">
+    <value>Empty Recycle Bin</value>
+  </data>
+  <data name="clean.sfc" xml:space="preserve">
+    <value>System File Checker</value>
+  </data>
+  <data name="clean.run_sfc" xml:space="preserve">
+    <value>Run sfc /scannow</value>
+  </data>
+  <data name="clean.sfc_note" xml:space="preserve">
+    <value>Scans and repairs Windows system files. May take several minutes.
+Cannot be cancelled once started.</value>
+  </data>
+  <data name="clean.dism" xml:space="preserve">
+    <value>DISM Component Cleanup</value>
+  </data>
+  <data name="clean.run_dism" xml:space="preserve">
+    <value>Run DISM Cleanup</value>
+  </data>
+  <data name="clean.dism_note" xml:space="preserve">
+    <value>Cleans up superseded Windows components. May take several minutes.</value>
+  </data>
+  <data name="clean.no_browser_cache" xml:space="preserve">
+    <value>No browser cache found.</value>
+  </data>
+  <data name="clean.unable_calculate" xml:space="preserve">
+    <value>Unable to calculate.</value>
+  </data>
+  <data name="clean.estimated" xml:space="preserve">
+    <value>Estimated: {0} can be freed</value>
+  </data>
+  <data name="clean.recycle_items" xml:space="preserve">
+    <value>Contains {0} item(s), {1}</value>
+  </data>
+  <data name="clean.recycle_empty" xml:space="preserve">
+    <value>Recycle Bin is empty</value>
+  </data>
+  <data name="clean.recycle_unable" xml:space="preserve">
+    <value>Unable to determine size</value>
+  </data>
+  <data name="clean.calculating_size" xml:space="preserve">
+    <value>Calculating size...</value>
+  </data>
+  <data name="clean.op.clean_temp_title" xml:space="preserve">
+    <value>Clean Temporary Files</value>
+  </data>
+  <data name="clean.op.total_estimated" xml:space="preserve">
+    <value>Total estimated: {0}</value>
+  </data>
+  <data name="clean.op.cleaning_temp" xml:space="preserve">
+    <value>Cleaning temporary files...</value>
+  </data>
+  <data name="clean.op.cleaned_files" xml:space="preserve">
+    <value>Cleaned {0} files, freed {1}</value>
+  </data>
+  <data name="clean.op.cleanup_failed" xml:space="preserve">
+    <value>Cleanup failed: {0}</value>
+  </data>
+  <data name="clean.op.clean_browser_title" xml:space="preserve">
+    <value>Clean Browser Cache</value>
+  </data>
+  <data name="clean.op.browser_running_warning" xml:space="preserve">
+    <value>⚠ One or more browsers are running. Some files may be locked.</value>
+  </data>
+  <data name="clean.op.cleaning_browser" xml:space="preserve">
+    <value>Cleaning browser caches...</value>
+  </data>
+  <data name="clean.op.reset_store_title" xml:space="preserve">
+    <value>Reset Store Cache</value>
+  </data>
+  <data name="clean.op.store_run_wsreset" xml:space="preserve">
+    <value>Run wsreset.exe to clear Microsoft Store cache</value>
+  </data>
+  <data name="clean.op.store_window_appear" xml:space="preserve">
+    <value>The Microsoft Store window will briefly appear</value>
+  </data>
+  <data name="clean.op.store_timeout" xml:space="preserve">
+    <value>30 second timeout</value>
+  </data>
+  <data name="clean.op.resetting_store" xml:space="preserve">
+    <value>Resetting Microsoft Store cache...</value>
+  </data>
+  <data name="clean.op.store_reset_ok" xml:space="preserve">
+    <value>Microsoft Store cache reset successfully</value>
+  </data>
+  <data name="clean.op.store_reset_fail" xml:space="preserve">
+    <value>Store cache reset failed: {0}</value>
+  </data>
+  <data name="clean.op.recycle_confirm" xml:space="preserve">
+    <value>Are you sure you want to permanently empty the Recycle Bin?
+
+This cannot be undone.</value>
+  </data>
+  <data name="clean.op.recycle_emptied" xml:space="preserve">
+    <value>Recycle Bin emptied</value>
+  </data>
+  <data name="clean.op.sfc_title" xml:space="preserve">
+    <value>System File Checker</value>
+  </data>
+  <data name="clean.op.sfc_run" xml:space="preserve">
+    <value>Run: sfc.exe /scannow</value>
+  </data>
+  <data name="clean.op.sfc_scans" xml:space="preserve">
+    <value>Scans all protected system files and replaces corrupted files</value>
+  </data>
+  <data name="clean.op.sfc_time" xml:space="preserve">
+    <value>This may take 10-15 minutes</value>
+  </data>
+  <data name="clean.op.sfc_no_cancel" xml:space="preserve">
+    <value>Cannot be cancelled once started</value>
+  </data>
+  <data name="clean.op.running_sfc" xml:space="preserve">
+    <value>Running System File Checker (this may take several minutes)...</value>
+  </data>
+  <data name="clean.op.sfc_complete" xml:space="preserve">
+    <value>System File Checker completed</value>
+  </data>
+  <data name="clean.op.sfc_results" xml:space="preserve">
+    <value>K-win — SFC Results</value>
+  </data>
+  <data name="clean.op.dism_title" xml:space="preserve">
+    <value>DISM Component Cleanup</value>
+  </data>
+  <data name="clean.op.dism_run" xml:space="preserve">
+    <value>Run: dism.exe /Online /Cleanup-Image /StartComponentCleanup</value>
+  </data>
+  <data name="clean.op.dism_removes" xml:space="preserve">
+    <value>Removes superseded Windows component versions</value>
+  </data>
+  <data name="clean.op.dism_time" xml:space="preserve">
+    <value>This may take 10-15 minutes</value>
+  </data>
+  <data name="clean.op.running_dism" xml:space="preserve">
+    <value>Running DISM cleanup (this may take several minutes)...</value>
+  </data>
+  <data name="clean.op.dism_complete" xml:space="preserve">
+    <value>DISM cleanup completed</value>
+  </data>
+  <data name="tweak.dark_mode" xml:space="preserve">
+    <value>Dark / Light Mode</value>
+  </data>
+  <data name="tweak.enable_dark" xml:space="preserve">
+    <value>🌙 Enable Dark Mode</value>
+  </data>
+  <data name="tweak.enable_light" xml:space="preserve">
+    <value>☀ Enable Light Mode</value>
+  </data>
+  <data name="tweak.transparency" xml:space="preserve">
+    <value>Transparency Effects</value>
+  </data>
+  <data name="tweak.enable_transparency" xml:space="preserve">
+    <value>Enable Transparency</value>
+  </data>
+  <data name="tweak.disable_transparency" xml:space="preserve">
+    <value>Disable Transparency</value>
+  </data>
+  <data name="tweak.file_ext" xml:space="preserve">
+    <value>File Extensions</value>
+  </data>
+  <data name="tweak.show_ext" xml:space="preserve">
+    <value>Show File Extensions</value>
+  </data>
+  <data name="tweak.hide_ext" xml:space="preserve">
+    <value>Hide File Extensions</value>
+  </data>
+  <data name="tweak.ext_note" xml:space="preserve">
+    <value>Showing extensions helps identify file types and spot suspicious files.</value>
+  </data>
+  <data name="tweak.widgets" xml:space="preserve">
+    <value>Widgets</value>
+  </data>
+  <data name="tweak.disable_widgets" xml:space="preserve">
+    <value>Disable Widgets</value>
+  </data>
+  <data name="tweak.enable_widgets" xml:space="preserve">
+    <value>Enable Widgets</value>
+  </data>
+  <data name="tweak.chat" xml:space="preserve">
+    <value>Chat Icon (Taskbar)</value>
+  </data>
+  <data name="tweak.hide_chat" xml:space="preserve">
+    <value>Hide Chat Icon</value>
+  </data>
+  <data name="tweak.show_chat" xml:space="preserve">
+    <value>Show Chat Icon</value>
+  </data>
+  <data name="tweak.menu_delay" xml:space="preserve">
+    <value>Menu Show Delay</value>
+  </data>
+  <data name="tweak.instant_menus" xml:space="preserve">
+    <value>Instant Menus (0 ms)</value>
+  </data>
+  <data name="tweak.default_delay" xml:space="preserve">
+    <value>Default (400 ms)</value>
+  </data>
+  <data name="tweak.menu_note" xml:space="preserve">
+    <value>Controls how long Windows waits before showing submenus. Default is 400 ms.</value>
+  </data>
+  <data name="tweak.shutdown_speed" xml:space="preserve">
+    <value>Shutdown Speed</value>
+  </data>
+  <data name="tweak.optimize_shutdown" xml:space="preserve">
+    <value>Optimize Shutdown Speed</value>
+  </data>
+  <data name="tweak.restore_defaults" xml:space="preserve">
+    <value>Restore Defaults</value>
+  </data>
+  <data name="tweak.shutdown_note" xml:space="preserve">
+    <value>Reduces time Windows waits for apps/services to close during shutdown.</value>
+  </data>
+  <data name="tweak.autoendtask" xml:space="preserve">
+    <value>AutoEndTask (Kill Hung Apps)</value>
+  </data>
+  <data name="tweak.enable_autoend" xml:space="preserve">
+    <value>Enable AutoEndTask</value>
+  </data>
+  <data name="tweak.disable_autoend" xml:space="preserve">
+    <value>Disable AutoEndTask</value>
+  </data>
+  <data name="tweak.autoend_note" xml:space="preserve">
+    <value>Automatically kills unresponsive apps during shutdown instead of showing a dialog.</value>
+  </data>
+  <data name="tweak.dark_active" xml:space="preserve">
+    <value>Status: Dark Mode is active ✓</value>
+  </data>
+  <data name="tweak.light_active" xml:space="preserve">
+    <value>Status: Light Mode is active</value>
+  </data>
+  <data name="tweak.dark_default" xml:space="preserve">
+    <value>Status: Default (Light)</value>
+  </data>
+  <data name="tweak.trans_enabled" xml:space="preserve">
+    <value>Status: Transparency is enabled ✓</value>
+  </data>
+  <data name="tweak.trans_disabled" xml:space="preserve">
+    <value>Status: Transparency is disabled</value>
+  </data>
+  <data name="tweak.trans_default" xml:space="preserve">
+    <value>Status: Default (enabled)</value>
+  </data>
+  <data name="tweak.ext_visible" xml:space="preserve">
+    <value>Status: File extensions are visible ✓</value>
+  </data>
+  <data name="tweak.ext_hidden" xml:space="preserve">
+    <value>Status: File extensions are hidden</value>
+  </data>
+  <data name="tweak.ext_default" xml:space="preserve">
+    <value>Status: Default (hidden)</value>
+  </data>
+  <data name="tweak.widgets_disabled" xml:space="preserve">
+    <value>Status: Widgets are disabled ✓</value>
+  </data>
+  <data name="tweak.widgets_enabled" xml:space="preserve">
+    <value>Status: Widgets are enabled</value>
+  </data>
+  <data name="tweak.widgets_default" xml:space="preserve">
+    <value>Status: Default (enabled)</value>
+  </data>
+  <data name="tweak.chat_hidden" xml:space="preserve">
+    <value>Status: Chat icon is hidden ✓</value>
+  </data>
+  <data name="tweak.chat_visible" xml:space="preserve">
+    <value>Status: Chat icon is visible</value>
+  </data>
+  <data name="tweak.chat_default" xml:space="preserve">
+    <value>Status: Default (visible)</value>
+  </data>
+  <data name="tweak.menu_status" xml:space="preserve">
+    <value>Status: Current delay = {0} ms</value>
+  </data>
+  <data name="tweak.menu_default" xml:space="preserve">
+    <value>Status: Default (400 ms)</value>
+  </data>
+  <data name="tweak.shutdown_status" xml:space="preserve">
+    <value>App timeout: {0} ms | Service timeout: {1} ms</value>
+  </data>
+  <data name="tweak.autoend_enabled" xml:space="preserve">
+    <value>Status: AutoEndTask is enabled ✓</value>
+  </data>
+  <data name="tweak.autoend_disabled" xml:space="preserve">
+    <value>Status: AutoEndTask is disabled</value>
+  </data>
+  <data name="tweak.autoend_default" xml:space="preserve">
+    <value>Status: Default (disabled)</value>
+  </data>
+  <data name="tweak.context_menu" xml:space="preserve">
+    <value>Right-Click Menu Style</value>
+  </data>
+  <data name="tweak.ctx_old" xml:space="preserve">
+    <value>Classic (Win10)</value>
+  </data>
+  <data name="tweak.ctx_new" xml:space="preserve">
+    <value>Modern (Win11)</value>
+  </data>
+  <data name="tweak.ctx_note" xml:space="preserve">
+    <value>Restores the full right-click context menu from Windows 10. Requires Explorer restart.</value>
+  </data>
+  <data name="tweak.ctx_old_active" xml:space="preserve">
+    <value>Status: Classic (Win10) context menu ✓</value>
+  </data>
+  <data name="tweak.ctx_new_active" xml:space="preserve">
+    <value>Status: Modern (Win11) context menu</value>
+  </data>
+  <data name="tweak.op.switch_mode" xml:space="preserve">
+    <value>Switch to {0} Mode</value>
+  </data>
+  <data name="tweak.op.switches_to" xml:space="preserve">
+    <value>Switches Windows to {0} Mode for apps and system.</value>
+  </data>
+  <data name="tweak.op.revert_mode" xml:space="preserve">
+    <value>Revert to {0} Mode</value>
+  </data>
+  <data name="tweak.op.switched_to" xml:space="preserve">
+    <value>Switched to {0} Mode</value>
+  </data>
+  <data name="tweak.op.trans_enable_desc" xml:space="preserve">
+    <value>Enables transparency effects for taskbar, Start menu, and Action Center.</value>
+  </data>
+  <data name="tweak.op.trans_disable_desc" xml:space="preserve">
+    <value>Disabling transparency can slightly improve performance on older hardware.</value>
+  </data>
+  <data name="tweak.op.revert_trans" xml:space="preserve">
+    <value>Revert transparency to {0}</value>
+  </data>
+  <data name="tweak.op.trans_set" xml:space="preserve">
+    <value>Transparency {0}</value>
+  </data>
+  <data name="tweak.op.ext_show_desc" xml:space="preserve">
+    <value>File extensions will be visible in Explorer (e.g., document.pdf instead of document).</value>
+  </data>
+  <data name="tweak.op.ext_hide_desc" xml:space="preserve">
+    <value>File extensions will be hidden in Explorer.</value>
+  </data>
+  <data name="tweak.op.revert_ext" xml:space="preserve">
+    <value>Revert file extensions to {0}</value>
+  </data>
+  <data name="tweak.op.ext_set" xml:space="preserve">
+    <value>File extensions {0} — restart Explorer to take effect</value>
+  </data>
+  <data name="tweak.op.widgets_enable_desc" xml:space="preserve">
+    <value>Re-enables the Widgets button on the taskbar.</value>
+  </data>
+  <data name="tweak.op.widgets_disable_desc" xml:space="preserve">
+    <value>Removes the Widgets button from the taskbar.</value>
+  </data>
+  <data name="tweak.op.revert_widgets" xml:space="preserve">
+    <value>Revert Widgets to {0}</value>
+  </data>
+  <data name="tweak.op.widgets_set" xml:space="preserve">
+    <value>Widgets {0}</value>
+  </data>
+  <data name="tweak.op.chat_show_desc" xml:space="preserve">
+    <value>Re-enables the Chat (Teams) icon on the taskbar.</value>
+  </data>
+  <data name="tweak.op.chat_hide_desc" xml:space="preserve">
+    <value>Removes the Chat (Teams) icon from the taskbar.</value>
+  </data>
+  <data name="tweak.op.revert_chat" xml:space="preserve">
+    <value>Revert Chat icon to {0}</value>
+  </data>
+  <data name="tweak.op.chat_set" xml:space="preserve">
+    <value>Chat icon {0}</value>
+  </data>
+  <data name="tweak.op.menu_instant" xml:space="preserve">
+    <value>Menus will appear instantly with no delay.</value>
+  </data>
+  <data name="tweak.op.menu_delay_set" xml:space="preserve">
+    <value>Menu delay set to {0} ms (Windows default: 400).</value>
+  </data>
+  <data name="tweak.op.set_menu_title" xml:space="preserve">
+    <value>Set Menu Delay to {0} ms</value>
+  </data>
+  <data name="tweak.op.revert_menu" xml:space="preserve">
+    <value>Revert MenuShowDelay</value>
+  </data>
+  <data name="tweak.op.menu_set" xml:space="preserve">
+    <value>Menu show delay set to {0} ms</value>
+  </data>
+  <data name="tweak.op.shutdown_title" xml:space="preserve">
+    <value>Optimize Shutdown Speed</value>
+  </data>
+  <data name="tweak.op.shutdown_reduces" xml:space="preserve">
+    <value>Reduces how long Windows waits for unresponsive apps/services before closing them.</value>
+  </data>
+  <data name="tweak.op.revert_shutdown" xml:space="preserve">
+    <value>Revert shutdown speed optimization</value>
+  </data>
+  <data name="tweak.op.shutdown_optimized" xml:space="preserve">
+    <value>Shutdown speed optimized</value>
+  </data>
+  <data name="tweak.op.restore_shutdown_title" xml:space="preserve">
+    <value>Restore Default Shutdown Speed</value>
+  </data>
+  <data name="tweak.op.shutdown_restores" xml:space="preserve">
+    <value>Restores default Windows shutdown timeouts.</value>
+  </data>
+  <data name="tweak.op.revert_shutdown_optimized" xml:space="preserve">
+    <value>Revert to optimized shutdown speed</value>
+  </data>
+  <data name="tweak.op.shutdown_restored" xml:space="preserve">
+    <value>Shutdown speed restored to defaults</value>
+  </data>
+  <data name="tweak.op.autoend_enable_desc" xml:space="preserve">
+    <value>Windows will automatically kill unresponsive apps during shutdown/logoff.</value>
+  </data>
+  <data name="tweak.op.autoend_disable_desc" xml:space="preserve">
+    <value>Windows will prompt you to wait/close when apps are unresponsive during shutdown.</value>
+  </data>
+  <data name="tweak.op.revert_autoend" xml:space="preserve">
+    <value>Revert AutoEndTask to {0}</value>
+  </data>
+  <data name="tweak.op.autoend_set" xml:space="preserve">
+    <value>AutoEndTask {0}</value>
+  </data>
+  <data name="tweak.op.ctx_old_desc" xml:space="preserve">
+    <value>Creates registry key to force Windows 10 classic context menu.</value>
+  </data>
+  <data name="tweak.op.ctx_new_desc" xml:space="preserve">
+    <value>Removes registry override to restore Windows 11 modern context menu.</value>
+  </data>
+  <data name="tweak.op.ctx_restart_explorer" xml:space="preserve">
+    <value>Explorer will be restarted for the change to take effect immediately.</value>
+  </data>
+  <data name="tweak.op.revert_ctx" xml:space="preserve">
+    <value>Revert context menu to {0}</value>
+  </data>
+  <data name="tweak.op.ctx_set" xml:space="preserve">
+    <value>Context menu set to {0}</value>
+  </data>
+  <data name="apps.show" xml:space="preserve">
+    <value>Show:</value>
+  </data>
+  <data name="apps.all_store" xml:space="preserve">
+    <value>All Store Apps</value>
+  </data>
+  <data name="apps.bloatware_only" xml:space="preserve">
+    <value>Bloatware Only</value>
+  </data>
+  <data name="apps.desktop_apps" xml:space="preserve">
+    <value>Desktop Apps (Win32)</value>
+  </data>
+  <data name="apps.search" xml:space="preserve">
+    <value>🔍 Search apps...</value>
+  </data>
+  <data name="apps.refresh" xml:space="preserve">
+    <value>↻ Refresh</value>
+  </data>
+  <data name="apps.actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="apps.uninstall_selected" xml:space="preserve">
+    <value>🗑 Uninstall Selected</value>
+  </data>
+  <data name="apps.bloatware_remover" xml:space="preserve">
+    <value>🧹 One-Click Bloatware Remover</value>
+  </data>
+  <data name="apps.remove_all_users" xml:space="preserve">
+    <value>Remove for All Users</value>
+  </data>
+  <data name="apps.loading" xml:space="preserve">
+    <value>Loading apps...</value>
+  </data>
+  <data name="apps.protected_warning" xml:space="preserve">
+    <value>⚠ Protected system apps (Start Menu, Explorer, Store, Security) are hidden and cannot be removed.</value>
+  </data>
+  <data name="apps.col_name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="apps.col_publisher" xml:space="preserve">
+    <value>Publisher</value>
+  </data>
+  <data name="apps.col_version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="apps.col_type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="apps.col_size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="apps.count" xml:space="preserve">
+    <value>{0} apps shown</value>
+  </data>
+  <data name="apps.count_selected" xml:space="preserve">
+    <value>{0} apps shown, {1} selected</value>
+  </data>
+  <data name="apps.loaded" xml:space="preserve">
+    <value>Loaded {0} apps</value>
+  </data>
+  <data name="apps.loading_apps" xml:space="preserve">
+    <value>Loading installed apps...</value>
+  </data>
+  <data name="apps.op.no_selected" xml:space="preserve">
+    <value>No apps selected. Check the boxes next to apps you want to uninstall.</value>
+  </data>
+  <data name="apps.op.uninstall_title" xml:space="preserve">
+    <value>Uninstall Apps</value>
+  </data>
+  <data name="apps.op.will_uninstall" xml:space="preserve">
+    <value>The following {0} app(s) will be uninstalled:</value>
+  </data>
+  <data name="apps.op.desktop_note" xml:space="preserve">
+    <value>⚠ Desktop app uninstalls may show their own dialogs. Store apps are removed silently.</value>
+  </data>
+  <data name="apps.op.uninstalling" xml:space="preserve">
+    <value>Uninstalling: {0}...</value>
+  </data>
+  <data name="apps.op.done_results" xml:space="preserve">
+    <value>Done: {0} removed, {1} failed</value>
+  </data>
+  <data name="apps.op.errors_title" xml:space="preserve">
+    <value>Completed with {0} error(s):
+
+{1}</value>
+  </data>
+  <data name="apps.op.success_uninstall" xml:space="preserve">
+    <value>Successfully uninstalled {0} app(s)</value>
+  </data>
+  <data name="apps.op.uninstalled_n" xml:space="preserve">
+    <value>Uninstalled {0} app(s)</value>
+  </data>
+  <data name="apps.op.scanning_bloat" xml:space="preserve">
+    <value>Scanning for bloatware...</value>
+  </data>
+  <data name="apps.op.no_bloatware" xml:space="preserve">
+    <value>No bloatware detected! Your system is clean.</value>
+  </data>
+  <data name="apps.op.bloat_found" xml:space="preserve">
+    <value>Found {0} bloatware app(s) to remove:</value>
+  </data>
+  <data name="apps.op.bloat_current_user" xml:space="preserve">
+    <value>Apps will be removed for current user.</value>
+  </data>
+  <data name="apps.op.bloat_provisioned" xml:space="preserve">
+    <value>Provisioned packages will also be removed to prevent reinstallation.</value>
+  </data>
+  <data name="apps.op.bloat_title" xml:space="preserve">
+    <value>One-Click Bloatware Remover</value>
+  </data>
+  <data name="apps.op.bloat_warning" xml:space="preserve">
+    <value>⚠ This cannot be undone. Removed apps can be reinstalled from the Microsoft Store.</value>
+  </data>
+  <data name="apps.op.removing" xml:space="preserve">
+    <value>[{0}/{1}] Removing {2}...</value>
+  </data>
+  <data name="apps.op.bloat_complete" xml:space="preserve">
+    <value>Bloatware Removal Complete
+
+Removed: {0}
+Failed: {1}
+
+Details:
+{2}</value>
+  </data>
+  <data name="apps.op.bloat_results_title" xml:space="preserve">
+    <value>K-win — Bloatware Remover</value>
+  </data>
+  <data name="apps.op.bloat_status" xml:space="preserve">
+    <value>Bloatware removal: {0} removed, {1} failed</value>
+  </data>
+  <data name="apps.op.no_selected_short" xml:space="preserve">
+    <value>No apps selected.</value>
+  </data>
+  <data name="apps.op.store_only" xml:space="preserve">
+    <value>Only Store/UWP apps can be removed for all users.
+Desktop (Win32) apps must be uninstalled individually.</value>
+  </data>
+  <data name="apps.op.remove_all_title" xml:space="preserve">
+    <value>Remove for All Users</value>
+  </data>
+  <data name="apps.op.remove_all_desc" xml:space="preserve">
+    <value>Remove {0} app(s) for ALL users on this PC:</value>
+  </data>
+  <data name="apps.op.remove_all_provisioned" xml:space="preserve">
+    <value>This removes the provisioned package so it won't be reinstalled for new users.</value>
+  </data>
+  <data name="apps.op.remove_all_warning" xml:space="preserve">
+    <value>⚠ Requires admin rights. This cannot be undone.</value>
+  </data>
+  <data name="apps.op.removing_all" xml:space="preserve">
+    <value>Removing for all users: {0}...</value>
+  </data>
+  <data name="apps.op.done_all" xml:space="preserve">
+    <value>Done: {0} removed for all users, {1} failed</value>
+  </data>
+  <data name="apps.op.removed_all" xml:space="preserve">
+    <value>Removed {0} app(s) for all users</value>
+  </data>
+  <data name="apps.op.scan_fail" xml:space="preserve">
+    <value>Scan failed: {0}</value>
+  </data>
+  <data name="apps.op.uninstall_results_title" xml:space="preserve">
+    <value>K-win — Uninstall Results</value>
+  </data>
+  <data name="ram.usage_live" xml:space="preserve">
+    <value>RAM Usage (Live)</value>
+  </data>
+  <data name="ram.clear_cached" xml:space="preserve">
+    <value>Clear Cached RAM</value>
+  </data>
+  <data name="ram.empty_working" xml:space="preserve">
+    <value>🧹 Empty Working Sets</value>
+  </data>
+  <data name="ram.frees_cached" xml:space="preserve">
+    <value>Frees cached memory held by processes.</value>
+  </data>
+  <data name="ram.safe_note" xml:space="preserve">
+    <value>Safe operation — Windows pages data back as needed.
+May briefly slow apps as they reload.</value>
+  </data>
+  <data name="ram.top_processes" xml:space="preserve">
+    <value>Top Processes by RAM</value>
+  </data>
+  <data name="ram.col_process" xml:space="preserve">
+    <value>Process</value>
+  </data>
+  <data name="ram.col_ram_mb" xml:space="preserve">
+    <value>RAM (MB)</value>
+  </data>
+  <data name="ram.col_private_mb" xml:space="preserve">
+    <value>Private (MB)</value>
+  </data>
+  <data name="ram.col_pid" xml:space="preserve">
+    <value>PID</value>
+  </data>
+  <data name="ram.sysmain" xml:space="preserve">
+    <value>SysMain (Superfetch)</value>
+  </data>
+  <data name="ram.enable_sysmain" xml:space="preserve">
+    <value>Enable SysMain</value>
+  </data>
+  <data name="ram.disable_sysmain" xml:space="preserve">
+    <value>Disable SysMain</value>
+  </data>
+  <data name="ram.sysmain_note" xml:space="preserve">
+    <value>SysMain caches frequently used data.
+Disabling may help on SSD + 16GB+ RAM systems.</value>
+  </data>
+  <data name="ram.compression" xml:space="preserve">
+    <value>Memory Compression</value>
+  </data>
+  <data name="ram.enable_compression" xml:space="preserve">
+    <value>Enable Compression</value>
+  </data>
+  <data name="ram.disable_compression" xml:space="preserve">
+    <value>Disable Compression</value>
+  </data>
+  <data name="ram.compression_note" xml:space="preserve">
+    <value>Compresses RAM pages to fit more. Disabling may
+improve perf on 32GB+ systems. Requires reboot.</value>
+  </data>
+  <data name="ram.used_info" xml:space="preserve">
+    <value>Used: {0} / {1}  |  Available: {2}</value>
+  </data>
+  <data name="ram.pagefile_auto" xml:space="preserve">
+    <value>Page file: Auto-managed  |  Location: {0}</value>
+  </data>
+  <data name="ram.pagefile_custom" xml:space="preserve">
+    <value>Page file: Custom  |  {0}</value>
+  </data>
+  <data name="ram.sysmain_status" xml:space="preserve">
+    <value>Status: {0} ({1})</value>
+  </data>
+  <data name="ram.comp_enabled" xml:space="preserve">
+    <value>Status: Memory Compression is enabled ✓</value>
+  </data>
+  <data name="ram.comp_disabled" xml:space="preserve">
+    <value>Status: Memory Compression is disabled</value>
+  </data>
+  <data name="ram.op.empty_title" xml:space="preserve">
+    <value>Empty Working Sets</value>
+  </data>
+  <data name="ram.op.empty_calls" xml:space="preserve">
+    <value>Calls EmptyWorkingSet() on all accessible processes via psapi.dll</value>
+  </data>
+  <data name="ram.op.empty_frees" xml:space="preserve">
+    <value>Frees cached/unused RAM back to the system</value>
+  </data>
+  <data name="ram.op.empty_safe" xml:space="preserve">
+    <value>Safe: Windows will page data back in as needed</value>
+  </data>
+  <data name="ram.op.empty_warning" xml:space="preserve">
+    <value>⚠ Apps may briefly slow down while reloading their data</value>
+  </data>
+  <data name="ram.op.clearing" xml:space="preserve">
+    <value>Clearing cached RAM...</value>
+  </data>
+  <data name="ram.op.cleared" xml:space="preserve">
+    <value>Cleared {0} processes, freed ~{1} MB</value>
+  </data>
+  <data name="ram.op.ram_cleared" xml:space="preserve">
+    <value>RAM cleared: {0} processes, ~{1} MB freed</value>
+  </data>
+  <data name="ram.op.sysmain_auto" xml:space="preserve">
+    <value>Service will be started and set to auto-start</value>
+  </data>
+  <data name="ram.op.sysmain_stop" xml:space="preserve">
+    <value>Service will be stopped and disabled</value>
+  </data>
+  <data name="ram.op.sysmain_preloads" xml:space="preserve">
+    <value>SysMain preloads frequently used apps into RAM.</value>
+  </data>
+  <data name="ram.op.sysmain_ssd" xml:space="preserve">
+    <value>May improve performance on SSD systems with 16+ GB RAM.</value>
+  </data>
+  <data name="ram.op.revert_sysmain" xml:space="preserve">
+    <value>Revert SysMain to {0}</value>
+  </data>
+  <data name="ram.op.sysmain_set" xml:space="preserve">
+    <value>SysMain {0}</value>
+  </data>
+  <data name="ram.op.comp_enable_desc" xml:space="preserve">
+    <value>Re-enables memory compression — Windows compresses RAM pages to fit more data.</value>
+  </data>
+  <data name="ram.op.comp_disable_desc" xml:space="preserve">
+    <value>Disables memory compression — may reduce CPU overhead on high-RAM (32GB+) systems.</value>
+  </data>
+  <data name="ram.op.comp_restart" xml:space="preserve">
+    <value>⚠ A system restart is required for this change to take effect.</value>
+  </data>
+  <data name="ram.op.comp_restart_warning" xml:space="preserve">
+    <value>⚠ Requires system restart to take effect.</value>
+  </data>
+  <data name="ram.op.revert_comp" xml:space="preserve">
+    <value>Revert memory compression to {0}</value>
+  </data>
+  <data name="ram.op.comp_set" xml:space="preserve">
+    <value>Memory compression {0} — restart required</value>
+  </data>
+  <data name="safety.applying" xml:space="preserve">
+    <value>Applying: {0}...</value>
+  </data>
+  <data name="safety.creating_rp" xml:space="preserve">
+    <value>Creating System Restore Point...</value>
+  </data>
+  <data name="safety.error_title" xml:space="preserve">
+    <value>K-win — Error</value>
+  </data>
+  <data name="safety.error_msg" xml:space="preserve">
+    <value>An error occurred during '{0}':
+
+{1}
+
+Registry changes made before the error are recorded and can be undone with Undo.</value>
+  </data>
+  <data name="safety.no_undo" xml:space="preserve">
+    <value>No actions to undo.</value>
+  </data>
+  <data name="safety.undo_confirm" xml:space="preserve">
+    <value>Undo: {0}
+
+Proceed?</value>
+  </data>
+  <data name="safety.undo_title" xml:space="preserve">
+    <value>K-win — Undo</value>
+  </data>
+  <data name="safety.undoing" xml:space="preserve">
+    <value>Undoing last action...</value>
+  </data>
+  <data name="safety.undo_ok" xml:space="preserve">
+    <value>Undo completed successfully</value>
+  </data>
+  <data name="safety.undo_fail" xml:space="preserve">
+    <value>Undo failed: {0}</value>
+  </data>
+  <data name="settings.title" xml:space="preserve">
+    <value>K-win — Settings</value>
+  </data>
+  <data name="settings.appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="settings.dark_mode" xml:space="preserve">
+    <value>Dark Mode (follows Windows theme by default)</value>
+  </data>
+  <data name="settings.safety" xml:space="preserve">
+    <value>Safety</value>
+  </data>
+  <data name="settings.create_rp" xml:space="preserve">
+    <value>Create System Restore Point before changes</value>
+  </data>
+  <data name="settings.auto_clean" xml:space="preserve">
+    <value>Auto-clean old backup files after:</value>
+  </data>
+  <data name="settings.days" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="settings.data_locations" xml:space="preserve">
+    <value>Data Locations</value>
+  </data>
+  <data name="settings.open_log" xml:space="preserve">
+    <value>Open Log Folder</value>
+  </data>
+  <data name="settings.open_backup" xml:space="preserve">
+    <value>Open Backup Folder</value>
+  </data>
+  <data name="settings.version_info" xml:space="preserve">
+    <value>K-win v1.0.0 — {0}
+Windows 11 Optimization Tool</value>
+  </data>
+  <data name="settings.language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="settings.change_language" xml:space="preserve">
+    <value>Change Language</value>
+  </data>
+  <data name="preview.title" xml:space="preserve">
+    <value>K-win — Preview: {0}</value>
+  </data>
+  <data name="preview.summary" xml:space="preserve">
+    <value>The following {0} change(s) will be applied:</value>
+  </data>
+  <data name="preview.col_num" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="preview.col_desc" xml:space="preserve">
+    <value>Change Description</value>
+  </data>
+  <data name="preview.apply" xml:space="preserve">
+    <value>✓ Apply Changes</value>
+  </data>
+  <data name="program.error_title" xml:space="preserve">
+    <value>K-win — Error</value>
+  </data>
+  <data name="program.error_msg" xml:space="preserve">
+    <value>An unexpected error occurred:
+
+{0}
+
+The error has been logged. Please check the log file for details.</value>
+  </data>
+  <data name="program.compat_title" xml:space="preserve">
+    <value>K-win — Compatibility Error</value>
+  </data>
+  <data name="program.admin_msg" xml:space="preserve">
+    <value>K-win requires administrator privileges to optimize Windows settings.
+
+Please right-click K-win.exe and select 'Run as administrator'.</value>
+  </data>
+  <data name="program.admin_title" xml:space="preserve">
+    <value>K-win — Administrator Required</value>
+  </data>
+  <data name="langpicker.title" xml:space="preserve">
+    <value>K-win — Choose Language</value>
+  </data>
+  <data name="langpicker.welcome" xml:space="preserve">
+    <value>Welcome to K-win</value>
+  </data>
+  <data name="langpicker.choose" xml:space="preserve">
+    <value>Choose your language:</value>
+  </data>
+  <data name="langpicker.continue" xml:space="preserve">
+    <value>Continue →</value>
+  </data>
+  <data name="word.enabled" xml:space="preserve">
+    <value>enabled</value>
+  </data>
+  <data name="word.disabled" xml:space="preserve">
+    <value>disabled</value>
+  </data>
+  <data name="word.shown" xml:space="preserve">
+    <value>shown</value>
+  </data>
+  <data name="word.hidden" xml:space="preserve">
+    <value>hidden</value>
+  </data>
+  <data name="word.visible" xml:space="preserve">
+    <value>visible</value>
+  </data>
+  <data name="word.dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="word.light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="dialog.kwin" xml:space="preserve">
+    <value>K-win</value>
+  </data>
+  <data name="dialog.kwin_confirm" xml:space="preserve">
+    <value>K-win — Confirm</value>
+  </data>
+  <data name="dialog.kwin_warnings" xml:space="preserve">
+    <value>K-win — Warnings</value>
+  </data>
+  <data name="dialog.kwin_uninstall_results" xml:space="preserve">
+    <value>K-win — Uninstall Results</value>
+  </data>
+  <data name="failed" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+  <data name="elev.status_admin" xml:space="preserve">
+    <value>🛡 Running as administrator</value>
+  </data>
+  <data name="elev.status_user" xml:space="preserve">
+    <value>Standard user · Restart as administrator</value>
+  </data>
+  <data name="elev.generic_op" xml:space="preserve">
+    <value>Changes that need administrator rights</value>
+  </data>
+  <data name="elev.required_title" xml:space="preserve">
+    <value>K-win — Administrator rights needed</value>
+  </data>
+  <data name="elev.required_msg" xml:space="preserve">
+    <value>"{0}" changes system-wide settings and needs administrator rights.
+
+Restart K-win as administrator now? Windows will ask for permission. Your undo history is kept.</value>
+  </data>
+  <data name="elev.not_started" xml:space="preserve">
+    <value>K-win was not restarted as administrator.</value>
+  </data>
+  <data name="safety.rp_failed_title" xml:space="preserve">
+    <value>K-win — Restore point not created</value>
+  </data>
+  <data name="safety.rp_failed_continue" xml:space="preserve">
+    <value>A System Restore point could not be created:
+
+{0}
+
+K-win still backs up every registry value it changes, so registry changes can be undone. Changes that are not registry-based may not be reversible.
+
+Continue without a restore point?</value>
+  </data>
+  <data name="safety.cancelled_no_rp" xml:space="preserve">
+    <value>Cancelled: no restore point could be created.</value>
+  </data>
+  <data name="safety.done_rp_recent" xml:space="preserve">
+    <value>Done: {0}. Windows reused a restore point from the last 24 hours instead of creating a new one.</value>
+  </data>
+  <data name="safety.partial_failure_status" xml:space="preserve">
+    <value>{0} change(s) failed. See details.</value>
+  </data>
+  <data name="safety.partial_failure" xml:space="preserve">
+    <value>"{0}" did not complete fully.
+
+Changes applied and recorded for undo: {1}
+
+Failed:
+{2}</value>
+  </data>
+  <data name="safety.undo_partial_note" xml:space="preserve">
+    <value>Note: part of this action (a power plan or service state) could only be undone before K-win was restarted. Only the registry changes will be reverted.</value>
+  </data>
+  <data name="priv.hosts_download_disabled" xml:space="preserve">
+    <value>Downloading ad-block lists is turned off in this version.
+
+K-win 1.0 downloaded a third-party list from the internet and wrote it into your hosts file without verifying it. This stays off until a verified source is available.
+
+You can still remove a K-win block added by an earlier version with "Disable".</value>
+  </data>
+  <data name="clean.op.scanning" xml:space="preserve">
+    <value>Scanning...</value>
+  </data>
+  <data name="clean.op.temp_age_note" xml:space="preserve">
+    <value>Files changed in the last 24 hours are kept (they may still be in use).</value>
+  </data>
+  <data name="clean.op.irreversible_note" xml:space="preserve">
+    <value>Deleted files cannot be restored by K-win.</value>
+  </data>
+  <data name="clean.op.browser_keeps_data" xml:space="preserve">
+    <value>Only cache files are removed. Passwords, cookies, history and sessions are kept.</value>
+  </data>
+  <data name="clean.op.cleaned_files_skipped" xml:space="preserve">
+    <value>Cleaned {0} files, freed {1}. {2} files were skipped (in use or protected).</value>
+  </data>
+  <data name="clean.op.recycle_title" xml:space="preserve">
+    <value>Empty Recycle Bin</value>
+  </data>
+  <data name="apps.op.bloat_all_users_optional" xml:space="preserve">
+    <value>Optional (asked next): also remove for all users, so the apps are not installed for new accounts.</value>
+  </data>
+  <data name="apps.op.bloat_all_users_q" xml:space="preserve">
+    <value>Advanced option: also remove these apps for ALL users on this PC?
+
+This removes the provisioned packages, so new user accounts won't get them. It needs administrator rights and can only be reversed by reinstalling the apps from the Microsoft Store.
+
+Choose No to remove them for your account only.</value>
+  </data>
+  <data name="apps.op.remove_all_confirm" xml:space="preserve">
+    <value>Remove {0} app(s) for ALL users on this PC?
+
+This cannot be undone by K-win. The apps can only be reinstalled from the Microsoft Store.</value>
+  </data>
+  <data name="hist.dns_revert_hint" xml:space="preserve">
+    <value>To revert, choose "DHCP (Auto)".</value>
+  </data>
+  <data name="hist.backup_at" xml:space="preserve">
+    <value>Backup saved to {0}</value>
+  </data>
+  <data name="hist.undo_of" xml:space="preserve">
+    <value>Undo: {0}</value>
+  </data>
+  <data name="nav.dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="nav.performance" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="nav.cleanup" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="nav.privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="nav.startup" xml:space="preserve">
+    <value>Startup Manager</value>
+  </data>
+  <data name="nav.health" xml:space="preserve">
+    <value>System Health</value>
+  </data>
+  <data name="nav.tools" xml:space="preserve">
+    <value>Tools</value>
+  </data>
+  <data name="nav.settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="page.dashboard_sub" xml:space="preserve">
+    <value>System overview and quick optimization tools</value>
+  </data>
+  <data name="page.performance_sub" xml:space="preserve">
+    <value>Power plans, visual effects, Game Mode and Fast Startup</value>
+  </data>
+  <data name="page.cleanup_sub" xml:space="preserve">
+    <value>Temporary files, browser caches and Windows repair tools</value>
+  </data>
+  <data name="page.privacy_sub" xml:space="preserve">
+    <value>Telemetry, advertising ID, activity history and DNS</value>
+  </data>
+  <data name="page.startup_sub" xml:space="preserve">
+    <value>Apps that start with Windows</value>
+  </data>
+  <data name="page.health_sub" xml:space="preserve">
+    <value>Windows details, storage and repair tools</value>
+  </data>
+  <data name="page.tools_sub" xml:space="preserve">
+    <value>Interface tweaks, installed apps and memory</value>
+  </data>
+  <data name="page.settings_sub" xml:space="preserve">
+    <value>Appearance, language, safety and app information</value>
+  </data>
+  <data name="shell.edition" xml:space="preserve">
+    <value>Enhanced Edition</value>
+  </data>
+  <data name="shell.free_open_source" xml:space="preserve">
+    <value>Free &amp; Open Source</value>
+  </data>
+  <data name="shell.mit_license" xml:space="preserve">
+    <value>MIT License</value>
+  </data>
+  <data name="shell.dark_mode" xml:space="preserve">
+    <value>Dark Mode</value>
+  </data>
+  <data name="shell.light_mode" xml:space="preserve">
+    <value>Light Mode</value>
+  </data>
+  <data name="shell.admin_yes" xml:space="preserve">
+    <value>Administrator: Yes</value>
+  </data>
+  <data name="shell.admin_no" xml:space="preserve">
+    <value>Administrator: No</value>
+  </data>
+  <data name="shell.admin_restart_tip" xml:space="preserve">
+    <value>Click to restart K-win as administrator</value>
+  </data>
+  <data name="shell.never" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="shell.today_at" xml:space="preserve">
+    <value>Today {0}</value>
+  </data>
+  <data name="shell.last_optimization" xml:space="preserve">
+    <value>Last optimization: {0}</value>
+  </data>
+  <data name="shell.restart_language" xml:space="preserve">
+    <value>K-win needs to restart to change the language. Restart now?</value>
+  </data>
+  <data name="dev.preview_title" xml:space="preserve">
+    <value>Development UI preview</value>
+  </data>
+  <data name="dev.preview_badge" xml:space="preserve">
+    <value>DEV PREVIEW</value>
+  </data>
+  <data name="dev.preview_banner" xml:space="preserve">
+    <value>Development UI preview (Debug build only): read-only, no system changes are made.</value>
+  </data>
+  <data name="dev.blocked" xml:space="preserve">
+    <value>"{0}" is disabled in the development UI preview.
+
+This mode is read-only: K-win makes no system changes while it is active.</value>
+  </data>
+  <data name="dash.loading" xml:space="preserve">
+    <value>Loading system information…</value>
+  </data>
+  <data name="dash.not_available" xml:space="preserve">
+    <value>Not available</value>
+  </data>
+  <data name="dash.version_line" xml:space="preserve">
+    <value>Version: {0} (Build {1})</value>
+  </data>
+  <data name="dash.device_line" xml:space="preserve">
+    <value>Device: {0}</value>
+  </data>
+  <data name="dash.cpu_line" xml:space="preserve">
+    <value>CPU: {0}</value>
+  </data>
+  <data name="dash.ram_line" xml:space="preserve">
+    <value>RAM: {0}</value>
+  </data>
+  <data name="dash.gpu_line" xml:space="preserve">
+    <value>GPU: {0}</value>
+  </data>
+  <data name="dash.system_status" xml:space="preserve">
+    <value>System Status</value>
+  </data>
+  <data name="dash.status_good" xml:space="preserve">
+    <value>Good</value>
+  </data>
+  <data name="dash.status_good_desc" xml:space="preserve">
+    <value>Basic checks passed: free disk space and memory use are in a healthy range.</value>
+  </data>
+  <data name="dash.status_attention" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="dash.issue_disk" xml:space="preserve">
+    <value>System drive has only {0}% free space.</value>
+  </data>
+  <data name="dash.issue_memory" xml:space="preserve">
+    <value>Memory use is high ({0}%).</value>
+  </data>
+  <data name="dash.optimize_now" xml:space="preserve">
+    <value>Optimize Now</value>
+  </data>
+  <data name="dash.optimize_caption" xml:space="preserve">
+    <value>Preview and apply recommended optimizations</value>
+  </data>
+  <data name="dash.menu_boost" xml:space="preserve">
+    <value>One-click performance boost…</value>
+  </data>
+  <data name="dash.menu_clean_temp" xml:space="preserve">
+    <value>Clean temporary files…</value>
+  </data>
+  <data name="dash.menu_performance_page" xml:space="preserve">
+    <value>Open Performance page</value>
+  </data>
+  <data name="dash.cpu" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="dash.memory" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="dash.disk" xml:space="preserve">
+    <value>Disk ({0})</value>
+  </data>
+  <data name="dash.gpu" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="dash.logical_processors" xml:space="preserve">
+    <value>{0} logical processors</value>
+  </data>
+  <data name="dash.gpu_usage_unavailable" xml:space="preserve">
+    <value>GPU usage counters are not provided by this driver</value>
+  </data>
+  <data name="dash.quick_actions" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="dash.quick_actions_sub" xml:space="preserve">
+    <value>Common optimization tasks</value>
+  </data>
+  <data name="dash.qa_performance" xml:space="preserve">
+    <value>Improve
+Performance</value>
+  </data>
+  <data name="dash.qa_cleanup" xml:space="preserve">
+    <value>Clean
+Junk Files</value>
+  </data>
+  <data name="dash.qa_privacy" xml:space="preserve">
+    <value>Enhance
+Privacy</value>
+  </data>
+  <data name="dash.qa_startup" xml:space="preserve">
+    <value>Manage
+Startup Apps</value>
+  </data>
+  <data name="dash.qa_health" xml:space="preserve">
+    <value>System Health
+Check</value>
+  </data>
+  <data name="dash.recent_actions" xml:space="preserve">
+    <value>Recent Actions</value>
+  </data>
+  <data name="dash.view_all" xml:space="preserve">
+    <value>View All</value>
+  </data>
+  <data name="dash.no_actions" xml:space="preserve">
+    <value>No actions yet. Changes you make with K-win will appear here.</value>
+  </data>
+  <data name="dash.disk_space" xml:space="preserve">
+    <value>Disk Space</value>
+  </data>
+  <data name="dash.see_details" xml:space="preserve">
+    <value>See Details</value>
+  </data>
+  <data name="dash.local_disk" xml:space="preserve">
+    <value>Local Disk</value>
+  </data>
+  <data name="dash.used_of" xml:space="preserve">
+    <value>{0} used of {1}</value>
+  </data>
+  <data name="clean.estimate" xml:space="preserve">
+    <value>Estimated: {0} can be freed</value>
+  </data>
+  <data name="dash.unavailable" xml:space="preserve">
+    <value>Unavailable</value>
+  </data>
+  <data name="dash.usage_unavailable" xml:space="preserve">
+    <value>Usage unavailable</value>
+  </data>
+  <data name="dash.cpu_sub_freq" xml:space="preserve">
+    <value>{0} · {1} logical processors</value>
+  </data>
+  <data name="dash.mem_sub" xml:space="preserve">
+    <value>{0} · {1} available</value>
+  </data>
+  <data name="dash.disk_activity" xml:space="preserve">
+    <value>All disks: activity {0}%</value>
+  </data>
+  <data name="dash.disk_activity_unavailable" xml:space="preserve">
+    <value>All disks: activity unavailable</value>
+  </data>
+  <data name="set.monitoring" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
+  <data name="set.interval" xml:space="preserve">
+    <value>Dashboard refresh interval</value>
+  </data>
+  <data name="set.every_seconds" xml:space="preserve">
+    <value>Every {0} s</value>
+  </data>
+  <data name="set.monitoring_note" xml:space="preserve">
+    <value>Monitoring is read-only and pauses while K-win is minimized or another page is open.</value>
+  </data>
+  <data name="health.os_title" xml:space="preserve">
+    <value>Operating System</value>
+  </data>
+  <data name="health.storage_title" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="health.smart_unavailable" xml:space="preserve">
+    <value>Drive health (SMART): Unavailable</value>
+  </data>
+  <data name="health.repair_title" xml:space="preserve">
+    <value>Windows Repair Tools</value>
+  </data>
+  <data name="health.sfc_title" xml:space="preserve">
+    <value>System File Checker (SFC)</value>
+  </data>
+  <data name="health.sfc_desc" xml:space="preserve">
+    <value>Scans protected Windows files and repairs damaged ones. Requires administrator rights; can take 10–20 minutes.</value>
+  </data>
+  <data name="health.dism_title" xml:space="preserve">
+    <value>DISM Component Cleanup</value>
+  </data>
+  <data name="health.dism_desc" xml:space="preserve">
+    <value>Removes superseded Windows update components. Requires administrator rights; can take several minutes.</value>
+  </data>
+  <data name="health.rp_title" xml:space="preserve">
+    <value>System Restore</value>
+  </data>
+  <data name="health.rp_desc" xml:space="preserve">
+    <value>Open Windows System Protection to view, create or use restore points.</value>
+  </data>
+  <data name="health.run" xml:space="preserve">
+    <value>Run…</value>
+  </data>
+  <data name="health.open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="health.scope_note" xml:space="preserve">
+    <value>This page shows basic information and tools. It is not a complete health assessment of your PC.</value>
+  </data>
+  <data name="health.edition" xml:space="preserve">
+    <value>Edition</value>
+  </data>
+  <data name="health.version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="health.build" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="health.architecture" xml:space="preserve">
+    <value>Architecture</value>
+  </data>
+  <data name="health.device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="health.uptime" xml:space="preserve">
+    <value>Uptime</value>
+  </data>
+  <data name="health.uptime_value" xml:space="preserve">
+    <value>{0} d {1} h {2} min</value>
+  </data>
+  <data name="health.admin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="health.free_of" xml:space="preserve">
+    <value>{0} free of {1} ({2}% free)</value>
+  </data>
+  <data name="health.low_space" xml:space="preserve">
+    <value>Low disk space</value>
+  </data>
+  <data name="word.yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="word.no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="set.appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="set.dark" xml:space="preserve">
+    <value>Dark mode</value>
+  </data>
+  <data name="set.light" xml:space="preserve">
+    <value>Light mode</value>
+  </data>
+  <data name="set.theme_note" xml:space="preserve">
+    <value>Applies immediately and is remembered.</value>
+  </data>
+  <data name="set.language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="set.language_note" xml:space="preserve">
+    <value>K-win restarts to apply a new language.</value>
+  </data>
+  <data name="set.safety" xml:space="preserve">
+    <value>Safety</value>
+  </data>
+  <data name="set.restore_point" xml:space="preserve">
+    <value>Create a restore point before system changes (recommended)</value>
+  </data>
+  <data name="set.retention" xml:space="preserve">
+    <value>Keep registry backups for (days):</value>
+  </data>
+  <data name="set.clean_backups" xml:space="preserve">
+    <value>Delete older backups</value>
+  </data>
+  <data name="set.safety_note" xml:space="preserve">
+    <value>Backups still needed for Undo are never deleted.</value>
+  </data>
+  <data name="set.data" xml:space="preserve">
+    <value>Data &amp; Logs</value>
+  </data>
+  <data name="set.open_logs" xml:space="preserve">
+    <value>Open log folder</value>
+  </data>
+  <data name="set.open_backups" xml:space="preserve">
+    <value>Open backup folder</value>
+  </data>
+  <data name="set.view_history" xml:space="preserve">
+    <value>View operation history</value>
+  </data>
+  <data name="set.data_note" xml:space="preserve">
+    <value>All K-win data stays on this PC in {0}. No account, no telemetry.</value>
+  </data>
+  <data name="set.about" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="set.about_line" xml:space="preserve">
+    <value>K-Win {0} · Enhanced Edition · Windows 11 Optimization Tool</value>
+  </data>
+  <data name="set.license_line" xml:space="preserve">
+    <value>Free and open source under the MIT License.</value>
+  </data>
+  <data name="set.backups_cleaned" xml:space="preserve">
+    <value>Deleted {0} old backup file(s).</value>
+  </data>
+  <data name="tools.tweaks" xml:space="preserve">
+    <value>Tweaks</value>
+  </data>
+  <data name="tools.apps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="tools.ram" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="hist.title" xml:space="preserve">
+    <value>K-win — Operation History</value>
+  </data>
+  <data name="hist.col_time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="hist.col_operation" xml:space="preserve">
+    <value>Operation</value>
+  </data>
+  <data name="hist.col_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="hist.col_undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="hist.col_restore_point" xml:space="preserve">
+    <value>Restore point</value>
+  </data>
+  <data name="hist.col_details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="hist.registry_changes" xml:space="preserve">
+    <value>{0} registry change(s)</value>
+  </data>
+  <data name="hist.summary" xml:space="preserve">
+    <value>{0} operation(s). Saved in {1}</value>
+  </data>
+  <data name="hist.close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="hist.status_completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="hist.status_failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="hist.status_cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="hist.status_skipped" xml:space="preserve">
+    <value>Skipped</value>
+  </data>
+  <data name="hist.status_restart" xml:space="preserve">
+    <value>Restart required</value>
+  </data>
+  <data name="hist.rev_full" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="hist.rev_partial" xml:space="preserve">
+    <value>Partial</value>
+  </data>
+  <data name="hist.rev_none" xml:space="preserve">
+    <value>Not reversible</value>
+  </data>
+  <data name="hist.rp_created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="hist.rp_recent" xml:space="preserve">
+    <value>Recent one reused</value>
+  </data>
+  <data name="hist.rp_not_admin" xml:space="preserve">
+    <value>Not needed (user-level)</value>
+  </data>
+  <data name="hist.rp_failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="card.recommended" xml:space="preserve">
+    <value>Recommended</value>
+  </data>
+  <data name="card.benefit" xml:space="preserve">
+    <value>Benefit</value>
+  </data>
+  <data name="card.side_effects" xml:space="preserve">
+    <value>Side effects</value>
+  </data>
+  <data name="card.requires" xml:space="preserve">
+    <value>Requires</value>
+  </data>
+  <data name="card.undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="card.current" xml:space="preserve">
+    <value>Current: {0}</value>
+  </data>
+  <data name="card.preference" xml:space="preserve">
+    <value>Your preference (no recommendation)</value>
+  </data>
+  <data name="card.requires_admin" xml:space="preserve">
+    <value>Administrator rights</value>
+  </data>
+  <data name="card.requires_user" xml:space="preserve">
+    <value>No administrator rights needed</value>
+  </data>
+  <data name="card.restart_needed" xml:space="preserve">
+    <value>Takes effect after a restart</value>
+  </data>
+  <data name="card.signout_needed" xml:space="preserve">
+    <value>Takes effect after signing out</value>
+  </data>
+  <data name="card.undo_full" xml:space="preserve">
+    <value>Yes. Undo restores the previous values exactly, also after a restart.</value>
+  </data>
+  <data name="card.undo_mixed" xml:space="preserve">
+    <value>Yes. Registry values are restored exactly; the service or power state is restored only until K-win is closed.</value>
+  </data>
+  <data name="card.undo_session" xml:space="preserve">
+    <value>Yes, until K-win is closed (switch back manually after that).</value>
+  </data>
+  <data name="card.switch_to" xml:space="preserve">
+    <value>Switch to: {0}</value>
+  </data>
+  <data name="card.state_custom" xml:space="preserve">
+    <value>Custom (changed outside K-win)</value>
+  </data>
+  <data name="card.state_unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="card.not_applicable" xml:space="preserve">
+    <value>Not available on this Windows version</value>
+  </data>
+  <data name="card.managed" xml:space="preserve">
+    <value>Managed by your organization</value>
+  </data>
+  <data name="card.managed_desc" xml:space="preserve">
+    <value>This PC is managed by an organization. K-win does not change Group Policy settings here.</value>
+  </data>
+  <data name="card.preview_change" xml:space="preserve">
+    <value>Change to: {0}</value>
+  </data>
+  <data name="card.preview_undo" xml:space="preserve">
+    <value>You can reverse this with Undo.</value>
+  </data>
+  <data name="card.applied" xml:space="preserve">
+    <value>{0}: {1} (verified)</value>
+  </data>
+  <data name="card.applied_restart" xml:space="preserve">
+    <value>{0}: {1}. Restart Windows to apply.</value>
+  </data>
+  <data name="card.apply_failed" xml:space="preserve">
+    <value>{0} was not applied: {1}</value>
+  </data>
+  <data name="hook.diagtrack_stop" xml:space="preserve">
+    <value>Service: stop "Connected User Experiences and Telemetry" (DiagTrack)</value>
+  </data>
+  <data name="hook.diagtrack_start" xml:space="preserve">
+    <value>Service: start "Connected User Experiences and Telemetry" (DiagTrack)</value>
+  </data>
+  <data name="hook.sysmain_start" xml:space="preserve">
+    <value>Service: start SysMain</value>
+  </data>
+  <data name="hook.sysmain_stop" xml:space="preserve">
+    <value>Service: stop SysMain</value>
+  </data>
+  <data name="hook.hibernate_on" xml:space="preserve">
+    <value>powercfg /hibernate on (Fast Startup needs hibernation)</value>
+  </data>
+  <data name="hook.hibernate_off" xml:space="preserve">
+    <value>powercfg /hibernate off</value>
+  </data>
+  <data name="hook.explorer_restart" xml:space="preserve">
+    <value>Windows Explorer restarts (the taskbar disappears for a moment)</value>
+  </data>
+  <data name="hook.service_failed" xml:space="preserve">
+    <value>The service {0} could not be changed: {1}</value>
+  </data>
+  <data name="perfp.power_title" xml:space="preserve">
+    <value>Power plan</value>
+  </data>
+  <data name="perfp.power_desc" xml:space="preserve">
+    <value>Chooses how Windows balances speed against energy use.</value>
+  </data>
+  <data name="perfp.power_recommended" xml:space="preserve">
+    <value>Balanced on laptops; High performance only when plugged in</value>
+  </data>
+  <data name="perfp.power_benefit" xml:space="preserve">
+    <value>Higher plans keep the CPU at higher speeds for faster response</value>
+  </data>
+  <data name="perfp.power_side" xml:space="preserve">
+    <value>More power use and heat; shorter battery life</value>
+  </data>
+  <data name="perfp.power_apply" xml:space="preserve">
+    <value>Apply plan</value>
+  </data>
+  <data name="perfp.power_ultimate" xml:space="preserve">
+    <value>Add Ultimate Performance…</value>
+  </data>
+  <data name="perfp.active" xml:space="preserve">
+    <value>active</value>
+  </data>
+  <data name="perfp.comp_title" xml:space="preserve">
+    <value>Memory compression</value>
+  </data>
+  <data name="perfp.comp_desc" xml:space="preserve">
+    <value>Windows compresses rarely used memory instead of writing it to disk.</value>
+  </data>
+  <data name="perfp.comp_on" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="perfp.comp_off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="perfp.comp_benefit" xml:space="preserve">
+    <value>Fits more in RAM and reduces slow page-file use</value>
+  </data>
+  <data name="perfp.comp_side" xml:space="preserve">
+    <value>Uses a little CPU time; turning it off rarely helps</value>
+  </data>
+  <data name="perfp.comp_detected" xml:space="preserve">
+    <value>detected from the Memory Compression process</value>
+  </data>
+  <data name="perfp.boost_title" xml:space="preserve">
+    <value>One-click performance boost</value>
+  </data>
+  <data name="perfp.boost_desc" xml:space="preserve">
+    <value>High performance power plan, best-performance visual effects and no transparency, in one step.</value>
+  </data>
+  <data name="perfp.boost_benefit" xml:space="preserve">
+    <value>Snappier interface on slower PCs</value>
+  </data>
+  <data name="perfp.boost_side" xml:space="preserve">
+    <value>Plainer look; more power use on laptops</value>
+  </data>
+  <data name="perfp.boost_run" xml:space="preserve">
+    <value>Preview and apply…</value>
+  </data>
+  <data name="privp.managed_notice" xml:space="preserve">
+    <value>This PC is managed by an organization: Group Policy settings are shown read-only.</value>
+  </data>
+  <data name="privp.reset_ad" xml:space="preserve">
+    <value>Reset advertising ID…</value>
+  </data>
+  <data name="privp.reset_ad_desc" xml:space="preserve">
+    <value>Windows gets a new random advertising ID, so apps can no longer link old activity to it.</value>
+  </data>
+  <data name="privp.ad_current_id" xml:space="preserve">
+    <value>Current ID</value>
+  </data>
+  <data name="privp.clear_activity" xml:space="preserve">
+    <value>Clear activity data now…</value>
+  </data>
+  <data name="privp.dns_title" xml:space="preserve">
+    <value>DNS provider</value>
+  </data>
+  <data name="privp.dns_desc" xml:space="preserve">
+    <value>Which servers translate website names into addresses for your active network adapter.</value>
+  </data>
+  <data name="privp.dns_benefit" xml:space="preserve">
+    <value>Some providers block known malicious sites or log less</value>
+  </data>
+  <data name="privp.dns_side" xml:space="preserve">
+    <value>Company networks or captive portals may stop working with a custom DNS</value>
+  </data>
+  <data name="privp.dns_undo" xml:space="preserve">
+    <value>Choose "DHCP (Auto)" to go back to your network's DNS</value>
+  </data>
+  <data name="privp.dns_apply" xml:space="preserve">
+    <value>Apply DNS</value>
+  </data>
+  <data name="privp.hosts_title" xml:space="preserve">
+    <value>Ad blocking (hosts file)</value>
+  </data>
+  <data name="privp.hosts_desc" xml:space="preserve">
+    <value>Downloading block lists is turned off until a verified source is available. A block added by K-win 1.0 can be removed here.</value>
+  </data>
+  <data name="privp.hosts_recommended" xml:space="preserve">
+    <value>Remove the K-win 1.0 block if present</value>
+  </data>
+  <data name="privp.hosts_side" xml:space="preserve">
+    <value>None; your own hosts entries are kept</value>
+  </data>
+  <data name="privp.hosts_undo" xml:space="preserve">
+    <value>A copy of the hosts file is saved before changes</value>
+  </data>
+  <data name="privp.hosts_remove" xml:space="preserve">
+    <value>Remove K-win block</value>
+  </data>
+  <data name="privp.hosts_why_off" xml:space="preserve">
+    <value>Why is download off?</value>
+  </data>
+  <data name="privp.security_title" xml:space="preserve">
+    <value>Windows Security</value>
+  </data>
+  <data name="privp.security_desc" xml:space="preserve">
+    <value>Antivirus, firewall and device protection are managed by Windows Security. K-win never changes them.</value>
+  </data>
+  <data name="privp.security_recommended" xml:space="preserve">
+    <value>Keep all protections on</value>
+  </data>
+  <data name="privp.security_open" xml:space="preserve">
+    <value>Open Windows Security</value>
+  </data>
+  <data name="startup.search" xml:space="preserve">
+    <value>Search…</value>
+  </data>
+  <data name="startup.refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="startup.disable" xml:space="preserve">
+    <value>Disable selected</value>
+  </data>
+  <data name="startup.enable" xml:space="preserve">
+    <value>Enable selected</value>
+  </data>
+  <data name="startup.explain" xml:space="preserve">
+    <value>Disabling works like Task Manager: the entry is kept and can be enabled again at any time.</value>
+  </data>
+  <data name="startup.col_name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="startup.col_status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="startup.col_publisher" xml:space="preserve">
+    <value>Publisher</value>
+  </data>
+  <data name="startup.col_source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="startup.col_command" xml:space="preserve">
+    <value>Command</value>
+  </data>
+  <data name="startup.enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="startup.disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="startup.missing" xml:space="preserve">
+    <value>file missing</value>
+  </data>
+  <data name="startup.unknown_publisher" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="startup.loading" xml:space="preserve">
+    <value>Reading startup entries…</value>
+  </data>
+  <data name="startup.summary" xml:space="preserve">
+    <value>{0} startup entries · {1} enabled · {2} disabled</value>
+  </data>
+  <data name="startup.nothing_selected" xml:space="preserve">
+    <value>Select (check) entries first. Entries already in that state are skipped.</value>
+  </data>
+  <data name="startup.src_user_run" xml:space="preserve">
+    <value>Registry · current user</value>
+  </data>
+  <data name="startup.src_machine_run" xml:space="preserve">
+    <value>Registry · all users (64-bit)</value>
+  </data>
+  <data name="startup.src_machine_run32" xml:space="preserve">
+    <value>Registry · all users (32-bit)</value>
+  </data>
+  <data name="startup.src_user_folder" xml:space="preserve">
+    <value>Startup folder · current user</value>
+  </data>
+  <data name="startup.src_common_folder" xml:space="preserve">
+    <value>Startup folder · all users</value>
+  </data>
+  <data name="startup.op_enable" xml:space="preserve">
+    <value>Enable {0} startup entr(ies)</value>
+  </data>
+  <data name="startup.op_disable" xml:space="preserve">
+    <value>Disable {0} startup entr(ies)</value>
+  </data>
+  <data name="startup.op_enable_desc" xml:space="preserve">
+    <value>These programs will start with Windows again:</value>
+  </data>
+  <data name="startup.op_disable_desc" xml:space="preserve">
+    <value>These programs will no longer start with Windows:</value>
+  </data>
+  <data name="startup.op_note" xml:space="preserve">
+    <value>Only the Windows "StartupApproved" flag changes (as in Task Manager). Entries are not deleted.</value>
+  </data>
+  <data name="startup.op_done" xml:space="preserve">
+    <value>{0} startup entr(ies) updated and verified.</value>
+  </data>
+  <data name="startup.op_failed" xml:space="preserve">
+    <value>{0}: {1}</value>
+  </data>
+  <data name="cleanup.scan" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="cleanup.clean_selected" xml:space="preserve">
+    <value>Clean selected…</value>
+  </data>
+  <data name="cleanup.cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="cleanup.step_start" xml:space="preserve">
+    <value>Step 1: Scan to measure what can be cleaned. Scanning never deletes anything.</value>
+  </data>
+  <data name="cleanup.scanning" xml:space="preserve">
+    <value>Scanning…</value>
+  </data>
+  <data name="cleanup.scan_cancelled" xml:space="preserve">
+    <value>Scan cancelled.</value>
+  </data>
+  <data name="cleanup.step_review" xml:space="preserve">
+    <value>Step 2: Review the measured sizes and choose categories, then select "Clean selected".</value>
+  </data>
+  <data name="cleanup.cleaning" xml:space="preserve">
+    <value>Cleaning: {0}</value>
+  </data>
+  <data name="cleanup.col_category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="cleanup.col_size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="cleanup.col_description" xml:space="preserve">
+    <value>What is removed</value>
+  </data>
+  <data name="cleanup.irreversible" xml:space="preserve">
+    <value>Deleted files cannot be restored by K-win. Personal folders (Documents, Desktop, Downloads…) are never touched.</value>
+  </data>
+  <data name="cleanup.items" xml:space="preserve">
+    <value>{0} items</value>
+  </data>
+  <data name="cleanup.needs_admin" xml:space="preserve">
+    <value>Needs administrator</value>
+  </data>
+  <data name="cleanup.selected_total" xml:space="preserve">
+    <value>{0} categories selected · {1}</value>
+  </data>
+  <data name="cleanup.op_name" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="cleanup.preview_intro" xml:space="preserve">
+    <value>These categories will be cleaned:</value>
+  </data>
+  <data name="cleanup.preview_recycle" xml:space="preserve">
+    <value>Recycle Bin: your deleted files are removed permanently.</value>
+  </data>
+  <data name="cleanup.report_done" xml:space="preserve">
+    <value>Done: {0} files deleted, {1} freed. {2} files skipped (in use or protected).</value>
+  </data>
+  <data name="cleanup.report_cancelled" xml:space="preserve">
+    <value>Cancelled: {0} files were deleted ({1}) before stopping. {2} files skipped.</value>
+  </data>
+  <data name="cleanup.report_failed" xml:space="preserve">
+    <value>Failed: {0}</value>
+  </data>
+  <data name="cleanup.store_title" xml:space="preserve">
+    <value>Microsoft Store cache</value>
+  </data>
+  <data name="cleanup.store_desc" xml:space="preserve">
+    <value>Runs Windows' own wsreset tool to reset the Store cache.</value>
+  </data>
+  <data name="cleanup.store_run" xml:space="preserve">
+    <value>Reset Store cache…</value>
+  </data>
+  <data name="cleanup.cat.user_temp" xml:space="preserve">
+    <value>Temporary files</value>
+  </data>
+  <data name="cleanup.cat.user_temp_desc" xml:space="preserve">
+    <value>Your temp folder (files older than 24 hours)</value>
+  </data>
+  <data name="cleanup.cat.error_reports" xml:space="preserve">
+    <value>Error reports</value>
+  </data>
+  <data name="cleanup.cat.error_reports_desc" xml:space="preserve">
+    <value>Windows Error Reporting files that were already handled</value>
+  </data>
+  <data name="cleanup.cat.windows_temp" xml:space="preserve">
+    <value>Windows temporary files</value>
+  </data>
+  <data name="cleanup.cat.windows_temp_desc" xml:space="preserve">
+    <value>C:\Windows\Temp (files older than 24 hours)</value>
+  </data>
+  <data name="cleanup.cat.browser_prefix" xml:space="preserve">
+    <value>Browser cache:</value>
+  </data>
+  <data name="cleanup.cat.browser_desc" xml:space="preserve">
+    <value>Cached web pages and images. Passwords, cookies, history and sessions are kept.</value>
+  </data>
+  <data name="cleanup.cat.recycle_bin" xml:space="preserve">
+    <value>Recycle Bin</value>
+  </data>
+  <data name="cleanup.cat.recycle_bin_desc" xml:space="preserve">
+    <value>Files you deleted. Not selected by default.</value>
+  </data>
+  <data name="toolsp.apps_note" xml:space="preserve">
+    <value>Desktop apps use their own uninstaller. Store apps are removed for your account; removing for all users is an advanced option that asks again.</value>
+  </data>
+  <data name="toolsp.mem_title" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="toolsp.mem_usage" xml:space="preserve">
+    <value>{0}% used · {1} of {2} · {3} available</value>
+  </data>
+  <data name="apps.select_all" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="apps.remove_bloatware" xml:space="preserve">
+    <value>Remove preinstalled apps…</value>
+  </data>
+  <data name="dash.gpu_scope" xml:space="preserve">
+    <value>Busiest engine, all GPUs</value>
+  </data>
+  <data name="setting.visual_effects.title" xml:space="preserve">
+    <value>Visual effects</value>
+  </data>
+  <data name="setting.visual_effects.desc" xml:space="preserve">
+    <value>Turns off animations and shadows that make Windows feel slower on older PCs.</value>
+  </data>
+  <data name="setting.visual_effects.benefit" xml:space="preserve">
+    <value>Faster-feeling windows and menus</value>
+  </data>
+  <data name="setting.visual_effects.side" xml:space="preserve">
+    <value>Plainer look without animations and shadows</value>
+  </data>
+  <data name="setting.visual_effects.on" xml:space="preserve">
+    <value>Best performance</value>
+  </data>
+  <data name="setting.visual_effects.off" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="setting.game_mode.title" xml:space="preserve">
+    <value>Game Mode</value>
+  </data>
+  <data name="setting.game_mode.desc" xml:space="preserve">
+    <value>Windows gives games priority and pauses some background work while you play.</value>
+  </data>
+  <data name="setting.game_mode.benefit" xml:space="preserve">
+    <value>Steadier frame rates in games</value>
+  </data>
+  <data name="setting.game_mode.side" xml:space="preserve">
+    <value>Background tasks may wait while a game runs</value>
+  </data>
+  <data name="setting.game_mode.on" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="setting.game_mode.off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="setting.fast_startup.title" xml:space="preserve">
+    <value>Fast Startup</value>
+  </data>
+  <data name="setting.fast_startup.desc" xml:space="preserve">
+    <value>Windows saves part of its state at shutdown so the next start is faster.</value>
+  </data>
+  <data name="setting.fast_startup.benefit" xml:space="preserve">
+    <value>Faster boot after a shutdown</value>
+  </data>
+  <data name="setting.fast_startup.side" xml:space="preserve">
+    <value>Some updates and dual-boot setups need it off; uses hibernation</value>
+  </data>
+  <data name="setting.fast_startup.on" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="setting.fast_startup.off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="setting.telemetry.title" xml:space="preserve">
+    <value>Diagnostic data</value>
+  </data>
+  <data name="setting.telemetry.desc" xml:space="preserve">
+    <value>Limits the diagnostic data Windows sends to Microsoft to the required minimum.</value>
+  </data>
+  <data name="setting.telemetry.benefit" xml:space="preserve">
+    <value>Less usage data sent to Microsoft</value>
+  </data>
+  <data name="setting.telemetry.side" xml:space="preserve">
+    <value>Some troubleshooting and feedback features send less information</value>
+  </data>
+  <data name="setting.telemetry.on" xml:space="preserve">
+    <value>Required only</value>
+  </data>
+  <data name="setting.telemetry.off" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="setting.advertising_id.title" xml:space="preserve">
+    <value>Advertising ID</value>
+  </data>
+  <data name="setting.advertising_id.desc" xml:space="preserve">
+    <value>Stops apps from using your advertising ID for personalized ads.</value>
+  </data>
+  <data name="setting.advertising_id.benefit" xml:space="preserve">
+    <value>Apps cannot link your activity for ads</value>
+  </data>
+  <data name="setting.advertising_id.side" xml:space="preserve">
+    <value>Ads stay, but are less personalized</value>
+  </data>
+  <data name="setting.advertising_id.on" xml:space="preserve">
+    <value>Turned off</value>
+  </data>
+  <data name="setting.advertising_id.off" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="setting.activity_history.title" xml:space="preserve">
+    <value>Activity history</value>
+  </data>
+  <data name="setting.activity_history.desc" xml:space="preserve">
+    <value>Stops Windows from collecting and uploading the apps, files and sites you use.</value>
+  </data>
+  <data name="setting.activity_history.benefit" xml:space="preserve">
+    <value>Your activity is not stored or synced</value>
+  </data>
+  <data name="setting.activity_history.side" xml:space="preserve">
+    <value>Recent items and Timeline-style features show less</value>
+  </data>
+  <data name="setting.activity_history.on" xml:space="preserve">
+    <value>Not collected</value>
+  </data>
+  <data name="setting.activity_history.off" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="setting.recall.title" xml:space="preserve">
+    <value>Recall (AI snapshots)</value>
+  </data>
+  <data name="setting.recall.desc" xml:space="preserve">
+    <value>Turns off Windows Recall, which saves snapshots of your screen for AI search (Windows 11 24H2+).</value>
+  </data>
+  <data name="setting.recall.benefit" xml:space="preserve">
+    <value>No screen snapshots are saved</value>
+  </data>
+  <data name="setting.recall.side" xml:space="preserve">
+    <value>Recall search is not available</value>
+  </data>
+  <data name="setting.recall.on" xml:space="preserve">
+    <value>Turned off</value>
+  </data>
+  <data name="setting.recall.off" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="setting.dark_mode.title" xml:space="preserve">
+    <value>Dark mode</value>
+  </data>
+  <data name="setting.dark_mode.desc" xml:space="preserve">
+    <value>Uses dark colors for Windows and apps that follow the system theme.</value>
+  </data>
+  <data name="setting.dark_mode.benefit" xml:space="preserve">
+    <value>Easier on the eyes in low light</value>
+  </data>
+  <data name="setting.dark_mode.side" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="setting.dark_mode.on" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="setting.dark_mode.off" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="setting.transparency.title" xml:space="preserve">
+    <value>Transparency effects</value>
+  </data>
+  <data name="setting.transparency.desc" xml:space="preserve">
+    <value>See-through effects on the taskbar, Start menu and windows.</value>
+  </data>
+  <data name="setting.transparency.benefit" xml:space="preserve">
+    <value>Turning it off saves a little GPU work</value>
+  </data>
+  <data name="setting.transparency.side" xml:space="preserve">
+    <value>Solid backgrounds look plainer</value>
+  </data>
+  <data name="setting.transparency.on" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="setting.transparency.off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="setting.file_extensions.title" xml:space="preserve">
+    <value>File name extensions</value>
+  </data>
+  <data name="setting.file_extensions.desc" xml:space="preserve">
+    <value>Shows endings like .exe or .pdf in File Explorer.</value>
+  </data>
+  <data name="setting.file_extensions.benefit" xml:space="preserve">
+    <value>Helps you spot disguised files such as "invoice.pdf.exe"</value>
+  </data>
+  <data name="setting.file_extensions.side" xml:space="preserve">
+    <value>File names look longer</value>
+  </data>
+  <data name="setting.file_extensions.on" xml:space="preserve">
+    <value>Shown</value>
+  </data>
+  <data name="setting.file_extensions.off" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="setting.widgets.title" xml:space="preserve">
+    <value>Widgets button</value>
+  </data>
+  <data name="setting.widgets.desc" xml:space="preserve">
+    <value>The Widgets (news and weather) button on the taskbar.</value>
+  </data>
+  <data name="setting.widgets.benefit" xml:space="preserve">
+    <value>Hiding it frees taskbar space</value>
+  </data>
+  <data name="setting.widgets.side" xml:space="preserve">
+    <value>Some Windows versions block this change; K-win reports it if so</value>
+  </data>
+  <data name="setting.widgets.on" xml:space="preserve">
+    <value>Shown</value>
+  </data>
+  <data name="setting.widgets.off" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="setting.chat_icon.title" xml:space="preserve">
+    <value>Chat button</value>
+  </data>
+  <data name="setting.chat_icon.desc" xml:space="preserve">
+    <value>The Teams Chat button on the taskbar (Windows 11 21H2/22H2).</value>
+  </data>
+  <data name="setting.chat_icon.benefit" xml:space="preserve">
+    <value>Hiding it frees taskbar space</value>
+  </data>
+  <data name="setting.chat_icon.side" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="setting.chat_icon.on" xml:space="preserve">
+    <value>Shown</value>
+  </data>
+  <data name="setting.chat_icon.off" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="setting.menu_delay.title" xml:space="preserve">
+    <value>Menu delay</value>
+  </data>
+  <data name="setting.menu_delay.desc" xml:space="preserve">
+    <value>How long Windows waits before opening sub-menus.</value>
+  </data>
+  <data name="setting.menu_delay.benefit" xml:space="preserve">
+    <value>Menus open instantly</value>
+  </data>
+  <data name="setting.menu_delay.side" xml:space="preserve">
+    <value>Menus may open when you only pass over them</value>
+  </data>
+  <data name="setting.menu_delay.on" xml:space="preserve">
+    <value>Instant (0 ms)</value>
+  </data>
+  <data name="setting.menu_delay.off" xml:space="preserve">
+    <value>Windows default (400 ms)</value>
+  </data>
+  <data name="setting.shutdown_speed.title" xml:space="preserve">
+    <value>Shutdown wait times</value>
+  </data>
+  <data name="setting.shutdown_speed.desc" xml:space="preserve">
+    <value>How long Windows waits for apps and services to close at shutdown.</value>
+  </data>
+  <data name="setting.shutdown_speed.benefit" xml:space="preserve">
+    <value>Faster shutdown when apps hang</value>
+  </data>
+  <data name="setting.shutdown_speed.side" xml:space="preserve">
+    <value>Apps get less time to save; unsaved work may be lost</value>
+  </data>
+  <data name="setting.shutdown_speed.on" xml:space="preserve">
+    <value>Short (2 s)</value>
+  </data>
+  <data name="setting.shutdown_speed.off" xml:space="preserve">
+    <value>Windows default</value>
+  </data>
+  <data name="setting.auto_end_tasks.title" xml:space="preserve">
+    <value>End hung apps automatically</value>
+  </data>
+  <data name="setting.auto_end_tasks.desc" xml:space="preserve">
+    <value>Closes apps that stop responding at shutdown without asking.</value>
+  </data>
+  <data name="setting.auto_end_tasks.benefit" xml:space="preserve">
+    <value>Shutdown does not stop on "This app is preventing shutdown"</value>
+  </data>
+  <data name="setting.auto_end_tasks.side" xml:space="preserve">
+    <value>Unsaved work in those apps is lost</value>
+  </data>
+  <data name="setting.auto_end_tasks.on" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="setting.auto_end_tasks.off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="setting.classic_context_menu.title" xml:space="preserve">
+    <value>Classic right-click menu</value>
+  </data>
+  <data name="setting.classic_context_menu.desc" xml:space="preserve">
+    <value>Shows the full Windows 10-style right-click menu instead of the short Windows 11 menu.</value>
+  </data>
+  <data name="setting.classic_context_menu.benefit" xml:space="preserve">
+    <value>All menu items without "Show more options"</value>
+  </data>
+  <data name="setting.classic_context_menu.side" xml:space="preserve">
+    <value>Explorer restarts; Windows 11 menu styling is lost</value>
+  </data>
+  <data name="setting.classic_context_menu.on" xml:space="preserve">
+    <value>Classic</value>
+  </data>
+  <data name="setting.classic_context_menu.off" xml:space="preserve">
+    <value>Windows 11</value>
+  </data>
+  <data name="setting.sysmain.title" xml:space="preserve">
+    <value>SysMain (Superfetch)</value>
+  </data>
+  <data name="setting.sysmain.desc" xml:space="preserve">
+    <value>Windows service that preloads frequently used apps into memory.</value>
+  </data>
+  <data name="setting.sysmain.benefit" xml:space="preserve">
+    <value>Apps you use often start faster</value>
+  </data>
+  <data name="setting.sysmain.side" xml:space="preserve">
+    <value>Turning it off rarely helps; it may reduce disk use on slow hard drives</value>
+  </data>
+  <data name="setting.sysmain.on" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="setting.sysmain.off" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+</root>

@@ -166,8 +166,8 @@ namespace KWin.Services
             {
                 try
                 {
-                    InitCounters();
-                    SampleSafe();
+                    InitCounters(); // can take seconds on a busy PC
+                    if (!_paused) SampleSafe(); // the pause also applies to the very first sample
                     while (await _timer.WaitForNextTickAsync(token).ConfigureAwait(false))
                     {
                         if (!_paused) SampleSafe();
