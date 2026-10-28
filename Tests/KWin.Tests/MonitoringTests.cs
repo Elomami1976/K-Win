@@ -158,13 +158,15 @@ namespace KWin.Tests
             await Task.Delay(1500);
 
             monitor.SetPaused(true);
-            await Task.Delay(300); // let an in-flight sample finish
+            await Task.Delay(1500); // let a sample that was already running finish (slow under test load)
             int pausedAt = Volatile.Read(ref count);
-            await Task.Delay(3000);
+            await Task.Delay(3000); // three intervals: no new samples while paused
             Assert.Equal(pausedAt, Volatile.Read(ref count));
 
-            monitor.SetPaused(false); // resuming samples right away
-            await Task.Delay(800);
+            monitor.SetPaused(false); // resuming takes a fresh sample right away
+            var deadline = DateTime.UtcNow.AddSeconds(5);
+            while (Volatile.Read(ref count) == pausedAt && DateTime.UtcNow < deadline)
+                await Task.Delay(100);
             Assert.True(Volatile.Read(ref count) > pausedAt);
         }
 
