@@ -4,6 +4,7 @@ using Xunit;
 
 namespace KWin.Tests
 {
+    [Collection("Serial")]
     public class CleanupSafetyTests
     {
         [Theory]

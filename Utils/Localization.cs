@@ -37,6 +37,7 @@ namespace KWin.Utils
             RegisterFrench();
             RegisterArabic();
             RegisterSecurityStrings();
+            RegisterShellStrings();
         }
 
         /// <summary>Get a localized string by key. Falls back to English, then returns the key itself.</summary>

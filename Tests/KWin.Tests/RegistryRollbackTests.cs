@@ -10,6 +10,7 @@ namespace KWin.Tests
     /// Registry tests run only inside a throwaway key: HKCU\Software\K-win-Tests\{guid}.
     /// The key is deleted afterwards. Nothing outside it is touched.
     /// </summary>
+    [Collection("Serial")]
     public sealed class RegistryRollbackTests : IDisposable
     {
         private readonly string _sub = $@"Software\K-win-Tests\{Guid.NewGuid():N}";

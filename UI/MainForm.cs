@@ -2,16 +2,18 @@ using Microsoft.Win32;
 using KWin.Core;
 using KWin.Models;
 using KWin.Services;
+using KWin.Themes;
+using KWin.UI.Pages;
 using KWin.Utils;
 using static KWin.Utils.Loc;
 
 namespace KWin.UI
 {
     /// <summary>
-    /// Main application window with TabControl hosting Performance, Privacy, and Cleanup tabs.
-    /// 900x600px fixed size, Windows 11 themed, fully async operations.
+    /// Main application window. The 1.5 shell (sidebar, top bar, pages, status bar) is built in
+    /// MainForm.Shell.cs; this file holds the feature pages and operations carried over from 1.0.
     /// </summary>
-    public class MainForm : Form
+    public partial class MainForm : Form
     {
         // Core services
         private readonly SafetyEngine _safety;
@@ -30,12 +32,10 @@ namespace KWin.UI
         // RAM monitor timer
         private System.Windows.Forms.Timer? _ramTimer;
 
-        // UI components
-        private readonly TabControl _tabControl;
+        // UI components shared by the shell and the 1.0 pages
         private readonly ProgressBar _progressBar;
         private readonly Label _statusLabel;
         private readonly Button _undoButton;
-        private readonly Button _settingsButton;
         private readonly Button _logViewerButton;
 
         // Theme
@@ -61,195 +61,23 @@ namespace KWin.UI
             _cleanup = new CleanupManager(_systemTools);
             _appManager = new AppManager();
 
-            // Detect theme
-            _isDarkMode = SettingsForm.IsWindowsDarkMode();
+            // Saved preferences (theme, restore point option)
+            _settingsService = new SettingsService();
+            _autoRestorePoint = _settingsService.Current.AutoRestorePoint;
+            _isDarkMode = _settingsService.Current.IsDark;
+            ThemeManager.SetTheme(_isDarkMode);
 
-            // Form setup
-            Text = Get("app.title");
-            Size = new Size(920, 620);
-            MinimumSize = new Size(920, 620);
-            MaximumSize = new Size(920, 620);
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
-            Font = IsFontInstalled("Segoe UI Variable")
-                ? new Font("Segoe UI Variable", 9.5F)
-                : new Font("Segoe UI", 9.5F);
-
-            // Header panel
-            var headerPanel = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 55,
-                BackColor = AccentBlue
-            };
-
-            var titleLabel = new Label
-            {
-                Text = Get("app.name"),
-                Font = new Font("Segoe UI", 18F, FontStyle.Bold),
-                ForeColor = Color.White,
-                Location = new Point(15, 10),
-                AutoSize = true
-            };
-
-            var subtitleLabel = new Label
-            {
-                Text = Get("app.subtitle"),
-                Font = new Font("Segoe UI", 9F),
-                ForeColor = Color.FromArgb(200, 220, 255),
-                Location = new Point(100, 22),
-                AutoSize = true
-            };
-
-            _settingsButton = new Button
-            {
-                Text = Get("app.settings"),
-                Size = new Size(90, 30),
-                Location = new Point(800, 12),
-                FlatStyle = FlatStyle.Flat,
-                ForeColor = Color.White,
-                BackColor = Color.FromArgb(0, 100, 180),
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 9F)
-            };
-            _settingsButton.FlatAppearance.BorderColor = Color.FromArgb(0, 100, 180);
-            _settingsButton.Click += SettingsButton_Click;
-
-            // Administrator status (K-Win runs as a normal user and elevates only on request)
-            Control adminStatus;
-            if (ElevationHelper.IsAdministrator)
-            {
-                adminStatus = new Label
-                {
-                    Text = Get("elev.status_admin"),
-                    ForeColor = Color.White,
-                    BackColor = AccentBlue,
-                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-                    TextAlign = ContentAlignment.MiddleRight,
-                    Location = new Point(470, 18),
-                    Size = new Size(320, 20)
-                };
-            }
-            else
-            {
-                var link = new LinkLabel
-                {
-                    Text = Get("elev.status_user"),
-                    LinkColor = Color.White,
-                    ActiveLinkColor = Color.FromArgb(255, 216, 77),
-                    ForeColor = Color.White,
-                    BackColor = AccentBlue,
-                    Font = new Font("Segoe UI", 9F),
-                    TextAlign = ContentAlignment.MiddleRight,
-                    Location = new Point(470, 18),
-                    Size = new Size(320, 20)
-                };
-                link.LinkClicked += (s, e) => RequestElevation(Get("elev.generic_op"));
-                adminStatus = link;
-            }
-
-            headerPanel.Controls.Add(titleLabel);
-            headerPanel.Controls.Add(subtitleLabel);
-            headerPanel.Controls.Add(adminStatus);
-            headerPanel.Controls.Add(_settingsButton);
-
-            // Tab control
-            _tabControl = new TabControl
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 10F),
-                Padding = new Point(15, 5)
-            };
-
-            // Footer panel
-            var footerPanel = new Panel
-            {
-                Dock = DockStyle.Bottom,
-                Height = 55
-            };
-
-            _progressBar = new ProgressBar
-            {
-                Location = new Point(15, 8),
-                Size = new Size(450, 18),
-                Style = ProgressBarStyle.Continuous
-            };
-
-            _statusLabel = new Label
-            {
-                Text = Get("app.ready"),
-                Location = new Point(15, 30),
-                Size = new Size(450, 20),
-                Font = new Font("Segoe UI", 8.5F),
-                ForeColor = Color.Gray
-            };
-
-            _undoButton = new Button
-            {
-                Text = Get("app.undo"),
-                Size = new Size(85, 32),
-                Location = new Point(640, 10),
-                FlatStyle = FlatStyle.Flat,
-                Enabled = false,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 9F)
-            };
+            // Controls shared by the shell (status bar / top bar) and the 1.0 pages
+            _progressBar = new ProgressBar { Style = ProgressBarStyle.Continuous };
+            _statusLabel = new Label { Text = Get("app.ready"), UseMnemonic = false };
+            _undoButton = new Button { Text = Get("app.undo"), Enabled = false };
             _undoButton.Click += UndoButton_Click;
-
-            _logViewerButton = new Button
-            {
-                Text = Get("app.logs"),
-                Size = new Size(80, 32),
-                Location = new Point(735, 10),
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 9F)
-            };
+            _logViewerButton = new Button { Text = Get("app.logs") };
             _logViewerButton.Click += LogViewerButton_Click;
 
-            var winVersionLabel = new Label
-            {
-                Text = WindowsVersionChecker.GetVersionString(),
-                Location = new Point(825, 18),
-                Size = new Size(75, 32),
-                Font = new Font("Segoe UI", 7.5F),
-                ForeColor = Color.Gray,
-                TextAlign = ContentAlignment.MiddleRight
-            };
-
-            footerPanel.Controls.Add(_progressBar);
-            footerPanel.Controls.Add(_statusLabel);
-            footerPanel.Controls.Add(_undoButton);
-            footerPanel.Controls.Add(_logViewerButton);
-            footerPanel.Controls.Add(winVersionLabel);
-
-            // Build tabs
-            _tabControl.TabPages.Add(BuildPerformanceTab());
-            _tabControl.TabPages.Add(BuildPrivacyTab());
-            _tabControl.TabPages.Add(BuildCleanupTab());
-            _tabControl.TabPages.Add(BuildTweaksTab());
-            _tabControl.TabPages.Add(BuildAppsTab());
-            _tabControl.TabPages.Add(BuildRamTab());
-
-            // Add controls (order matters for DockStyle)
-            Controls.Add(_tabControl);
-            Controls.Add(footerPanel);
-            Controls.Add(headerPanel);
-
-            // Apply RTL if Arabic
-            if (Loc.IsRTL)
-            {
-                RightToLeft = RightToLeft.Yes;
-                RightToLeftLayout = true;
-            }
-
-            // Apply theme
+            // 1.5 window shell (sidebar, top bar, pages, status bar)
+            BuildShell(initialTab);
             ApplyTheme();
-
-            // Reopen the tab the user was on before restarting as administrator
-            if (initialTab is int tab && tab >= 0 && tab < _tabControl.TabCount)
-                _tabControl.SelectedIndex = tab;
 
             // Undo history is loaded from disk
             UpdateUndoButton();
@@ -430,6 +258,7 @@ namespace KWin.UI
                 Padding = new Padding(10),
                 Font = new Font("Segoe UI", 9.5F, FontStyle.Bold)
             };
+            _startupGroup = startupGroup; // shown on the Startup Manager page
 
             var startupList = new CheckedListBox
             {
@@ -1045,6 +874,7 @@ namespace KWin.UI
             };
             cleanTempBtn.FlatAppearance.BorderSize = 0;
             cleanTempBtn.Click += async (s, e) => await CleanTempFilesAsync(tempPreviewLabel);
+            _tempPreviewLabel = tempPreviewLabel; // used by the dashboard "Clean temporary files" action
 
             tempGroup.Controls.Add(tempPreviewLabel);
             tempGroup.Controls.Add(cleanTempBtn);
@@ -2282,6 +2112,7 @@ namespace KWin.UI
                 SetStatus(Get("priv.hosts_inactive"), false);
                 return;
             }
+            if (DevMode.IsUiPreview) { ShowDevPreviewBlocked(Get("priv.hosts_disable")); return; }
             if (!EnsureAdmin(Get("priv.hosts_disable"))) return;
 
             SetBusy(true, Get("priv.hosts_removing"));
@@ -2330,26 +2161,15 @@ namespace KWin.UI
 
         #region Cleanup Operations
 
+        // The scan runs in the background; the label is updated after "await", which resumes on
+        // the UI thread. (1.0 used BeginInvoke, which fails if the window isn't created yet.)
         private async void PreviewTempFilesAsync(Label label)
         {
             try
             {
-            await Task.Run(() =>
-            {
-                var result = _cleanup.PreviewTempFileCleanup();
-                if (result.Success)
-                {
-                    var (total, breakdown) = result.Data;
-                    string text = $"Estimated: {CleanupManager.FormatSize(total)} can be freed\n" +
-                                  string.Join(", ", breakdown.Select(b =>
-                                      $"{b.Key}: {CleanupManager.FormatSize(b.Value)}"));
-                    BeginInvoke(() => label.Text = text);
-                }
-                else
-                {
-                    BeginInvoke(() => label.Text = Get("clean.unable_calculate"));
-                }
-            });
+                var result = await Task.Run(() => _cleanup.PreviewTempFileCleanup());
+                if (label.IsDisposed) return;
+                label.Text = result.Success ? FormatEstimate(result.Data.TotalBytes, result.Data.Breakdown) : Get("clean.unable_calculate");
             }
             catch (Exception ex)
             {
@@ -2361,33 +2181,21 @@ namespace KWin.UI
         {
             try
             {
-            await Task.Run(() =>
-            {
-                var result = _cleanup.PreviewBrowserCacheCleanup();
-                if (result.Success)
-                {
-                    var (total, breakdown) = result.Data;
-                    if (total == 0)
-                    {
-                        BeginInvoke(() => label.Text = Get("clean.no_browser_cache"));
-                        return;
-                    }
-                    string text = $"Estimated: {CleanupManager.FormatSize(total)} can be freed\n" +
-                                  string.Join(", ", breakdown.Select(b =>
-                                      $"{b.Key}: {CleanupManager.FormatSize(b.Value)}"));
-                    BeginInvoke(() => label.Text = text);
-                }
-                else
-                {
-                    BeginInvoke(() => label.Text = Get("clean.unable_calculate"));
-                }
-            });
+                var result = await Task.Run(() => _cleanup.PreviewBrowserCacheCleanup());
+                if (label.IsDisposed) return;
+                label.Text = !result.Success ? Get("clean.unable_calculate")
+                    : result.Data.TotalBytes == 0 ? Get("clean.no_browser_cache")
+                    : FormatEstimate(result.Data.TotalBytes, result.Data.Breakdown);
             }
             catch (Exception ex)
             {
                 Logger.Instance.Error("PreviewBrowserCache", "ui", ex);
             }
         }
+
+        private static string FormatEstimate(long total, Dictionary<string, long> breakdown) =>
+            Get("clean.estimate", CleanupManager.FormatSize(total)) + Environment.NewLine +
+            string.Join(", ", breakdown.Select(b => $"{b.Key}: {CleanupManager.FormatSize(b.Value)}"));
 
         private async Task CleanTempFilesAsync(Label previewLabel)
         {
@@ -4671,7 +4479,7 @@ namespace KWin.UI
             _ramTimer = new System.Windows.Forms.Timer { Interval = 2000 };
             _ramTimer.Tick += (s, e) =>
             {
-                if (_tabControl.SelectedTab == tab)
+                if (layout.Visible && WindowState != FormWindowState.Minimized)
                     UpdateRamDisplay(ramUsageBar, ramPercentLabel, ramDetailLabel, ramPageFileLabel, ramPageConfigLabel);
             };
             _ramTimer.Start();
@@ -4891,6 +4699,11 @@ namespace KWin.UI
         /// </summary>
         private async Task ExecuteWithSafetyAsync(string operationName, Func<Task> action, bool requiresAdmin = true)
         {
+            if (DevMode.IsUiPreview)
+            {
+                ShowDevPreviewBlocked(operationName);
+                return;
+            }
             if (requiresAdmin && !EnsureAdmin(operationName))
                 return;
 
@@ -5008,16 +4821,27 @@ namespace KWin.UI
 
         private void RequestElevation(string operationName)
         {
+            if (DevMode.IsUiPreview)
+            {
+                ShowDevPreviewBlocked(operationName);
+                return;
+            }
             var answer = MessageBox.Show(this,
                 Get("elev.required_msg", operationName),
                 Get("elev.required_title"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (answer != DialogResult.Yes) return;
 
-            if (ElevationHelper.TryRestartElevated(_tabControl.SelectedIndex))
+            if (ElevationHelper.TryRestartElevated(_currentPage))
                 Close();
             else
                 SetStatus(Get("elev.not_started"), false);
+        }
+
+        private void ShowDevPreviewBlocked(string operationName)
+        {
+            MessageBox.Show(this, Get("dev.blocked", operationName), Get("dev.preview_title"),
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>Adds an entry to the saved operation history.</summary>
@@ -5125,7 +4949,7 @@ namespace KWin.UI
             }
 
             _statusLabel.Text = message;
-            _statusLabel.ForeColor = isError ? Color.Red : (_isDarkMode ? DarkText : Color.Gray);
+            _statusLabel.ForeColor = isError ? ThemeManager.Current.Error : ThemeManager.Current.TextMuted;
             if (isError)
             {
                 _statusErrorDuringOp = true;
@@ -5148,26 +4972,8 @@ namespace KWin.UI
             if (message != null) SetStatus(message, false);
             if (!busy && message == null) SetStatus(Get("app.ready"), false);
 
-            // Disable/enable tab control during operations
-            _tabControl.Enabled = !busy;
-        }
-
-        private void SettingsButton_Click(object? sender, EventArgs e)
-        {
-            using var settingsForm = new SettingsForm(_isDarkMode);
-            if (settingsForm.ShowDialog(this) == DialogResult.OK)
-            {
-                _isDarkMode = settingsForm.DarkModeEnabled;
-                _autoRestorePoint = settingsForm.AutoRestorePoint;
-
-                if (settingsForm.AutoCleanBackups)
-                {
-                    _safety.CleanOldBackups(settingsForm.BackupRetentionDays);
-                    Logger.Instance.CleanOldLogs(settingsForm.BackupRetentionDays);
-                }
-
-                ApplyTheme();
-            }
+            // Disable/enable the page content during operations (navigation stays available)
+            _contentHost.Enabled = !busy;
         }
 
         private void LogViewerButton_Click(object? sender, EventArgs e)
@@ -5187,80 +4993,102 @@ namespace KWin.UI
             }
         }
 
+        /// <summary>Applies the current theme to the shell, the new pages and the hosted 1.0 pages.</summary>
         private void ApplyTheme()
         {
-            Color bg = _isDarkMode ? DarkBg : LightBg;
-            Color surface = _isDarkMode ? DarkSurface : LightSurface;
-            Color fg = _isDarkMode ? DarkText : LightText;
+            var p = ThemeManager.Current;
+            SuspendLayout();
+            BackColor = p.WindowBackground;
+            ForeColor = p.Text;
 
-            BackColor = bg;
-            ForeColor = fg;
+            ThemeManager.ApplyTree(this);
 
-            ApplyThemeRecursive(this, bg, surface, fg);
+            foreach (var host in _legacyHosts)
+            {
+                host.BackColor = p.WindowBackground;
+                host.ForeColor = p.Text;
+                ApplyLegacyTheme(host, p);
+            }
+
+            _statusLabel.ForeColor = p.TextMuted;
+            foreach (var b in new[] { _undoButton, _logViewerButton })
+            {
+                b.BackColor = p.Input;
+                b.ForeColor = p.Text;
+                b.FlatAppearance.BorderColor = p.CardBorder;
+                b.FlatAppearance.MouseOverBackColor = p.CardHover;
+                b.FlatAppearance.MouseDownBackColor = p.SidebarHover;
+            }
+            foreach (var c in new[] { _themeCombo, _langCombo })
+            {
+                c.BackColor = p.Input;
+                c.ForeColor = p.Text;
+            }
+            if (_adminStatusControl is LinkLabel link)
+            {
+                link.LinkColor = p.Accent;
+                link.ActiveLinkColor = p.LogoYellow;
+                link.VisitedLinkColor = p.Accent;
+            }
+
+            ThemeManager.ApplyTitleBar(this);
+            SyncSelectors();
+            ResumeLayout(true);
+            Invalidate(true);
         }
 
-        private void ApplyThemeRecursive(Control parent, Color bg, Color surface, Color fg)
+        /// <summary>
+        /// Theming for the 1.0 pages (standard controls at fixed positions): groups become cards,
+        /// inputs use the input color. Labels with a status color (green/orange/red/gray) keep it.
+        /// </summary>
+        private static void ApplyLegacyTheme(Control parent, ThemePalette p)
         {
             foreach (Control c in parent.Controls)
             {
-                if (c is TabControl tc)
+                switch (c)
                 {
-                    foreach (TabPage tp in tc.TabPages)
-                    {
-                        tp.BackColor = bg;
-                        tp.ForeColor = fg;
-                        ApplyThemeRecursive(tp, bg, surface, fg);
-                    }
-                }
-                else if (c is GroupBox gb)
-                {
-                    gb.ForeColor = fg;
-                    gb.BackColor = bg;
-                    ApplyThemeRecursive(gb, bg, surface, fg);
-                }
-                else if (c is Button btn)
-                {
-                    // Don't override styled buttons (accent colored)
-                    if (btn.BackColor == AccentBlue ||
-                        btn.BackColor == Color.FromArgb(200, 60, 60) ||
-                        btn.BackColor == Color.FromArgb(0, 150, 80) ||
-                        btn.BackColor == Color.FromArgb(0, 100, 180))
+                    case GroupBox gb:
+                        gb.BackColor = p.Card;
+                        gb.ForeColor = p.Text;
+                        ApplyLegacyTheme(gb, p);
                         continue;
-
-                    btn.BackColor = surface;
-                    btn.ForeColor = fg;
-                }
-                else if (c is TextBox || c is ComboBox || c is CheckedListBox || c is ListView)
-                {
-                    c.BackColor = surface;
-                    c.ForeColor = fg;
-                }
-                else if (c is Label lbl)
-                {
-                    // Don't override specifically colored labels
-                    if (lbl.ForeColor == Color.Green || lbl.ForeColor == Color.DarkOrange ||
-                        lbl.ForeColor == Color.Red || lbl.ForeColor == Color.Gray ||
-                        lbl.ForeColor == Color.White || lbl.ForeColor == Color.FromArgb(200, 220, 255))
+                    case TableLayoutPanel tlp:
+                        tlp.BackColor = p.WindowBackground;
+                        ApplyLegacyTheme(tlp, p);
                         continue;
-
-                    lbl.ForeColor = fg;
+                    case Button btn:
+                        if (btn.BackColor == AccentBlue ||
+                            btn.BackColor == Color.FromArgb(200, 60, 60) ||
+                            btn.BackColor == Color.FromArgb(0, 150, 80) ||
+                            btn.BackColor == Color.FromArgb(0, 100, 180))
+                            continue; // colored action buttons keep their color
+                        btn.BackColor = p.Input;
+                        btn.ForeColor = p.Text;
+                        btn.FlatAppearance.BorderColor = p.CardBorder;
+                        continue;
+                    case TextBox or ComboBox or CheckedListBox or ListView or NumericUpDown:
+                        c.BackColor = p.Input;
+                        c.ForeColor = p.Text;
+                        continue;
+                    case LinkLabel link:
+                        link.LinkColor = p.Accent;
+                        continue;
+                    case Label lbl:
+                        if (lbl.ForeColor == Color.Green || lbl.ForeColor == Color.DarkOrange ||
+                            lbl.ForeColor == Color.Red || lbl.ForeColor == Color.White)
+                            continue;
+                        lbl.ForeColor = lbl.ForeColor == Color.Gray ? p.TextMuted : p.Text;
+                        continue;
+                    case CheckBox or RadioButton:
+                        c.ForeColor = p.Text;
+                        continue;
+                    case Panel panel:
+                        panel.BackColor = panel.Parent is GroupBox ? p.Card : p.WindowBackground;
+                        panel.ForeColor = p.Text;
+                        ApplyLegacyTheme(panel, p);
+                        continue;
                 }
-                else if (c is Panel panel && panel.BackColor != AccentBlue)
-                {
-                    panel.BackColor = bg;
-                    panel.ForeColor = fg;
-                    ApplyThemeRecursive(panel, bg, surface, fg);
-                }
-                else if (c is CheckBox cb)
-                {
-                    cb.ForeColor = fg;
-                }
-
-                if (c is TableLayoutPanel tlp)
-                {
-                    tlp.BackColor = bg;
-                    ApplyThemeRecursive(tlp, bg, surface, fg);
-                }
+                ApplyLegacyTheme(c, p);
             }
         }
 
@@ -5275,6 +5103,7 @@ namespace KWin.UI
             _ramTimer?.Stop();
             _ramTimer?.Dispose();
             _undoToolTip.Dispose();
+            _history.Changed -= OnHistoryChangedForShell;
             Logger.Instance.Info("Application", "MainForm", "closing");
             Logger.Instance.Dispose();
             base.OnFormClosing(e);

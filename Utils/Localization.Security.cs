@@ -119,6 +119,29 @@ namespace KWin.Utils
             });
         }
 
+        /// <summary>
+        /// Keeps numbers with units (e.g. "358.5 GB / 673.6 GB") in left-to-right order inside
+        /// Arabic text, using a Unicode left-to-right embedding.
+        /// </summary>
+        public static string Ltr(string text) => IsRTL ? "\u202A" + text + "\u202C" : text;
+
+        /// <summary>True if the language table defines the key (used by tests).</summary>
+        internal static bool HasKey(string lang, string key) =>
+            _translations.TryGetValue(lang, out var d) && d.ContainsKey(key);
+
+        /// <summary>Keys added in 1.5 (security + shell strings), for completeness tests.</summary>
+        internal static IReadOnlyCollection<string> Keys15
+        {
+            get
+            {
+                var keys = new HashSet<string>();
+                foreach (var m in _keys15) keys.Add(m);
+                return keys;
+            }
+        }
+
+        private static readonly List<string> _keys15 = new();
+
         private static void Merge(string lang, Dictionary<string, string> strings)
         {
             if (!_translations.TryGetValue(lang, out var dict))
@@ -127,7 +150,10 @@ namespace KWin.Utils
                 _translations[lang] = dict;
             }
             foreach (var (key, value) in strings)
+            {
                 dict[key] = value;
+                if (lang == "en") _keys15.Add(key);
+            }
         }
     }
 }
