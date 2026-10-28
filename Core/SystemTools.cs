@@ -29,6 +29,9 @@ namespace KWin.Core
         {
             try
             {
+                if (DevMode.IsUiPreview && !IsReadOnlyQuery(fileName, arguments))
+                    return Result<string>.Fail(DevMode.BlockedMessage);
+
                 // Validate the tool is approved
                 if (!Validator.IsApprovedTool(fileName))
                 {
@@ -115,6 +118,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly(fileName);
                 if (!Validator.IsApprovedTool(fileName))
                     return Result<bool>.Fail($"Tool '{fileName}' is not in the approved list.");
 
@@ -343,6 +347,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("stop service");
                 if (Validator.IsCriticalService(serviceName))
                     return Result<bool>.Fail($"Service '{serviceName}' is marked as critical and cannot be stopped.");
 
@@ -368,6 +373,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("start service");
                 using var sc = new System.ServiceProcess.ServiceController(serviceName);
                 if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
                 {
@@ -397,6 +403,14 @@ namespace KWin.Core
             {
                 return false;
             }
+        }
+
+        /// <summary>Tool calls that only read information (allowed in the development UI preview).</summary>
+        private static bool IsReadOnlyQuery(string fileName, string arguments)
+        {
+            string name = Path.GetFileName(fileName).ToLowerInvariant();
+            string args = arguments.Trim().ToLowerInvariant();
+            return name == "powercfg.exe" && (args == "/list" || args == "/getactivescheme");
         }
 
         /// <summary>

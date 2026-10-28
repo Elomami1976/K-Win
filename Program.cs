@@ -12,6 +12,9 @@ namespace KWin
         [STAThread]
         static void Main()
         {
+            // Development-only UI preview (Debug builds only; ignored in Release). See DevMode.
+            DevMode.Initialize(Environment.GetCommandLineArgs());
+
             // Enable modern visual styles
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -52,7 +55,12 @@ namespace KWin
 
             // Windows 11 compatibility check
             string? compatError = WindowsVersionChecker.ValidateCompatibility();
-            if (compatError != null)
+            if (compatError != null && DevMode.IsUiPreview)
+            {
+                // Debug-only, read-only preview: the check is reported, not enforced.
+                Logger.Instance.Warn("Program", "DevMode", $"UI preview on unsupported OS: {compatError}");
+            }
+            else if (compatError != null)
             {
                 MessageBox.Show(
                     compatError,

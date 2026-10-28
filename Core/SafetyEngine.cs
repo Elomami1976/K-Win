@@ -289,6 +289,9 @@ namespace KWin.Core
             string description = $"K-win: {operationName}";
             if (description.Length > 64) description = description[..64]; // Windows truncates long descriptions
 
+            if (DevMode.IsUiPreview)
+                return new RestorePointOutcome { Status = RestorePointStatus.Failed, Message = DevMode.BlockedMessage };
+
             if (!ElevationHelper.IsAdministrator)
             {
                 return new RestorePointOutcome

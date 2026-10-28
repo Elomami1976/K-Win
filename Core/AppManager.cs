@@ -295,6 +295,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("uninstall");
                 if (app.IsStoreApp)
                     return Result<bool>.Fail("Use UninstallStoreAppAsync for Store apps.");
 
@@ -372,6 +373,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("uninstall");
                 if (!app.IsStoreApp)
                     return Result<bool>.Fail("Use UninstallDesktopAppAsync for desktop apps.");
 
@@ -425,6 +427,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("remove provisioned app");
                 if (IsProtectedApp(packageName))
                     return Result<bool>.Fail($"'{packageName}' is a protected system app and cannot be removed.");
                 if (!IsValidPackageName(packageName))

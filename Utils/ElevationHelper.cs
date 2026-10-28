@@ -35,6 +35,7 @@ namespace KWin.Utils
         /// </summary>
         public static bool TryRestartElevated(int? tabIndex = null)
         {
+            if (DevMode.IsUiPreview) return false; // the preview never elevates
             string? exe = Environment.ProcessPath;
             if (string.IsNullOrEmpty(exe) || !File.Exists(exe))
                 return false;

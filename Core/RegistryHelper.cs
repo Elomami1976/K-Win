@@ -182,6 +182,7 @@ namespace KWin.Core
             string target = $"{keyPath}\\{valueName}";
             try
             {
+                DevMode.ThrowIfReadOnly("registry write");
                 if (!Validator.IsValidRegistryPath(keyPath, out string error))
                     return Result<string>.Fail(error);
 
@@ -274,6 +275,7 @@ namespace KWin.Core
             string target = $"{keyPath}\\{valueName}";
             try
             {
+                DevMode.ThrowIfReadOnly("registry delete");
                 if (!Validator.IsValidRegistryPath(keyPath, out string error))
                     return Result<string>.Fail(error);
 
@@ -335,6 +337,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("registry key delete");
                 if (!Validator.IsValidRegistryPath(keyPath, out string error))
                     return Result<string>.Fail(error);
 
@@ -393,6 +396,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("registry revert");
                 if (!Validator.IsValidRegistryPath(change.KeyPath, out string error))
                     return Result<bool>.Fail(error);
 
@@ -483,6 +487,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("registry import");
                 if (!File.Exists(backupFilePath))
                     return Result<bool>.Fail($"Backup file not found: {backupFilePath}");
 

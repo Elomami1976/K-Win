@@ -193,6 +193,7 @@ namespace KWin.Core
         public static CleanupReport CleanTargets(IEnumerable<CleanupTarget> targets,
             IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
+            DevMode.ThrowIfReadOnly("cleanup");
             var report = new CleanupReport();
             DateTime now = DateTime.UtcNow;
 
@@ -418,6 +419,7 @@ namespace KWin.Core
         {
             try
             {
+                DevMode.ThrowIfReadOnly("empty Recycle Bin");
                 Logger.Instance.Info("EmptyRecycleBin", "RecycleBin", "starting");
 
                 // Use SHEmptyRecycleBin via P/Invoke
@@ -477,7 +479,8 @@ namespace KWin.Core
         [System.Runtime.InteropServices.DllImport("shell32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
         public static extern uint SHEmptyRecycleBin(IntPtr hwnd, string? pszRootPath, uint dwFlags);
 
-        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 4)]
+        // x64 layout: natural alignment (cbSize = 24). The 1.0 "Pack = 4" made Windows reject the call.
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
         public struct SHQUERYRBINFO
         {
             public uint cbSize;
