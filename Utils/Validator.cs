@@ -87,9 +87,82 @@ namespace KWin.Utils
         }
 
         /// <summary>
-        /// Validates a file path is safe to delete (not in protected directories).
+        /// True if <paramref name="path"/> is strictly inside <paramref name="directory"/>
+        /// (compares whole path segments, so C:\Temp2 is NOT inside C:\Temp).
         /// </summary>
-        public static bool IsSafeToDelete(string filePath, out string error)
+        public static bool IsUnderDirectory(string path, string directory)
+        {
+            if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(directory))
+                return false;
+            try
+            {
+                string full = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar);
+                string dir = Path.GetFullPath(directory).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                return full.StartsWith(dir, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>Folders whose contents cleanup must never delete, whatever the allowed roots say.</summary>
+        public static IReadOnlyList<string> GetProtectedDirectories() => _protectedDirs.Value;
+
+        private static readonly Lazy<IReadOnlyList<string>> _protectedDirs = new(BuildProtectedDirectories);
+
+        private static IReadOnlyList<string> BuildProtectedDirectories()
+        {
+            var list = new List<string>();
+            void Add(Environment.SpecialFolder f)
+            {
+                try
+                {
+                    string p = Environment.GetFolderPath(f);
+                    if (!string.IsNullOrEmpty(p)) list.Add(p);
+                }
+                catch { }
+            }
+
+            Add(Environment.SpecialFolder.Desktop);
+            Add(Environment.SpecialFolder.MyDocuments);
+            Add(Environment.SpecialFolder.MyPictures);
+            Add(Environment.SpecialFolder.MyMusic);
+            Add(Environment.SpecialFolder.MyVideos);
+            Add(Environment.SpecialFolder.Favorites);
+            Add(Environment.SpecialFolder.ProgramFiles);
+            Add(Environment.SpecialFolder.ProgramFilesX86);
+            Add(Environment.SpecialFolder.System);
+            Add(Environment.SpecialFolder.SystemX86);
+
+            string profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            if (!string.IsNullOrEmpty(profile))
+            {
+                list.Add(Path.Combine(profile, "Downloads"));
+                list.Add(Path.Combine(profile, "OneDrive"));
+            }
+            foreach (var env in new[] { "OneDrive", "OneDriveConsumer", "OneDriveCommercial" })
+            {
+                string? od = Environment.GetEnvironmentVariable(env);
+                if (!string.IsNullOrEmpty(od)) list.Add(od);
+            }
+
+            string win = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+            if (!string.IsNullOrEmpty(win))
+            {
+                list.Add(Path.Combine(win, "WinSxS"));
+                list.Add(Path.Combine(win, "SysWOW64"));
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Validates that a file may be deleted by cleanup:
+        ///  - it must be strictly inside one of <paramref name="allowedRoots"/>,
+        ///  - it must not be inside a protected folder (Documents, Desktop, Downloads, Program Files, System32, ...),
+        ///  - it must not be a junction or symbolic link, and its folder must not be one either.
+        /// </summary>
+        public static bool IsSafeToDelete(string filePath, IEnumerable<string> allowedRoots, out string error)
         {
             error = string.Empty;
 
@@ -99,29 +172,42 @@ namespace KWin.Utils
                 return false;
             }
 
-            string fullPath = Path.GetFullPath(filePath).ToUpperInvariant();
-            string winDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows).ToUpperInvariant();
-            string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).ToUpperInvariant();
-            string programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86).ToUpperInvariant();
+            string fullPath;
+            try { fullPath = Path.GetFullPath(filePath); }
+            catch { error = "Invalid file path."; return false; }
 
-            // Block System32, SysWOW64, WinSxS
-            if (fullPath.Contains(Path.Combine(winDir, "SYSTEM32")) ||
-                fullPath.Contains(Path.Combine(winDir, "SYSWOW64")) ||
-                fullPath.Contains(Path.Combine(winDir, "WINSXS")))
+            if (!allowedRoots.Any(r => IsUnderDirectory(fullPath, r)))
             {
-                error = "Deleting files in protected Windows directories is forbidden.";
+                error = "File is outside the folders selected for cleanup.";
                 return false;
             }
 
-            // Block Program Files root (but allow cache subdirectories)
-            if (fullPath.StartsWith(programFiles + "\\") || fullPath.StartsWith(programFilesX86 + "\\"))
+            if (GetProtectedDirectories().Any(p =>
+                    IsUnderDirectory(fullPath, p) || string.Equals(Path.GetFullPath(p).TrimEnd('\\'), fullPath.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase)))
             {
-                // Only allow known cache paths
-                if (!fullPath.Contains("\\CACHE") && !fullPath.Contains("\\TEMP"))
+                error = "File is inside a protected folder.";
+                return false;
+            }
+
+            try
+            {
+                var fi = new FileInfo(fullPath);
+                if (fi.Exists && fi.Attributes.HasFlag(FileAttributes.ReparsePoint))
                 {
-                    error = "Deleting files in Program Files is restricted. Only cache/temp subdirectories allowed.";
+                    error = "File is a link (reparse point).";
                     return false;
                 }
+                var parent = fi.Directory;
+                if (parent != null && parent.Exists && parent.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    error = "File's folder is a link (reparse point).";
+                    return false;
+                }
+            }
+            catch
+            {
+                error = "Could not read file attributes.";
+                return false;
             }
 
             return true;
@@ -174,9 +260,9 @@ namespace KWin.Utils
                 "wsreset.exe" => true,
                 "systempropertiesperformance.exe" => true,
                 "reg.exe" => true,
-                "msiexec.exe" => true,
-                "powershell.exe" => true,
-                "cmd.exe" => true,
+                "netsh.exe" => true,
+                "ipconfig.exe" => true,
+                // cmd.exe and powershell.exe were removed in 1.5: no shell is ever run through this path.
                 _ => false
             };
         }

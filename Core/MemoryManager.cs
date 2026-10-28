@@ -7,9 +7,10 @@ using KWin.Utils;
 namespace KWin.Core
 {
     /// <summary>
-    /// RAM optimization and monitoring using built-in Windows APIs.
-    /// Provides memory info, process memory usage, standby list clearing,
-    /// SysMain/Superfetch control, memory compression toggle, and page file info.
+    /// RAM monitoring using built-in Windows APIs: memory info, process memory usage,
+    /// SysMain/Superfetch service control, memory compression status and page file info.
+    /// (The 1.0 "clear cached RAM" working-set trimming was removed in 1.5: it gives no
+    /// lasting benefit because Windows pages the data straight back in.)
     /// All operations use free, built-in Windows/.NET APIs only.
     /// </summary>
     public class MemoryManager
@@ -33,20 +34,6 @@ namespace KWin.Core
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
-
-        [DllImport("psapi.dll", SetLastError = true)]
-        private static extern bool EmptyWorkingSet(IntPtr hProcess);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, int dwProcessId);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool CloseHandle(IntPtr hObject);
-
-        // Privileges for memory operations
-        private const uint PROCESS_QUERY_INFORMATION = 0x0400;
-        private const uint PROCESS_SET_QUOTA = 0x0100;
 
         #endregion
 
@@ -177,62 +164,6 @@ namespace KWin.Core
 
         #endregion
 
-        #region Empty Working Sets (Clear Cached RAM)
-
-        /// <summary>
-        /// Empties working sets of all accessible processes to free cached RAM.
-        /// This is a safe operation — Windows will page data back in as needed.
-        /// </summary>
-        public static Result<(int Cleared, long FreedMB)> EmptyAllWorkingSets()
-        {
-            try
-            {
-                var beforeInfo = GetMemoryInfo();
-                ulong availBefore = beforeInfo.Success ? beforeInfo.Data!.AvailablePhysicalMB : 0;
-
-                int cleared = 0;
-                int failed = 0;
-
-                foreach (var proc in Process.GetProcesses())
-                {
-                    try
-                    {
-                        IntPtr handle = OpenProcess(
-                            PROCESS_QUERY_INFORMATION | PROCESS_SET_QUOTA,
-                            false, proc.Id);
-
-                        if (handle != IntPtr.Zero)
-                        {
-                            if (EmptyWorkingSet(handle))
-                                cleared++;
-                            else
-                                failed++;
-
-                            CloseHandle(handle);
-                        }
-                    }
-                    catch { /* skip inaccessible processes */ }
-                }
-
-                var afterInfo = GetMemoryInfo();
-                ulong availAfter = afterInfo.Success ? afterInfo.Data!.AvailablePhysicalMB : 0;
-                long freedMB = (long)(availAfter - availBefore);
-                if (freedMB < 0) freedMB = 0;
-
-                Logger.Instance.Info("EmptyAllWorkingSets", "psapi", "success",
-                    newValue: $"Cleared: {cleared}, Freed: ~{freedMB} MB");
-
-                return Result<(int, long)>.Ok((cleared, freedMB));
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.Error("EmptyAllWorkingSets", "psapi", ex);
-                return Result<(int, long)>.Fail(ex);
-            }
-        }
-
-        #endregion
-
         #region SysMain / Superfetch Service
 
         /// <summary>
@@ -252,77 +183,15 @@ namespace KWin.Core
         }
 
         /// <summary>
-        /// Enables and starts SysMain service.
+        /// Starts the SysMain service. The start type is changed separately through
+        /// RegistryHelper (backed up and reversible) before calling this.
         /// </summary>
-        public static async Task<Result<bool>> EnableSysMainAsync()
-        {
-            try
-            {
-                Logger.Instance.Info("EnableSysMain", "SysMain", "starting");
-
-                // Set to Automatic start
-                using (var key = Registry.LocalMachine.OpenSubKey(
-                    @"SYSTEM\CurrentControlSet\Services\SysMain", true))
-                {
-                    key?.SetValue("Start", 2, RegistryValueKind.DWord); // 2 = Automatic
-                }
-
-                // Start the service
-                using var sc = new System.ServiceProcess.ServiceController("SysMain");
-                if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
-                {
-                    sc.Start();
-                    await Task.Run(() =>
-                        sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Running,
-                            TimeSpan.FromSeconds(15)));
-                }
-
-                Logger.Instance.Info("EnableSysMain", "SysMain", "success");
-                return Result<bool>.Ok(true);
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.Error("EnableSysMain", "SysMain", ex);
-                return Result<bool>.Fail(ex);
-            }
-        }
+        public static Task<Result<bool>> StartSysMainAsync() => SystemTools.StartServiceAsync("SysMain");
 
         /// <summary>
-        /// Stops and disables SysMain (Superfetch) service.
-        /// Safe for systems with 16+ GB RAM or SSD storage.
+        /// Stops the SysMain service. The start type is changed separately through RegistryHelper.
         /// </summary>
-        public static async Task<Result<bool>> DisableSysMainAsync()
-        {
-            try
-            {
-                Logger.Instance.Info("DisableSysMain", "SysMain", "starting");
-
-                using var sc = new System.ServiceProcess.ServiceController("SysMain");
-
-                if (sc.Status == System.ServiceProcess.ServiceControllerStatus.Running)
-                {
-                    sc.Stop();
-                    await Task.Run(() =>
-                        sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Stopped,
-                            TimeSpan.FromSeconds(15)));
-                }
-
-                // Disable startup
-                using (var key = Registry.LocalMachine.OpenSubKey(
-                    @"SYSTEM\CurrentControlSet\Services\SysMain", true))
-                {
-                    key?.SetValue("Start", 4, RegistryValueKind.DWord); // 4 = Disabled
-                }
-
-                Logger.Instance.Info("DisableSysMain", "SysMain", "success");
-                return Result<bool>.Ok(true);
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.Error("DisableSysMain", "SysMain", ex);
-                return Result<bool>.Fail(ex);
-            }
-        }
+        public static Task<Result<bool>> StopSysMainAsync() => SystemTools.StopServiceAsync("SysMain");
 
         #endregion
 

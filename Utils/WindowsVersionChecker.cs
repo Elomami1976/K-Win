@@ -68,19 +68,7 @@ namespace KWin.Utils
         }
 
         /// <summary>Checks if the current user is running as Administrator.</summary>
-        public static bool IsRunningAsAdmin()
-        {
-            try
-            {
-                using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-                var principal = new System.Security.Principal.WindowsPrincipal(identity);
-                return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        public static bool IsRunningAsAdmin() => ElevationHelper.IsAdministrator;
 
         /// <summary>Checks if the system is running on battery power (laptop detection).</summary>
         public static bool IsOnBattery()

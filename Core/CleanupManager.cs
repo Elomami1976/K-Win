@@ -17,31 +17,15 @@ namespace KWin.Core
             _systemTools = systemTools;
         }
 
-        /// <summary>
-        /// Calculates the total size of files in a directory (recursive).
-        /// </summary>
-        /// <param name="path">Directory path to measure.</param>
-        /// <returns>Total size in bytes.</returns>
-        public static long GetDirectorySize(string path)
-        {
-            if (!Directory.Exists(path)) return 0;
-
-            long size = 0;
-            try
-            {
-                foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
-                {
-                    try { size += new FileInfo(file).Length; }
-                    catch { /* Skip inaccessible files */ }
-                }
-            }
-            catch { /* Skip inaccessible directories */ }
-            return size;
-        }
+        /// <summary>Temp files newer than this are left alone (they are often still in use).</summary>
+        public static readonly TimeSpan MinTempFileAge = TimeSpan.FromHours(24);
 
         /// <summary>
-        /// Formats a byte count into a human-readable string.
+        /// Total size of regular files in a folder. Junctions and symbolic links are not followed.
         /// </summary>
+        public static long GetDirectorySize(string path) => SafeFileWalker.GetSize(path);
+
+        /// <summary>Formats a byte count into a human-readable string.</summary>
         public static string FormatSize(long bytes)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };
@@ -55,58 +39,125 @@ namespace KWin.Core
             return $"{len:0.##} {sizes[order]}";
         }
 
+        #region Targets
+
         /// <summary>
-        /// Gets the estimated space that can be freed by cleaning temp files.
+        /// Temp-file cleanup targets. The same list is used for the preview and the cleanup,
+        /// so the estimate matches what is actually deleted.
         /// </summary>
+        public static List<CleanupTarget> GetTempTargets()
+        {
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var targets = new List<CleanupTarget>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            void Add(string label, string path, TimeSpan? minAge)
+            {
+                if (string.IsNullOrWhiteSpace(path)) return;
+                string full = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar);
+                if (seen.Add(full))
+                    targets.Add(new CleanupTarget(label, full, minAge));
+            }
+
+            Add("User Temp", Path.GetTempPath(), MinTempFileAge);
+            Add("User Temp", Path.Combine(localAppData, "Temp"), MinTempFileAge);
+            Add("Error Reports", Path.Combine(localAppData, "Microsoft", "Windows", "WER"), null);
+
+            // The system-wide temp folder is only writable with administrator rights.
+            if (ElevationHelper.IsAdministrator)
+                Add("Windows Temp", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Temp"), MinTempFileAge);
+
+            return targets;
+        }
+
+        /// <summary>Browser cache folders for every profile of the supported browsers.</summary>
+        public static List<CleanupTarget> GetBrowserTargets()
+        {
+            string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var targets = new List<CleanupTarget>();
+
+            void AddChromium(string label, string userDataDir)
+            {
+                if (!Directory.Exists(userDataDir)) return;
+                targets.Add(new CleanupTarget(label, Path.Combine(userDataDir, "GpuCache"), null));
+                targets.Add(new CleanupTarget(label, Path.Combine(userDataDir, "ShaderCache"), null));
+
+                IEnumerable<string> profiles;
+                try
+                {
+                    profiles = Directory.GetDirectories(userDataDir)
+                        .Where(d =>
+                        {
+                            string n = Path.GetFileName(d);
+                            return n.Equals("Default", StringComparison.OrdinalIgnoreCase) ||
+                                   n.StartsWith("Profile ", StringComparison.OrdinalIgnoreCase);
+                        })
+                        .ToList();
+                }
+                catch { profiles = Array.Empty<string>(); }
+
+                foreach (var profile in profiles)
+                {
+                    targets.Add(new CleanupTarget(label, Path.Combine(profile, "Cache"), null));
+                    targets.Add(new CleanupTarget(label, Path.Combine(profile, "Code Cache"), null));
+                    targets.Add(new CleanupTarget(label, Path.Combine(profile, "GPUCache"), null));
+                }
+            }
+
+            AddChromium("Microsoft Edge", Path.Combine(localAppData, "Microsoft", "Edge", "User Data"));
+            AddChromium("Google Chrome", Path.Combine(localAppData, "Google", "Chrome", "User Data"));
+            AddChromium("Brave", Path.Combine(localAppData, "BraveSoftware", "Brave-Browser", "User Data"));
+            AddChromium("Vivaldi", Path.Combine(localAppData, "Vivaldi", "User Data"));
+
+            string opera = Path.Combine(localAppData, "Opera Software", "Opera Stable");
+            targets.Add(new CleanupTarget("Opera", Path.Combine(opera, "Cache"), null));
+            targets.Add(new CleanupTarget("Opera", Path.Combine(opera, "Code Cache"), null));
+
+            string firefoxProfiles = Path.Combine(localAppData, "Mozilla", "Firefox", "Profiles");
+            if (Directory.Exists(firefoxProfiles))
+            {
+                try
+                {
+                    foreach (var profile in Directory.GetDirectories(firefoxProfiles))
+                        targets.Add(new CleanupTarget("Mozilla Firefox", Path.Combine(profile, "cache2"), null));
+                }
+                catch { }
+            }
+
+            return targets
+                .Where(t => Directory.Exists(t.Path))
+                .GroupBy(t => t.Path, StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.First())
+                .ToList();
+        }
+
+        #endregion
+
+        #region Preview
+
+        /// <summary>
+        /// Measures what a cleanup of the targets would delete, using exactly the
+        /// same file filters as <see cref="CleanTargets"/>.
+        /// </summary>
+        public static (long TotalBytes, Dictionary<string, long> Breakdown) Measure(IEnumerable<CleanupTarget> targets)
+        {
+            var breakdown = new Dictionary<string, long>();
+            DateTime now = DateTime.UtcNow;
+            foreach (var t in targets)
+            {
+                long size = SafeFileWalker.GetSize(t.Path, f => t.Includes(f, now));
+                if (size <= 0) continue;
+                breakdown[t.Label] = breakdown.TryGetValue(t.Label, out var existing) ? existing + size : size;
+            }
+            return (breakdown.Values.Sum(), breakdown);
+        }
+
+        /// <summary>Estimated space that temp-file cleanup will free.</summary>
         public Result<(long TotalBytes, Dictionary<string, long> Breakdown)> PreviewTempFileCleanup()
         {
             try
             {
-                var breakdown = new Dictionary<string, long>();
-
-                // Windows Temp
-                string winTemp = Path.GetTempPath();
-                long winTempSize = GetDirectorySize(winTemp);
-                breakdown["Windows Temp"] = winTempSize;
-
-                // User Temp (if different from GetTempPath)
-                string userTemp = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp");
-                if (!string.Equals(userTemp, winTemp, StringComparison.OrdinalIgnoreCase))
-                {
-                    long userTempSize = GetDirectorySize(userTemp);
-                    breakdown["User Temp"] = userTempSize;
-                }
-
-                // Windows Prefetch (read-only preview)
-                string prefetch = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Prefetch");
-                long prefetchSize = GetDirectorySize(prefetch);
-                breakdown["Prefetch"] = prefetchSize;
-
-                // Thumbnail Cache
-                string thumbCache = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "Microsoft", "Windows", "Explorer");
-                long thumbSize = 0;
-                if (Directory.Exists(thumbCache))
-                {
-                    foreach (var file in Directory.EnumerateFiles(thumbCache, "thumbcache_*.db"))
-                    {
-                        try { thumbSize += new FileInfo(file).Length; } catch { }
-                    }
-                }
-                if (thumbSize > 0) breakdown["Thumbnail Cache"] = thumbSize;
-
-                // Windows Error Reports
-                string werPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "Microsoft", "Windows", "WER");
-                long werSize = GetDirectorySize(werPath);
-                if (werSize > 0) breakdown["Error Reports"] = werSize;
-
-                long total = breakdown.Values.Sum();
-                return Result<(long, Dictionary<string, long>)>.Ok((total, breakdown));
+                return Result<(long, Dictionary<string, long>)>.Ok(Measure(GetTempTargets()));
             }
             catch (Exception ex)
             {
@@ -115,54 +166,12 @@ namespace KWin.Core
             }
         }
 
-        /// <summary>
-        /// Gets the estimated space that can be freed by cleaning browser caches.
-        /// </summary>
+        /// <summary>Estimated space that browser-cache cleanup will free.</summary>
         public Result<(long TotalBytes, Dictionary<string, long> Breakdown)> PreviewBrowserCacheCleanup()
         {
             try
             {
-                var breakdown = new Dictionary<string, long>();
-                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-                // Microsoft Edge
-                long edgeSize = GetChromiumBrowserCacheSize(localAppData, "Microsoft", "Edge");
-                if (edgeSize > 0) breakdown["Microsoft Edge"] = edgeSize;
-
-                // Google Chrome
-                long chromeSize = GetChromiumBrowserCacheSize(localAppData, "Google", "Chrome");
-                if (chromeSize > 0) breakdown["Google Chrome"] = chromeSize;
-
-                // Brave Browser
-                long braveSize = GetChromiumBrowserCacheSize(localAppData, "BraveSoftware", "Brave-Browser");
-                if (braveSize > 0) breakdown["Brave"] = braveSize;
-
-                // Opera
-                string operaCache = Path.Combine(localAppData, "Opera Software", "Opera Stable", "Cache");
-                string operaCodeCache = Path.Combine(localAppData, "Opera Software", "Opera Stable", "Code Cache");
-                long operaSize = GetDirectorySize(operaCache) + GetDirectorySize(operaCodeCache);
-                if (operaSize > 0) breakdown["Opera"] = operaSize;
-
-                // Vivaldi
-                long vivaldiSize = GetChromiumBrowserCacheSize(localAppData, "Vivaldi", path3: null);
-                if (vivaldiSize > 0) breakdown["Vivaldi"] = vivaldiSize;
-
-                // Mozilla Firefox
-                string firefoxProfiles = Path.Combine(localAppData,
-                    "Mozilla", "Firefox", "Profiles");
-                long firefoxSize = 0;
-                if (Directory.Exists(firefoxProfiles))
-                {
-                    foreach (var profile in Directory.GetDirectories(firefoxProfiles))
-                    {
-                        string ffCache = Path.Combine(profile, "cache2");
-                        firefoxSize += GetDirectorySize(ffCache);
-                    }
-                }
-                if (firefoxSize > 0) breakdown["Mozilla Firefox"] = firefoxSize;
-
-                long total = breakdown.Values.Sum();
-                return Result<(long, Dictionary<string, long>)>.Ok((total, breakdown));
+                return Result<(long, Dictionary<string, long>)>.Ok(Measure(GetBrowserTargets()));
             }
             catch (Exception ex)
             {
@@ -171,225 +180,128 @@ namespace KWin.Core
             }
         }
 
-        /// <summary>
-        /// Helper to calculate cache size for Chromium-based browsers.
-        /// </summary>
-        private static long GetChromiumBrowserCacheSize(string localAppData, string vendor, string? product = null, string? path3 = "User Data")
-        {
-            string basePath = product != null
-                ? Path.Combine(localAppData, vendor, product)
-                : Path.Combine(localAppData, vendor);
+        #endregion
 
-            if (path3 != null)
-                basePath = Path.Combine(basePath, path3);
-
-            string cache = Path.Combine(basePath, "Default", "Cache");
-            string codeCache = Path.Combine(basePath, "Default", "Code Cache");
-            string gpuCache = Path.Combine(basePath, "GpuCache");
-            string shaderCache = Path.Combine(basePath, "ShaderCache");
-
-            return GetDirectorySize(cache) + GetDirectorySize(codeCache)
-                 + GetDirectorySize(gpuCache) + GetDirectorySize(shaderCache);
-        }
+        #region Clean
 
         /// <summary>
-        /// Cleans temporary files from Windows Temp and User Temp directories.
-        /// Skips files that are in use.
+        /// Deletes the files of the given targets. Every file is re-validated against its target
+        /// folder and the protected-folder list right before deletion; links are never followed.
+        /// Locked, read-only or protected files are skipped and counted. Empty subfolders are
+        /// removed; the target folders themselves are kept.
         /// </summary>
-        public Task<Result<(int FilesDeleted, long BytesFreed)>> CleanTempFilesAsync(
-            IProgress<string>? progress = null,
-            CancellationToken cancellationToken = default)
+        public static CleanupReport CleanTargets(IEnumerable<CleanupTarget> targets,
+            IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
-            return Task.Run(() => CleanTempFilesInternal(progress, cancellationToken));
-        }
+            var report = new CleanupReport();
+            DateTime now = DateTime.UtcNow;
 
-        private Result<(int FilesDeleted, long BytesFreed)> CleanTempFilesInternal(
-            IProgress<string>? progress = null,
-            CancellationToken cancellationToken = default)
-        {
-            int filesDeleted = 0;
-            long bytesFreed = 0;
-
-            try
+            foreach (var target in targets)
             {
-                Logger.Instance.Info("CleanTempFiles", "temp folders", "starting");
+                cancellationToken.ThrowIfCancellationRequested();
+                if (!Directory.Exists(target.Path)) continue;
+                progress?.Report($"Cleaning: {target.Path}");
+                var allowed = new[] { target.Path };
 
-                var tempPaths = new List<string>
+                foreach (var file in SafeFileWalker.EnumerateFiles(target.Path))
                 {
-                    Path.GetTempPath(),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Temp"),
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                        "Microsoft", "Windows", "WER"),
-                };
-
-                foreach (var tempPath in tempPaths.Distinct(StringComparer.OrdinalIgnoreCase))
-                {
-                    if (!Directory.Exists(tempPath)) continue;
-
-                    progress?.Report($"Cleaning: {tempPath}");
-
-                    foreach (var file in Directory.EnumerateFiles(tempPath, "*", SearchOption.AllDirectories))
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        try
-                        {
-                            if (!Validator.IsSafeToDelete(file, out _)) continue;
-
-                            var fi = new FileInfo(file);
-                            long size = fi.Length;
-                            fi.Delete();
-                            filesDeleted++;
-                            bytesFreed += size;
-                        }
-                        catch
-                        {
-                            // File in use or access denied — skip silently
-                        }
-                    }
-
-                    // Try to delete empty subdirectories
+                    cancellationToken.ThrowIfCancellationRequested();
                     try
                     {
-                        foreach (var dir in Directory.GetDirectories(tempPath, "*", SearchOption.AllDirectories)
-                            .OrderByDescending(d => d.Length)) // Delete deepest first
+                        if (!target.Includes(file, now)) continue;
+                        if (file.IsReadOnly || !Validator.IsSafeToDelete(file.FullName, allowed, out _))
                         {
-                            try
-                            {
-                                if (Directory.GetFileSystemEntries(dir).Length == 0)
-                                    Directory.Delete(dir);
-                            }
-                            catch { }
+                            report.FilesSkipped++;
+                            continue;
                         }
+
+                        long size = file.Length;
+                        file.Delete();
+                        report.FilesDeleted++;
+                        report.BytesFreed += size;
+                    }
+                    catch
+                    {
+                        report.FilesSkipped++; // in use or access denied
+                    }
+                }
+
+                foreach (var dir in SafeFileWalker.EnumerateDirectoriesDeepestFirst(target.Path))
+                {
+                    try
+                    {
+                        if (Validator.IsUnderDirectory(dir.FullName, target.Path) &&
+                            !dir.EnumerateFileSystemInfos().Any())
+                            dir.Delete(false);
                     }
                     catch { }
                 }
-
-                Logger.Instance.Info("CleanTempFiles", "temp folders", "success",
-                    newValue: $"Deleted {filesDeleted} files, freed {FormatSize(bytesFreed)}");
-
-                return Result<(int, long)>.Ok((filesDeleted, bytesFreed));
             }
-            catch (OperationCanceledException)
-            {
-                Logger.Instance.Warn("CleanTempFiles", "temp folders", "Cancelled by user");
-                return Result<(int, long)>.Fail("Operation cancelled.");
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.Error("CleanTempFiles", "temp folders", ex);
-                return Result<(int, long)>.Fail(ex);
-            }
+            return report;
         }
 
-        /// <summary>
-        /// Cleans browser cache directories for Edge, Chrome, and Firefox.
-        /// Warns if browsers are running.
-        /// </summary>
-        public Task<Result<(int FilesDeleted, long BytesFreed, List<string> Warnings)>> CleanBrowserCachesAsync(
+        /// <summary>Cleans temporary files (files changed in the last 24 hours are kept).</summary>
+        public Task<Result<CleanupReport>> CleanTempFilesAsync(
             IProgress<string>? progress = null,
             CancellationToken cancellationToken = default)
         {
-            return Task.Run(() => CleanBrowserCachesInternal(progress, cancellationToken));
+            return Task.Run(() => RunClean("CleanTempFiles", GetTempTargets(), progress, cancellationToken));
         }
 
-        private Result<(int FilesDeleted, long BytesFreed, List<string> Warnings)> CleanBrowserCachesInternal(
+        /// <summary>Cleans browser caches. Warns about running browsers (their files are locked).</summary>
+        public Task<Result<CleanupReport>> CleanBrowserCachesAsync(
             IProgress<string>? progress = null,
             CancellationToken cancellationToken = default)
         {
-            int filesDeleted = 0;
-            long bytesFreed = 0;
+            return Task.Run(() =>
+            {
+                var result = RunClean("CleanBrowserCaches", GetBrowserTargets(), progress, cancellationToken);
+                if (result.Success)
+                    result.Data!.Warnings.AddRange(GetRunningBrowserWarnings());
+                return result;
+            });
+        }
+
+        /// <summary>Names of supported browsers that are currently running.</summary>
+        public static List<string> GetRunningBrowserWarnings()
+        {
             var warnings = new List<string>();
+            foreach (var (proc, name) in new[]
+            {
+                ("msedge", "Microsoft Edge"), ("chrome", "Google Chrome"), ("firefox", "Mozilla Firefox"),
+                ("brave", "Brave"), ("opera", "Opera"), ("vivaldi", "Vivaldi")
+            })
+            {
+                if (SystemTools.IsProcessRunning(proc))
+                    warnings.Add($"{name} is running — some cache files may be locked.");
+            }
+            return warnings;
+        }
 
+        private static Result<CleanupReport> RunClean(string op, List<CleanupTarget> targets,
+            IProgress<string>? progress, CancellationToken token)
+        {
             try
             {
-                Logger.Instance.Info("CleanBrowserCaches", "browser caches", "starting");
-                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-                // Check running browsers
-                if (SystemTools.IsProcessRunning("msedge"))
-                    warnings.Add("Microsoft Edge is running — some cache files may be locked.");
-                if (SystemTools.IsProcessRunning("chrome"))
-                    warnings.Add("Google Chrome is running — some cache files may be locked.");
-                if (SystemTools.IsProcessRunning("firefox"))
-                    warnings.Add("Mozilla Firefox is running — some cache files may be locked.");
-                if (SystemTools.IsProcessRunning("brave"))
-                    warnings.Add("Brave is running — some cache files may be locked.");
-                if (SystemTools.IsProcessRunning("opera"))
-                    warnings.Add("Opera is running — some cache files may be locked.");
-                if (SystemTools.IsProcessRunning("vivaldi"))
-                    warnings.Add("Vivaldi is running — some cache files may be locked.");
-
-                var cachePaths = new List<string>
-                {
-                    // Edge
-                    Path.Combine(localAppData, "Microsoft", "Edge", "User Data", "Default", "Cache"),
-                    Path.Combine(localAppData, "Microsoft", "Edge", "User Data", "Default", "Code Cache"),
-                    Path.Combine(localAppData, "Microsoft", "Edge", "User Data", "GpuCache"),
-                    Path.Combine(localAppData, "Microsoft", "Edge", "User Data", "ShaderCache"),
-                    // Chrome
-                    Path.Combine(localAppData, "Google", "Chrome", "User Data", "Default", "Cache"),
-                    Path.Combine(localAppData, "Google", "Chrome", "User Data", "Default", "Code Cache"),
-                    Path.Combine(localAppData, "Google", "Chrome", "User Data", "GpuCache"),
-                    Path.Combine(localAppData, "Google", "Chrome", "User Data", "ShaderCache"),
-                    // Brave
-                    Path.Combine(localAppData, "BraveSoftware", "Brave-Browser", "User Data", "Default", "Cache"),
-                    Path.Combine(localAppData, "BraveSoftware", "Brave-Browser", "User Data", "Default", "Code Cache"),
-                    // Opera
-                    Path.Combine(localAppData, "Opera Software", "Opera Stable", "Cache"),
-                    Path.Combine(localAppData, "Opera Software", "Opera Stable", "Code Cache"),
-                    // Vivaldi
-                    Path.Combine(localAppData, "Vivaldi", "User Data", "Default", "Cache"),
-                    Path.Combine(localAppData, "Vivaldi", "User Data", "Default", "Code Cache"),
-                };
-
-                // Add Firefox profile caches
-                string firefoxProfiles = Path.Combine(localAppData, "Mozilla", "Firefox", "Profiles");
-                if (Directory.Exists(firefoxProfiles))
-                {
-                    foreach (var profile in Directory.GetDirectories(firefoxProfiles))
-                    {
-                        cachePaths.Add(Path.Combine(profile, "cache2"));
-                    }
-                }
-
-                foreach (var cachePath in cachePaths)
-                {
-                    if (!Directory.Exists(cachePath)) continue;
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    progress?.Report($"Cleaning: {cachePath}");
-
-                    foreach (var file in Directory.EnumerateFiles(cachePath, "*", SearchOption.AllDirectories))
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        try
-                        {
-                            var fi = new FileInfo(file);
-                            long size = fi.Length;
-                            fi.Delete();
-                            filesDeleted++;
-                            bytesFreed += size;
-                        }
-                        catch { /* Locked files */ }
-                    }
-                }
-
-                Logger.Instance.Info("CleanBrowserCaches", "browser caches", "success",
-                    newValue: $"Deleted {filesDeleted} files, freed {FormatSize(bytesFreed)}");
-
-                return Result<(int, long, List<string>)>.Ok((filesDeleted, bytesFreed, warnings));
+                Logger.Instance.Info(op, string.Join(";", targets.Select(t => t.Path)), "starting");
+                var report = CleanTargets(targets, progress, token);
+                Logger.Instance.Info(op, "cleanup", "success",
+                    newValue: $"Deleted {report.FilesDeleted} files, freed {FormatSize(report.BytesFreed)}, skipped {report.FilesSkipped}");
+                return Result<CleanupReport>.Ok(report);
             }
             catch (OperationCanceledException)
             {
-                return Result<(int, long, List<string>)>.Fail("Operation cancelled.");
+                Logger.Instance.Warn(op, "cleanup", "Cancelled by user");
+                return Result<CleanupReport>.Fail("Operation cancelled.");
             }
             catch (Exception ex)
             {
-                Logger.Instance.Error("CleanBrowserCaches", "browser caches", ex);
-                return Result<(int, long, List<string>)>.Fail(ex);
+                Logger.Instance.Error(op, "cleanup", ex);
+                return Result<CleanupReport>.Fail(ex);
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Resets Microsoft Store cache using wsreset.exe (30s timeout).
@@ -530,6 +442,27 @@ namespace KWin.Core
                 return Result<bool>.Fail(ex);
             }
         }
+    }
+
+    /// <summary>A folder to clean, with an optional minimum file age.</summary>
+    public sealed record CleanupTarget(string Label, string Path, TimeSpan? MinAge)
+    {
+        /// <summary>Whether a file in this target is eligible for deletion.</summary>
+        public bool Includes(FileInfo file, DateTime nowUtc)
+        {
+            if (MinAge is not TimeSpan age) return true;
+            try { return nowUtc - file.LastWriteTimeUtc >= age; }
+            catch { return false; }
+        }
+    }
+
+    /// <summary>Result of a cleanup run, including files that could not be deleted.</summary>
+    public sealed class CleanupReport
+    {
+        public int FilesDeleted { get; set; }
+        public long BytesFreed { get; set; }
+        public int FilesSkipped { get; set; }
+        public List<string> Warnings { get; } = new();
     }
 
     /// <summary>

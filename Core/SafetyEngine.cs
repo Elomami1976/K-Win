@@ -1,112 +1,167 @@
 using System.Management;
+using System.Text.Json;
 using KWin.Models;
 using KWin.Utils;
 
 namespace KWin.Core
 {
     /// <summary>
-    /// Central safety system responsible for creating restore points, managing backups,
-    /// and maintaining an undo stack for all system modifications.
-    /// This is the guardian of system integrity — every modification flows through here.
+    /// Restore points, undo history and change capture.
+    ///
+    /// While an operation is running (BeginOperation .. EndOperation), every verified
+    /// registry change made through <see cref="RegistryHelper"/> is captured. Captured
+    /// changes are attached to the next PushUndoAction call, or to an automatic undo
+    /// entry at EndOperation, so no registry change is ever left without an undo record.
+    /// The undo history is saved to undo.json and survives restarts.
     /// </summary>
+    /// <summary>What happened to the registry during one operation.</summary>
+    public sealed record OperationCapture(
+        List<RegistryChange> Changes,
+        string? UndoId,
+        bool HasSessionStep,
+        List<string> Failures);
+
     public class SafetyEngine
     {
-        private readonly Stack<UndoAction> _undoStack = new();
-        private readonly string _backupDirectory;
+        public const int MaxUndoDepth = 20;
 
-        /// <summary>Maximum number of undo operations to keep in the stack.</summary>
-        public const int MaxUndoDepth = 5;
+        private readonly RegistryHelper _registry;
+        private readonly string _undoFile;
+        private readonly List<UndoAction> _undo = new(); // oldest first
+        private readonly object _lock = new();
 
-        /// <summary>Gets the number of available undo operations.</summary>
-        public int UndoCount => _undoStack.Count;
+        private readonly List<RegistryChange> _pending = new();
+        private readonly List<RegistryChange> _operationChanges = new();
+        private readonly List<string> _operationFailures = new();
+        private bool _capturing;
+        private bool _undoPushedThisOperation;
+        private string? _lastPushedId;
 
-        /// <summary>Gets the description of the most recent undoable action.</summary>
-        public string? LastUndoDescription => _undoStack.Count > 0 ? _undoStack.Peek().Description : null;
+        private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
-        /// <summary>Gets all available undo actions (read-only).</summary>
-        public IReadOnlyList<UndoAction> UndoActions => _undoStack.ToList().AsReadOnly();
-
-        public SafetyEngine()
+        public SafetyEngine(RegistryHelper registry, string? dataDirectory = null)
         {
-            _backupDirectory = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "K-win", "backups");
-            Directory.CreateDirectory(_backupDirectory);
+            _registry = registry;
+            string dir = dataDirectory ?? AppPaths.DataDirectory;
+            Directory.CreateDirectory(dir);
+            _undoFile = Path.Combine(dir, "undo.json");
+            _registry.ChangeRecorded += OnChangeRecorded;
+            _registry.ChangeFailed += OnChangeFailed;
+            LoadUndo();
         }
 
-        /// <summary>Gets the backup directory path.</summary>
-        public string BackupDirectory => _backupDirectory;
+        public string BackupDirectory => _registry.BackupDirectory;
 
-        /// <summary>
-        /// Creates a Windows System Restore Point using WMI before any system modification.
-        /// Description format: "K-win Win11: [Operation] on [Date]"
-        /// </summary>
-        /// <param name="operationName">Name of the operation being performed.</param>
-        /// <returns>Result indicating success or failure.</returns>
-        public Result<bool> CreateRestorePoint(string operationName)
+        public int UndoCount { get { lock (_lock) return _undo.Count; } }
+
+        public string? LastUndoDescription { get { lock (_lock) return _undo.Count > 0 ? _undo[^1].Description : null; } }
+
+        public UndoAction? PeekUndo() { lock (_lock) return _undo.Count > 0 ? _undo[^1] : null; }
+
+        /// <summary>Newest first.</summary>
+        public IReadOnlyList<UndoAction> UndoActions { get { lock (_lock) return _undo.AsEnumerable().Reverse().ToList(); } }
+
+        #region Change capture
+
+        private void OnChangeRecorded(RegistryChange change)
         {
-            string description = $"K-win Win11: {operationName} on {DateTime.Now:yyyy-MM-dd HH:mm}";
-
-            try
+            lock (_lock)
             {
-                Logger.Instance.Info("CreateRestorePoint", description, "starting");
-
-                // Use WMI to create a system restore point
-                var scope = new ManagementScope(@"\\.\root\default");
-                var path = new ManagementPath("SystemRestore");
-                var options = new ObjectGetOptions();
-
-                using var process = new ManagementClass(scope, path, options);
-                var inParams = process.GetMethodParameters("CreateRestorePoint");
-                inParams["Description"] = description;
-                inParams["RestorePointType"] = 12; // APPLICATION_INSTALL
-                inParams["EventType"] = 100;       // BEGIN_SYSTEM_CHANGE
-
-                var outParams = process.InvokeMethod("CreateRestorePoint", inParams, null);
-                var returnValue = Convert.ToInt32(outParams["ReturnValue"]);
-
-                if (returnValue == 0)
-                {
-                    Logger.Instance.Info("CreateRestorePoint", description, "success");
-                    return Result<bool>.Ok(true);
-                }
-                else
-                {
-                    string error = $"WMI returned code {returnValue}";
-                    Logger.Instance.Error("CreateRestorePoint", description, error);
-                    return Result<bool>.Fail(error);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.Error("CreateRestorePoint", description, ex);
-                return Result<bool>.Fail(ex);
+                if (!_capturing) return;
+                _pending.Add(change);
+                _operationChanges.Add(change);
             }
         }
 
+        private void OnChangeFailed(string target, string reason)
+        {
+            lock (_lock)
+            {
+                if (_capturing) _operationFailures.Add($"{target}: {reason}");
+            }
+        }
+
+        /// <summary>Starts capturing registry changes for an operation.</summary>
+        public void BeginOperation()
+        {
+            lock (_lock)
+            {
+                _pending.Clear();
+                _operationChanges.Clear();
+                _operationFailures.Clear();
+                _capturing = true;
+                _undoPushedThisOperation = false;
+                _lastPushedId = null;
+            }
+        }
+
         /// <summary>
-        /// Pushes an undo action onto the stack. Trims oldest items if stack exceeds MaxUndoDepth.
+        /// Stops capturing. Changes not yet attached to an undo entry get an automatic one.
+        /// Returns every change made during the operation and the id of the undo entry (if any).
         /// </summary>
-        /// <param name="action">The undo action to register.</param>
+        public OperationCapture EndOperation(string operationName)
+        {
+            List<RegistryChange> leftovers;
+            lock (_lock)
+            {
+                _capturing = false;
+                leftovers = new List<RegistryChange>(_pending);
+                _pending.Clear();
+            }
+
+            if (leftovers.Count > 0)
+            {
+                PushUndoAction(new UndoAction { Description = operationName, RegistryChanges = leftovers });
+            }
+
+            lock (_lock)
+            {
+                bool sessionStep = _undoPushedThisOperation &&
+                    _undo.Any(u => u.Id == _lastPushedId && u.HadSessionStep);
+                return new OperationCapture(
+                    new List<RegistryChange>(_operationChanges),
+                    _undoPushedThisOperation ? _lastPushedId : null,
+                    sessionStep,
+                    new List<string>(_operationFailures));
+            }
+        }
+
+        #endregion
+
+        #region Undo
+
+        /// <summary>
+        /// Adds an undo entry. Registry changes captured since the last push are attached to it.
+        /// </summary>
         public void PushUndoAction(UndoAction action)
         {
             try
             {
-                // Trim if at capacity
-                if (_undoStack.Count >= MaxUndoDepth)
+                lock (_lock)
                 {
-                    var items = _undoStack.ToList();
-                    _undoStack.Clear();
-                    // Keep most recent (MaxUndoDepth - 1) to make room
-                    for (int i = Math.Min(items.Count - 1, MaxUndoDepth - 2); i >= 0; i--)
+                    if (_pending.Count > 0)
                     {
-                        _undoStack.Push(items[i]);
+                        action.RegistryChanges.AddRange(_pending);
+                        _pending.Clear();
                     }
+                    action.HadSessionStep = action.UndoDelegate != null;
+
+                    // Nothing to undo at all: don't create an empty entry.
+                    if (action.RegistryChanges.Count == 0 && action.UndoDelegate == null &&
+                        action.BackupFiles.All(string.IsNullOrEmpty))
+                        return;
+
+                    action.BackupFiles.RemoveAll(string.IsNullOrEmpty);
+                    _undo.Add(action);
+                    while (_undo.Count > MaxUndoDepth) _undo.RemoveAt(0);
+
+                    _undoPushedThisOperation = true;
+                    _lastPushedId = action.Id;
+                    SaveUndo();
                 }
 
-                _undoStack.Push(action);
                 Logger.Instance.Info("PushUndoAction", action.Description, "registered",
-                    newValue: $"Stack depth: {_undoStack.Count}");
+                    newValue: $"changes={action.RegistryChanges.Count}, depth={UndoCount}");
             }
             catch (Exception ex)
             {
@@ -115,150 +170,261 @@ namespace KWin.Core
         }
 
         /// <summary>
-        /// Undoes the most recent action on the stack.
+        /// Undoes the most recent action: reverts its registry changes (newest first), then runs
+        /// its session-only step if still available. Reports partial undo honestly.
         /// </summary>
-        /// <returns>Result indicating success or failure of the undo operation.</returns>
         public async Task<Result<bool>> UndoLastAction()
         {
+            UndoAction? action;
+            lock (_lock)
+            {
+                if (_undo.Count == 0)
+                    return Result<bool>.Fail("No actions to undo.");
+                action = _undo[^1];
+                _undo.RemoveAt(_undo.Count - 1);
+                SaveUndo();
+            }
+
+            Logger.Instance.Info("UndoLastAction", action.Description, "starting");
+            var errors = new List<string>();
+
             try
             {
-                if (_undoStack.Count == 0)
-                    return Result<bool>.Fail("No actions to undo.");
-
-                var action = _undoStack.Pop();
-                Logger.Instance.Info("UndoLastAction", action.Description, "starting");
+                if (action.RegistryChanges.Count > 0)
+                {
+                    for (int i = action.RegistryChanges.Count - 1; i >= 0; i--)
+                    {
+                        var r = await _registry.RevertChangeAsync(action.RegistryChanges[i]);
+                        if (!r.Success) errors.Add(r.ErrorMessage ?? "Unknown error");
+                    }
+                }
+                else if (action.BackupFiles.Count > 0)
+                {
+                    foreach (var file in action.BackupFiles)
+                    {
+                        var r = await _registry.RestoreFromBackup(file);
+                        if (!r.Success) errors.Add(r.ErrorMessage ?? "Unknown error");
+                    }
+                }
 
                 if (action.UndoDelegate != null)
                 {
-                    var result = await action.UndoDelegate();
-                    if (result.Success)
-                    {
-                        Logger.Instance.Info("UndoLastAction", action.Description, "success");
-                    }
-                    else
-                    {
-                        Logger.Instance.Error("UndoLastAction", action.Description,
-                            result.ErrorMessage ?? "Unknown error");
-                    }
-                    return result;
+                    var r = await action.UndoDelegate();
+                    if (!r.Success) errors.Add(r.ErrorMessage ?? "Unknown error");
                 }
-
-                // Fallback: restore from backup files
-                if (action.BackupFiles.Count > 0)
+                else if (action.HadSessionStep)
                 {
-                    return await RestoreFromBackupFiles(action.BackupFiles);
+                    errors.Add("Part of this action (a non-registry step such as a power plan or service state) " +
+                               "could only be undone in the session where it was made. Registry changes were reverted.");
                 }
-
-                return Result<bool>.Fail("No undo delegate or backup files available.");
             }
             catch (Exception ex)
             {
-                Logger.Instance.Error("UndoLastAction", "unknown", ex);
-                return Result<bool>.Fail(ex);
+                errors.Add($"{ex.GetType().Name}: {ex.Message}");
             }
+
+            if (errors.Count > 0)
+            {
+                Logger.Instance.Error("UndoLastAction", action.Description, string.Join(" | ", errors));
+                return Result<bool>.Fail(string.Join("\n", errors));
+            }
+
+            Logger.Instance.Info("UndoLastAction", action.Description, "success");
+            return Result<bool>.Ok(true);
         }
 
-        /// <summary>
-        /// Undoes all actions in the stack, from newest to oldest.
-        /// </summary>
-        /// <returns>Result indicating overall success or failure.</returns>
+        /// <summary>Undoes all actions, newest first.</summary>
         public async Task<Result<bool>> UndoAllActions()
         {
             var errors = new List<string>();
-
-            while (_undoStack.Count > 0)
+            while (UndoCount > 0)
             {
                 var result = await UndoLastAction();
-                if (!result.Success)
-                    errors.Add(result.ErrorMessage ?? "Unknown error");
+                if (!result.Success) errors.Add(result.ErrorMessage ?? "Unknown error");
             }
-
-            if (errors.Count > 0)
-                return Result<bool>.Fail($"Some undo operations failed:\n{string.Join("\n", errors)}");
-
-            return Result<bool>.Ok(true);
+            return errors.Count > 0
+                ? Result<bool>.Fail($"Some undo operations failed:\n{string.Join("\n", errors)}")
+                : Result<bool>.Ok(true);
         }
 
-        /// <summary>
-        /// Restores registry keys from a list of .reg backup files.
-        /// </summary>
-        private async Task<Result<bool>> RestoreFromBackupFiles(List<string> backupFiles)
+        private void LoadUndo()
         {
-            var errors = new List<string>();
-
-            foreach (var backupFile in backupFiles)
+            try
             {
-                try
-                {
-                    if (!File.Exists(backupFile))
-                    {
-                        errors.Add($"Backup file not found: {backupFile}");
-                        continue;
-                    }
-
-                    // Import .reg file using reg.exe
-                    var psi = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "reg.exe",
-                        Arguments = $"import \"{backupFile}\"",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    };
-
-                    using var proc = System.Diagnostics.Process.Start(psi);
-                    if (proc != null)
-                    {
-                        await proc.WaitForExitAsync();
-                        if (proc.ExitCode != 0)
-                        {
-                            string err = await proc.StandardError.ReadToEndAsync();
-                            errors.Add($"Failed to restore {backupFile}: {err}");
-                        }
-                        else
-                        {
-                            Logger.Instance.Info("RestoreBackup", backupFile, "success");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    errors.Add($"Exception restoring {backupFile}: {ex.Message}");
-                }
+                if (!File.Exists(_undoFile)) return;
+                var loaded = JsonSerializer.Deserialize<List<UndoAction>>(File.ReadAllText(_undoFile), JsonOptions);
+                if (loaded != null) _undo.AddRange(loaded.TakeLast(MaxUndoDepth));
             }
-
-            if (errors.Count > 0)
-                return Result<bool>.Fail(string.Join("\n", errors));
-
-            return Result<bool>.Ok(true);
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("SafetyEngine.LoadUndo", _undoFile, ex);
+                AppPaths.QuarantineCorruptFile(_undoFile);
+            }
         }
 
+        private void SaveUndo()
+        {
+            try
+            {
+                AppPaths.WriteAllTextAtomic(_undoFile, JsonSerializer.Serialize(_undo, JsonOptions));
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("SafetyEngine.SaveUndo", _undoFile, ex);
+            }
+        }
+
+        #endregion
+
+        #region Restore points
+
         /// <summary>
-        /// Cleans up backup files older than the specified number of days.
+        /// Requests a System Restore point and verifies whether Windows actually created one.
+        /// Windows silently skips creation if a restore point was made in the last 24 hours
+        /// (SystemRestorePointCreationFrequency); that case is reported as SkippedRecentExists.
+        /// This is a blocking WMI call: run it on a background thread.
         /// </summary>
-        /// <param name="daysToKeep">Number of days of backups to retain.</param>
-        /// <returns>Number of files deleted.</returns>
+        public RestorePointOutcome CreateRestorePoint(string operationName)
+        {
+            string description = $"K-win: {operationName}";
+            if (description.Length > 64) description = description[..64]; // Windows truncates long descriptions
+
+            if (!ElevationHelper.IsAdministrator)
+            {
+                return new RestorePointOutcome
+                {
+                    Status = RestorePointStatus.SkippedNotAdmin,
+                    Message = "Restore points require administrator rights."
+                };
+            }
+
+            try
+            {
+                Logger.Instance.Info("CreateRestorePoint", description, "starting");
+                var latestBefore = GetLatestRestorePoint();
+
+                var scope = new ManagementScope(@"\\.\root\default");
+                using var sr = new ManagementClass(scope, new ManagementPath("SystemRestore"), new ObjectGetOptions());
+                using var inParams = sr.GetMethodParameters("CreateRestorePoint");
+                inParams["Description"] = description;
+                inParams["RestorePointType"] = 12; // MODIFY_SETTINGS
+                inParams["EventType"] = 100;       // BEGIN_SYSTEM_CHANGE
+
+                using var outParams = sr.InvokeMethod("CreateRestorePoint", inParams, null);
+                int returnValue = Convert.ToInt32(outParams["ReturnValue"]);
+
+                if (returnValue != 0)
+                {
+                    string reason = returnValue switch
+                    {
+                        1058 => "System Restore is turned off or its service is disabled.",
+                        1068 => "A service System Restore depends on could not start.",
+                        unchecked((int)0x80070422) => "System Restore is turned off or its service is disabled.",
+                        _ => $"Windows returned error code {returnValue}."
+                    };
+                    Logger.Instance.Error("CreateRestorePoint", description, reason);
+                    return new RestorePointOutcome { Status = RestorePointStatus.Failed, Message = reason };
+                }
+
+                var latestAfter = GetLatestRestorePoint();
+                if (latestAfter != null && (latestBefore == null || latestAfter.Value.Sequence > latestBefore.Value.Sequence))
+                {
+                    Logger.Instance.Info("CreateRestorePoint", description, "verified",
+                        newValue: $"seq={latestAfter.Value.Sequence}");
+                    return new RestorePointOutcome
+                    {
+                        Status = RestorePointStatus.Created,
+                        Message = "Restore point created and verified.",
+                        SequenceNumber = latestAfter.Value.Sequence,
+                        LatestRestorePointTime = latestAfter.Value.Created
+                    };
+                }
+
+                if (latestBefore != null)
+                {
+                    string msg = $"Windows did not create a new restore point because one was created recently " +
+                                 $"({latestBefore.Value.Created:g}). That earlier restore point is still available.";
+                    Logger.Instance.Warn("CreateRestorePoint", description, msg);
+                    return new RestorePointOutcome
+                    {
+                        Status = RestorePointStatus.SkippedRecentExists,
+                        Message = msg,
+                        SequenceNumber = latestBefore.Value.Sequence,
+                        LatestRestorePointTime = latestBefore.Value.Created
+                    };
+                }
+
+                const string noneMsg = "Windows reported success, but no restore point could be found. System Restore may be turned off for the system drive.";
+                Logger.Instance.Error("CreateRestorePoint", description, noneMsg);
+                return new RestorePointOutcome { Status = RestorePointStatus.Failed, Message = noneMsg };
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("CreateRestorePoint", description, ex);
+                return new RestorePointOutcome
+                {
+                    Status = RestorePointStatus.Failed,
+                    Message = $"{ex.GetType().Name}: {ex.Message}"
+                };
+            }
+        }
+
+        private static (uint Sequence, DateTime Created)? GetLatestRestorePoint()
+        {
+            try
+            {
+                using var searcher = new ManagementObjectSearcher(@"root\default",
+                    "SELECT SequenceNumber, CreationTime FROM SystemRestore");
+                (uint, DateTime)? latest = null;
+                foreach (ManagementObject mo in searcher.Get())
+                {
+                    using (mo)
+                    {
+                        uint seq = Convert.ToUInt32(mo["SequenceNumber"]);
+                        DateTime created = ManagementDateTimeConverter.ToDateTime(mo["CreationTime"]?.ToString() ?? "");
+                        if (latest == null || seq > latest.Value.Item1)
+                            latest = (seq, created);
+                    }
+                }
+                return latest;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
+        /// <summary>Deletes .reg backups older than the given number of days, keeping any still needed for undo.</summary>
         public int CleanOldBackups(int daysToKeep = 30)
         {
             int cleaned = 0;
             try
             {
-                var cutoff = DateTime.Now.AddDays(-daysToKeep);
-                foreach (var file in Directory.GetFiles(_backupDirectory, "*.reg"))
+                HashSet<string> inUse;
+                lock (_lock)
                 {
+                    inUse = _undo.SelectMany(u => u.RegistryChanges.Select(c => c.BackupFile ?? "").Concat(u.BackupFiles))
+                        .Where(f => !string.IsNullOrEmpty(f))
+                        .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                }
+
+                var cutoff = DateTime.Now.AddDays(-daysToKeep);
+                foreach (var file in Directory.GetFiles(BackupDirectory, "*.reg"))
+                {
+                    if (inUse.Contains(file)) continue;
                     if (File.GetCreationTime(file) < cutoff)
                     {
                         File.Delete(file);
                         cleaned++;
                     }
                 }
-                Logger.Instance.Info("CleanOldBackups", _backupDirectory, "success",
-                    newValue: $"Deleted {cleaned} files");
+                Logger.Instance.Info("CleanOldBackups", BackupDirectory, "success", newValue: $"Deleted {cleaned} files");
             }
             catch (Exception ex)
             {
-                Logger.Instance.Error("CleanOldBackups", _backupDirectory, ex);
+                Logger.Instance.Error("CleanOldBackups", BackupDirectory, ex);
             }
             return cleaned;
         }

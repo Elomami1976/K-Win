@@ -55,23 +55,47 @@ namespace KWin.Models
 
     /// <summary>
     /// Represents an action that can be undone.
-    /// Stored in the undo stack for rollback capability.
+    /// Registry changes are saved to disk so they can be undone after a restart.
+    /// Non-registry steps (UndoDelegate, e.g. switching the power plan back) only exist
+    /// for the current session.
     /// </summary>
     public class UndoAction
     {
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = Guid.NewGuid().ToString("N")[..12];
+
         /// <summary>Human-readable description of the action.</summary>
+        [JsonPropertyName("description")]
         public string Description { get; set; } = string.Empty;
 
-        /// <summary>When this action was performed.</summary>
+        /// <summary>When this action was performed (UTC).</summary>
+        [JsonPropertyName("performed_at")]
         public DateTime PerformedAt { get; set; } = DateTime.UtcNow;
 
-        /// <summary>The delegate that reverses this action.</summary>
+        /// <summary>
+        /// Extra, non-registry undo step for this session only (not saved to disk).
+        /// It runs after the registry changes have been reverted.
+        /// </summary>
+        [JsonIgnore]
         public Func<Task<Result<bool>>>? UndoDelegate { get; set; }
 
-        /// <summary>List of registry backup file paths associated with this action.</summary>
+        /// <summary>True if this action had a session-only undo step when it was created.</summary>
+        [JsonPropertyName("had_session_step")]
+        public bool HadSessionStep { get; set; }
+
+        /// <summary>Precisely reversible registry changes, newest last.</summary>
+        [JsonPropertyName("registry_changes")]
+        public List<RegistryChange> RegistryChanges { get; set; } = new();
+
+        /// <summary>Legacy: .reg backup files (used only when no RegistryChanges were recorded).</summary>
+        [JsonPropertyName("backup_files")]
         public List<string> BackupFiles { get; set; } = new();
 
-        /// <summary>Related change logs for this action.</summary>
-        public List<ChangeLog> Changes { get; set; } = new();
+        /// <summary>
+        /// True when part of the undo is no longer available
+        /// (the session-only step was lost because the app restarted).
+        /// </summary>
+        [JsonIgnore]
+        public bool IsPartial => HadSessionStep && UndoDelegate == null;
     }
 }

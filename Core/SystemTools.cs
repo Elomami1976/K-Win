@@ -41,7 +41,7 @@ namespace KWin.Core
 
                 var psi = new ProcessStartInfo
                 {
-                    FileName = fileName,
+                    FileName = ResolveSystemTool(fileName),
                     Arguments = arguments,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -52,6 +52,11 @@ namespace KWin.Core
 
                 using var process = new Process { StartInfo = psi };
                 process.Start();
+
+                // Read output while the process runs; reading only after exit can deadlock
+                // when a tool (e.g. sfc) writes more than the pipe buffer holds.
+                var stdoutTask = process.StandardOutput.ReadToEndAsync();
+                var stderrTask = process.StandardError.ReadToEndAsync();
 
                 // Create a combined cancellation token with timeout
                 using var timeoutCts = new CancellationTokenSource(timeoutMs);
@@ -78,8 +83,8 @@ namespace KWin.Core
                     return Result<string>.Fail("Operation cancelled.");
                 }
 
-                string stdout = await process.StandardOutput.ReadToEndAsync();
-                string stderr = await process.StandardError.ReadToEndAsync();
+                string stdout = await stdoutTask;
+                string stderr = await stderrTask;
 
                 if (process.ExitCode == 0)
                 {
@@ -117,7 +122,7 @@ namespace KWin.Core
 
                 var psi = new ProcessStartInfo
                 {
-                    FileName = fileName,
+                    FileName = ResolveSystemTool(fileName),
                     Arguments = arguments,
                     UseShellExecute = true
                 };
@@ -331,45 +336,80 @@ namespace KWin.Core
         }
 
         /// <summary>
-        /// Stops and disables a Windows service (ONLY non-critical services).
+        /// Stops a Windows service (only non-critical services).
+        /// The start type is changed separately through RegistryHelper so it is backed up and reversible.
         /// </summary>
-        public async Task<Result<bool>> StopAndDisableServiceAsync(string serviceName)
+        public static async Task<Result<bool>> StopServiceAsync(string serviceName)
         {
             try
             {
                 if (Validator.IsCriticalService(serviceName))
-                    return Result<bool>.Fail($"Service '{serviceName}' is marked as critical and cannot be disabled.");
+                    return Result<bool>.Fail($"Service '{serviceName}' is marked as critical and cannot be stopped.");
 
-                Logger.Instance.Info("StopAndDisableService", serviceName, "starting");
-
-                // Use ServiceController API directly (no sc.exe needed)
                 using var sc = new System.ServiceProcess.ServiceController(serviceName);
-
-                if (sc.Status == System.ServiceProcess.ServiceControllerStatus.Running)
+                if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Stopped)
                 {
                     sc.Stop();
-                    await Task.Run(() =>
-                        sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Stopped,
-                            TimeSpan.FromSeconds(15)));
+                    await Task.Run(() => sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Stopped,
+                        TimeSpan.FromSeconds(20)));
                 }
-
-                // Disable the service via registry (Start = 4 means Disabled)
-                // The caller is responsible for backing up the registry key first
-                using var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(
-                    $@"SYSTEM\CurrentControlSet\Services\{serviceName}", true);
-                if (key != null)
-                {
-                    key.SetValue("Start", 4, Microsoft.Win32.RegistryValueKind.DWord);
-                }
-
-                Logger.Instance.Info("StopAndDisableService", serviceName, "success");
+                Logger.Instance.Info("StopService", serviceName, "success");
                 return Result<bool>.Ok(true);
             }
             catch (Exception ex)
             {
-                Logger.Instance.Error("StopAndDisableService", serviceName, ex);
+                Logger.Instance.Error("StopService", serviceName, ex);
                 return Result<bool>.Fail(ex);
             }
+        }
+
+        /// <summary>Starts a Windows service and waits until it is running.</summary>
+        public static async Task<Result<bool>> StartServiceAsync(string serviceName)
+        {
+            try
+            {
+                using var sc = new System.ServiceProcess.ServiceController(serviceName);
+                if (sc.Status != System.ServiceProcess.ServiceControllerStatus.Running)
+                {
+                    sc.Start();
+                    await Task.Run(() => sc.WaitForStatus(System.ServiceProcess.ServiceControllerStatus.Running,
+                        TimeSpan.FromSeconds(20)));
+                }
+                Logger.Instance.Info("StartService", serviceName, "success");
+                return Result<bool>.Ok(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("StartService", serviceName, ex);
+                return Result<bool>.Fail(ex);
+            }
+        }
+
+        /// <summary>True if the service exists and is running.</summary>
+        public static bool IsServiceRunning(string serviceName)
+        {
+            try
+            {
+                using var sc = new System.ServiceProcess.ServiceController(serviceName);
+                return sc.Status == System.ServiceProcess.ServiceControllerStatus.Running;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Maps an approved tool name to its full path in System32 so a same-named program
+        /// in the current folder or PATH can never be started instead.
+        /// </summary>
+        public static string ResolveSystemTool(string fileName)
+        {
+            string name = Path.GetFileName(fileName);
+            string candidate = Path.Combine(Environment.SystemDirectory, name);
+            if (File.Exists(candidate)) return candidate;
+            string winCandidate = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), name);
+            return File.Exists(winCandidate) ? winCandidate : candidate;
         }
 
         /// <summary>

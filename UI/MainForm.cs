@@ -1,6 +1,7 @@
 using Microsoft.Win32;
 using KWin.Core;
 using KWin.Models;
+using KWin.Services;
 using KWin.Utils;
 using static KWin.Utils.Loc;
 
@@ -18,6 +19,13 @@ namespace KWin.UI
         private readonly SystemTools _systemTools;
         private readonly CleanupManager _cleanup;
         private readonly AppManager _appManager;
+        private readonly OperationHistoryService _history;
+
+        // Operation status tracking (an operation fails if any status was reported as an error)
+        private bool _statusErrorDuringOp;
+        private bool _operationHasIrreversibleSteps;
+        private string? _lastErrorStatus;
+        private readonly ToolTip _undoToolTip = new();
 
         // RAM monitor timer
         private System.Windows.Forms.Timer? _ramTimer;
@@ -43,11 +51,12 @@ namespace KWin.UI
         private static readonly Color LightSurface = Color.White;
         private static readonly Color LightText = Color.FromArgb(30, 30, 30);
 
-        public MainForm()
+        public MainForm(int? initialTab = null)
         {
             // Initialize core services
-            _safety = new SafetyEngine();
             _registry = new RegistryHelper();
+            _safety = new SafetyEngine(_registry);
+            _history = new OperationHistoryService();
             _systemTools = new SystemTools();
             _cleanup = new CleanupManager(_systemTools);
             _appManager = new AppManager();
@@ -107,8 +116,42 @@ namespace KWin.UI
             _settingsButton.FlatAppearance.BorderColor = Color.FromArgb(0, 100, 180);
             _settingsButton.Click += SettingsButton_Click;
 
+            // Administrator status (K-Win runs as a normal user and elevates only on request)
+            Control adminStatus;
+            if (ElevationHelper.IsAdministrator)
+            {
+                adminStatus = new Label
+                {
+                    Text = Get("elev.status_admin"),
+                    ForeColor = Color.White,
+                    BackColor = AccentBlue,
+                    Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                    TextAlign = ContentAlignment.MiddleRight,
+                    Location = new Point(470, 18),
+                    Size = new Size(320, 20)
+                };
+            }
+            else
+            {
+                var link = new LinkLabel
+                {
+                    Text = Get("elev.status_user"),
+                    LinkColor = Color.White,
+                    ActiveLinkColor = Color.FromArgb(255, 216, 77),
+                    ForeColor = Color.White,
+                    BackColor = AccentBlue,
+                    Font = new Font("Segoe UI", 9F),
+                    TextAlign = ContentAlignment.MiddleRight,
+                    Location = new Point(470, 18),
+                    Size = new Size(320, 20)
+                };
+                link.LinkClicked += (s, e) => RequestElevation(Get("elev.generic_op"));
+                adminStatus = link;
+            }
+
             headerPanel.Controls.Add(titleLabel);
             headerPanel.Controls.Add(subtitleLabel);
+            headerPanel.Controls.Add(adminStatus);
             headerPanel.Controls.Add(_settingsButton);
 
             // Tab control
@@ -203,6 +246,13 @@ namespace KWin.UI
 
             // Apply theme
             ApplyTheme();
+
+            // Reopen the tab the user was on before restarting as administrator
+            if (initialTab is int tab && tab >= 0 && tab < _tabControl.TabCount)
+                _tabControl.SelectedIndex = tab;
+
+            // Undo history is loaded from disk
+            UpdateUndoButton();
 
             // Log startup
             Logger.Instance.Info("Application", "MainForm", "started",
@@ -1217,7 +1267,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, Get("perf.op.create_ultimate_title"), changes))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("perf.op.create_ultimate_title"), async () =>
+            await ExecuteUserLevelAsync(Get("perf.op.create_ultimate_title"), async () =>
             {
                 var result = await _systemTools.CreateUltimatePerformancePlanAsync();
                 if (result.Success)
@@ -1247,7 +1297,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, Get("perf.op.change_power_plan"), changes))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("perf.op.change_power_plan"), async () =>
+            await ExecuteUserLevelAsync(Get("perf.op.change_power_plan"), async () =>
             {
                 // Save current plan for undo
                 var currentPlan = await _systemTools.GetActivePowerPlanAsync();
@@ -1296,7 +1346,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, Get("perf.op.visual_effects_title"), changes))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("perf.op.visual_effects_title"), async () =>
+            await ExecuteUserLevelAsync(Get("perf.op.visual_effects_title"), async () =>
             {
                 var backups = new List<string>();
 
@@ -1359,7 +1409,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, Get("perf.op.restore_visual_title"), changes))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("perf.op.restore_visual_title"), async () =>
+            await ExecuteUserLevelAsync(Get("perf.op.restore_visual_title"), async () =>
             {
                 var backups = new List<string>();
 
@@ -1469,7 +1519,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, $"{action} {Get("perf.game_mode")}", changes))
                 return;
 
-            await ExecuteWithSafetyAsync($"{action} {Get("perf.game_mode")}", async () =>
+            await ExecuteUserLevelAsync($"{action} {Get("perf.game_mode")}", async () =>
             {
                 var backups = new List<string>();
 
@@ -1553,28 +1603,20 @@ namespace KWin.UI
                 if (r1.Success) backups.Add(r1.Data!);
 
                 // Also toggle hibernation via powercfg for consistency
-                if (!enable)
-                {
-                    await _systemTools.ExecuteToolAsync("powercfg.exe", "/hibernate off");
-                }
-                else
-                {
-                    await _systemTools.ExecuteToolAsync("powercfg.exe", "/hibernate on");
-                }
+                var hib = await _systemTools.ExecuteToolAsync("powercfg.exe", enable ? "/hibernate on" : "/hibernate off");
+                if (!hib.Success)
+                    SetStatus(Get("failed", hib.ErrorMessage ?? "powercfg"), true);
 
                 _safety.PushUndoAction(new UndoAction
                 {
                     Description = Get("perf.op.revert_fast_startup", enable ? Get("word.disabled") : Get("word.enabled")),
                     BackupFiles = backups,
+                    // Registry values are reverted precisely by SafetyEngine; this only reverts hibernation.
                     UndoDelegate = async () =>
                     {
-                        int revert = enable ? 0 : 1;
-                        _registry.SetValueWithBackup(
-                            @"HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power",
-                            "HiberbootEnabled", revert, RegistryValueKind.DWord);
-                        await _systemTools.ExecuteToolAsync("powercfg.exe",
-                            revert == 1 ? "/hibernate on" : "/hibernate off");
-                        return Result<bool>.Ok(true);
+                        var r = await _systemTools.ExecuteToolAsync("powercfg.exe",
+                            enable ? "/hibernate off" : "/hibernate on");
+                        return r.Success ? Result<bool>.Ok(true) : Result<bool>.Fail(r.ErrorMessage ?? "powercfg failed");
                     }
                 });
                 UpdateUndoButton();
@@ -1607,7 +1649,7 @@ namespace KWin.UI
                 Get("perf.op.startup_warning")))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("perf.op.disable_startup_title"), async () =>
+            await ExecuteUserLevelAsync(Get("perf.op.disable_startup_title"), async () =>
             {
                 var backups = new List<string>();
                 foreach (var item in selected)
@@ -1648,14 +1690,16 @@ namespace KWin.UI
                     : null))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("perf.op.one_click_title"), async () =>
+            await ExecuteUserLevelAsync(Get("perf.op.one_click_title"), async () =>
             {
                 var backups = new List<string>();
 
                 // 1. Power Plan
                 var currentPlan = await _systemTools.GetActivePowerPlanAsync();
                 string previousGuid = currentPlan.Success ? currentPlan.Data! : "";
-                await _systemTools.SetPowerPlanAsync("8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c");
+                var planResult = await _systemTools.SetPowerPlanAsync("8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c");
+                if (!planResult.Success)
+                    SetStatus(Get("failed", planResult.ErrorMessage ?? "powercfg"), true);
 
                 // 2. Visual effects
                 var r1 = _registry.SetValueWithBackup(
@@ -1676,19 +1720,12 @@ namespace KWin.UI
                 {
                     Description = Get("perf.op.revert_boost"),
                     BackupFiles = backups,
+                    // Registry values are reverted precisely by SafetyEngine; this only restores the power plan.
                     UndoDelegate = async () =>
                     {
-                        // Restore power plan
-                        if (!string.IsNullOrEmpty(previousGuid))
-                            await _systemTools.SetPowerPlanAsync(previousGuid);
-
-                        // Restore registry from backups
-                        foreach (var backup in backups)
-                        {
-                            if (File.Exists(backup))
-                                await _registry.RestoreFromBackup(backup);
-                        }
-                        return Result<bool>.Ok(true);
+                        if (string.IsNullOrEmpty(previousGuid)) return Result<bool>.Ok(true);
+                        var r = await _systemTools.SetPowerPlanAsync(previousGuid);
+                        return r.Success ? Result<bool>.Ok(true) : Result<bool>.Fail(r.ErrorMessage ?? "powercfg failed");
                     }
                 });
                 UpdateUndoButton();
@@ -1756,20 +1793,26 @@ namespace KWin.UI
                     "AllowTelemetry", 1, RegistryValueKind.DWord);
                 if (r1.Success) backups.Add(r1.Data!);
 
-                // Stop DiagTrack service
-                try
+                // Disable DiagTrack: start type via RegistryHelper (backed up, reversible), then stop it.
+                bool diagWasRunning = SystemTools.IsServiceRunning("DiagTrack");
+                var r2 = _registry.SetValueWithBackup(
+                    @"HKLM\SYSTEM\CurrentControlSet\Services\DiagTrack",
+                    "Start", 4, RegistryValueKind.DWord);
+                if (r2.Success)
                 {
-                    await _systemTools.StopAndDisableServiceAsync("DiagTrack");
-                }
-                catch (Exception ex)
-                {
-                    Logger.Instance.Warn("ReduceTelemetry", "DiagTrack", ex.Message);
+                    backups.Add(r2.Data!);
+                    var stop = await SystemTools.StopServiceAsync("DiagTrack");
+                    if (!stop.Success)
+                        Logger.Instance.Warn("ReduceTelemetry", "DiagTrack", stop.ErrorMessage ?? "stop failed");
                 }
 
                 _safety.PushUndoAction(new UndoAction
                 {
                     Description = Get("priv.op.revert_telemetry"),
-                    BackupFiles = backups
+                    BackupFiles = backups,
+                    UndoDelegate = diagWasRunning
+                        ? async () => await SystemTools.StartServiceAsync("DiagTrack")
+                        : null
                 });
                 UpdateUndoButton();
 
@@ -1871,7 +1914,7 @@ namespace KWin.UI
                 Get("priv.op.ad_replaces_warning")))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("priv.op.reset_ad_title"), async () =>
+            await ExecuteUserLevelAsync(Get("priv.op.reset_ad_title"), async () =>
             {
                 var backups = new List<string>();
 
@@ -1948,18 +1991,8 @@ namespace KWin.UI
                 }
                 catch { }
 
-                // 2. Delete Connected Devices Platform data
-                string cdpPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "ConnectedDevicesPlatform");
-
-                if (Directory.Exists(cdpPath))
-                {
-                    foreach (var file in Directory.EnumerateFiles(cdpPath, "*", SearchOption.AllDirectories))
-                    {
-                        try { File.Delete(file); filesDeleted++; } catch { }
-                    }
-                }
+                // 2. (1.0 deleted the entire ConnectedDevicesPlatform folder here. 1.5 only removes
+                //    the activity database below, which is what this feature is about.)
 
                 // 3. Delete Timeline / ActivitiesCache database
                 string actCachePath = Path.Combine(
@@ -2017,6 +2050,7 @@ namespace KWin.UI
                 }
 
                 // Push undo for registry changes only (file deletions are irreversible)
+                _operationHasIrreversibleSteps = filesDeleted > 0;
                 if (backups.Count > 0)
                 {
                     _safety.PushUndoAction(new UndoAction
@@ -2128,6 +2162,8 @@ namespace KWin.UI
 
         private async Task SetDnsAsync(int index, Label statusLabel)
         {
+            if (!EnsureAdmin(Get("priv.op.dns_title"))) return;
+
             if (index == 0)
             {
                 // Reset to DHCP
@@ -2137,18 +2173,11 @@ namespace KWin.UI
                     var iface = GetActiveInterfaceName();
                     if (iface == null) { SetStatus(Get("priv.dns_no_adapter"), false); return; }
 
-                    var psi = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "netsh",
-                        Arguments = $"interface ip set dns name=\"{iface}\" dhcp",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true
-                    };
-                    var proc = System.Diagnostics.Process.Start(psi);
-                    await proc!.WaitForExitAsync();
+                    var r = await _systemTools.ExecuteToolAsync("netsh.exe", $"interface ip set dns name=\"{iface}\" dhcp");
                     CheckDnsStatus(statusLabel);
-                    SetStatus(Get("priv.dns_set_auto"), false);
+                    SetStatus(r.Success ? Get("priv.dns_set_auto") : Get("failed", r.ErrorMessage ?? ""), !r.Success);
+                    RecordOperation(Get("priv.op.dns_title") + " (DHCP)", r.Success ? OperationStatus.Completed : OperationStatus.Failed,
+                        Reversibility.None, null, r.ErrorMessage);
                 }
                 catch (Exception ex) { SetStatus(Get("failed", ex.Message), false); }
             }
@@ -2170,32 +2199,17 @@ namespace KWin.UI
                     var iface = GetActiveInterfaceName();
                     if (iface == null) { SetStatus(Get("priv.dns_no_adapter"), false); return; }
 
-                    // Set primary DNS
-                    var psi1 = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "netsh",
-                        Arguments = $"interface ip set dns name=\"{iface}\" static {servers[0]}",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true
-                    };
-                    var proc1 = System.Diagnostics.Process.Start(psi1);
-                    await proc1!.WaitForExitAsync();
-
-                    // Set secondary DNS
-                    var psi2 = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "netsh",
-                        Arguments = $"interface ip add dns name=\"{iface}\" {servers[1]} index=2",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true
-                    };
-                    var proc2 = System.Diagnostics.Process.Start(psi2);
-                    await proc2!.WaitForExitAsync();
+                    // Servers come from the fixed list above; the adapter name is validated.
+                    var r1 = await _systemTools.ExecuteToolAsync("netsh.exe", $"interface ip set dns name=\"{iface}\" static {servers[0]}");
+                    var r2 = r1.Success
+                        ? await _systemTools.ExecuteToolAsync("netsh.exe", $"interface ip add dns name=\"{iface}\" {servers[1]} index=2")
+                        : r1;
 
                     CheckDnsStatus(statusLabel);
-                    SetStatus(Get("priv.dns_set_ok", name), false);
+                    bool ok = r1.Success && r2.Success;
+                    SetStatus(ok ? Get("priv.dns_set_ok", name) : Get("failed", (r1.Success ? r2 : r1).ErrorMessage ?? ""), !ok);
+                    RecordOperation($"{Get("priv.op.dns_title")} ({name})", ok ? OperationStatus.Completed : OperationStatus.Failed,
+                        Reversibility.None, Get("hist.dns_revert_hint"), ok ? null : (r1.Success ? r2 : r1).ErrorMessage);
                 }
                 catch (Exception ex) { SetStatus(Get("failed", ex.Message), false); }
             }
@@ -2204,10 +2218,15 @@ namespace KWin.UI
 
         private static string? GetActiveInterfaceName()
         {
-            return System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+            string? name = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
                 .FirstOrDefault(n => n.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up
                     && n.NetworkInterfaceType != System.Net.NetworkInformation.NetworkInterfaceType.Loopback)
                 ?.Name;
+
+            // The name is placed inside quotes on the netsh command line: refuse anything that could break out.
+            if (name == null || name.IndexOfAny(new[] { '"', '\r', '\n', '\0' }) >= 0)
+                return null;
+            return name;
         }
 
         // --- Hosts-based Ad Blocker ---
@@ -2245,97 +2264,52 @@ namespace KWin.UI
             catch { label.Text = Get("common.unable_determine"); }
         }
 
-        private async Task EnableHostsBlockerAsync(Label statusLabel)
+        private Task EnableHostsBlockerAsync(Label statusLabel)
         {
-            var changes = new List<string>
-            {
-                Get("priv.op.hosts_add_desc"),
-                Get("priv.op.hosts_domains")
-            };
-
-            if (!PreviewDialog.ShowPreview(this, Get("priv.op.hosts_title"), changes))
-                return;
-
-            SetBusy(true, Get("priv.hosts_downloading"));
-            try
-            {
-                // Backup existing hosts file
-                string backupPath = HostsPath + ".kwin.bak";
-                if (File.Exists(HostsPath) && !File.Exists(backupPath))
-                    File.Copy(HostsPath, backupPath, false);
-
-                // Download Steven Black's unified hosts list (ads only)
-                using var http = new HttpClient();
-                http.Timeout = TimeSpan.FromSeconds(30);
-                var hostsData = await http.GetStringAsync(
-                    "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts");
-
-                // Parse — extract 0.0.0.0 lines (skip localhost entries)
-                var lines = hostsData.Split('\n')
-                    .Where(l => l.StartsWith("0.0.0.0") && !l.Contains("0.0.0.0 0.0.0.0") && !l.Contains("localhost"))
-                    .Take(15000) // reasonable limit
-                    .ToList();
-
-                // Read existing hosts, remove old K-win block if any
-                string existingContent = File.Exists(HostsPath) ? File.ReadAllText(HostsPath) : "";
-                existingContent = RemoveKwinHostsBlock(existingContent);
-
-                // Append new block
-                var sb = new System.Text.StringBuilder(existingContent.TrimEnd());
-                sb.AppendLine();
-                sb.AppendLine();
-                sb.AppendLine(HostsMarkerStart);
-                sb.AppendLine($"# Added by K-win on {DateTime.Now:yyyy-MM-dd HH:mm}");
-                sb.AppendLine($"# Source: Steven Black's unified hosts — {lines.Count} domains blocked");
-                foreach (var line in lines) sb.AppendLine(line.Trim());
-                sb.AppendLine(HostsMarkerEnd);
-
-                File.WriteAllText(HostsPath, sb.ToString());
-
-                // Flush DNS cache
-                var psi = new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "ipconfig",
-                    Arguments = "/flushdns",
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                };
-                System.Diagnostics.Process.Start(psi)?.WaitForExit(5000);
-
-                CheckHostsBlockerStatus(statusLabel);
-                SetStatus(Get("priv.hosts_enabled_ok", lines.Count), false);
-            }
-            catch (Exception ex) { SetStatus(Get("failed", ex.Message), false); }
-            SetBusy(false, null);
+            // Disabled in 1.5: 1.0 downloaded a third-party list at runtime with no integrity check
+            // and wrote it into the system hosts file. It stays off until a verified source exists.
+            MessageBox.Show(this, Get("priv.hosts_download_disabled"), Get("dialog.kwin"),
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CheckHostsBlockerStatus(statusLabel);
+            return Task.CompletedTask;
         }
 
         private async Task DisableHostsBlockerAsync(Label statusLabel)
         {
+            if (!File.Exists(HostsPath) || !File.ReadAllText(HostsPath).Contains(HostsMarkerStart))
+            {
+                CheckHostsBlockerStatus(statusLabel);
+                SetStatus(Get("priv.hosts_inactive"), false);
+                return;
+            }
+            if (!EnsureAdmin(Get("priv.hosts_disable"))) return;
+
             SetBusy(true, Get("priv.hosts_removing"));
             try
             {
-                if (File.Exists(HostsPath))
-                {
-                    var content = File.ReadAllText(HostsPath);
-                    content = RemoveKwinHostsBlock(content);
-                    File.WriteAllText(HostsPath, content.TrimEnd() + Environment.NewLine);
+                var content = File.ReadAllText(HostsPath);
 
-                    // Flush DNS
-                    var psi = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = "ipconfig",
-                        Arguments = "/flushdns",
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    System.Diagnostics.Process.Start(psi)?.WaitForExit(5000);
-                }
+                // Keep a copy of the current hosts file before rewriting it.
+                string backup = Path.Combine(_safety.BackupDirectory, $"hosts_{DateTime.Now:yyyyMMdd_HHmmss}.bak");
+                File.Copy(HostsPath, backup, overwrite: false);
+
+                File.WriteAllText(HostsPath, RemoveKwinHostsBlock(content).TrimEnd() + Environment.NewLine);
+                await _systemTools.ExecuteToolAsync("ipconfig.exe", "/flushdns");
+
                 CheckHostsBlockerStatus(statusLabel);
                 SetStatus(Get("priv.hosts_disabled_ok"), false);
+                RecordOperation(Get("priv.hosts_disable"), OperationStatus.Completed, Reversibility.None,
+                    Get("hist.backup_at", backup), null);
             }
-            catch (Exception ex) { SetStatus(Get("failed", ex.Message), false); }
-            SetBusy(false, null);
-            await Task.CompletedTask;
+            catch (Exception ex)
+            {
+                SetStatus(Get("failed", ex.Message), true);
+                RecordOperation(Get("priv.hosts_disable"), OperationStatus.Failed, Reversibility.None, null, ex.Message);
+            }
+            finally
+            {
+                SetBusy(false, null);
+            }
         }
 
         private static string RemoveKwinHostsBlock(string content)
@@ -2358,6 +2332,8 @@ namespace KWin.UI
 
         private async void PreviewTempFilesAsync(Label label)
         {
+            try
+            {
             await Task.Run(() =>
             {
                 var result = _cleanup.PreviewTempFileCleanup();
@@ -2374,10 +2350,17 @@ namespace KWin.UI
                     BeginInvoke(() => label.Text = Get("clean.unable_calculate"));
                 }
             });
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("PreviewTempFiles", "ui", ex);
+            }
         }
 
         private async void PreviewBrowserCacheAsync(Label label)
         {
+            try
+            {
             await Task.Run(() =>
             {
                 var result = _cleanup.PreviewBrowserCacheCleanup();
@@ -2399,17 +2382,26 @@ namespace KWin.UI
                     BeginInvoke(() => label.Text = Get("clean.unable_calculate"));
                 }
             });
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("PreviewBrowserCache", "ui", ex);
+            }
         }
 
         private async Task CleanTempFilesAsync(Label previewLabel)
         {
-            var preview = _cleanup.PreviewTempFileCleanup();
+            SetBusy(true, Get("clean.op.scanning"));
+            var preview = await Task.Run(() => _cleanup.PreviewTempFileCleanup());
+            SetBusy(false);
             if (preview.Success)
             {
                 var changes = preview.Data.Breakdown
                     .Select(b => $"{b.Key}: {CleanupManager.FormatSize(b.Value)}")
                     .ToList();
                 changes.Insert(0, $"Total estimated: {CleanupManager.FormatSize(preview.Data.TotalBytes)}");
+                changes.Add(Get("clean.op.temp_age_note"));
+                changes.Add(Get("clean.op.irreversible_note"));
 
                 if (!PreviewDialog.ShowPreview(this, Get("clean.op.clean_temp_title"), changes))
                     return;
@@ -2419,17 +2411,8 @@ namespace KWin.UI
             try
             {
                 var progress = new Progress<string>(msg => SetStatus(msg, false));
-                var result = await Task.Run(() => _cleanup.CleanTempFilesAsync(progress));
-
-                if (result.Success)
-                {
-                    var (files, bytes) = result.Data;
-                    SetStatus(Get("clean.op.cleaned_files", files, CleanupManager.FormatSize(bytes)), false);
-                }
-                else
-                {
-                    SetStatus(Get("clean.op.cleanup_failed", result.ErrorMessage ?? ""), true);
-                }
+                var result = await _cleanup.CleanTempFilesAsync(progress);
+                ReportCleanup(Get("clean.op.clean_temp_title"), result);
 
                 PreviewTempFilesAsync(previewLabel);
             }
@@ -2441,7 +2424,9 @@ namespace KWin.UI
 
         private async Task CleanBrowserCachesAsync(Label previewLabel)
         {
-            var preview = _cleanup.PreviewBrowserCacheCleanup();
+            SetBusy(true, Get("clean.op.scanning"));
+            var preview = await Task.Run(() => _cleanup.PreviewBrowserCacheCleanup());
+            SetBusy(false);
             if (preview.Success)
             {
                 var changes = preview.Data.Breakdown
@@ -2449,9 +2434,9 @@ namespace KWin.UI
                     .ToList();
                 changes.Insert(0, $"Total estimated: {CleanupManager.FormatSize(preview.Data.TotalBytes)}");
 
-                bool anyRunning = SystemTools.IsProcessRunning("msedge") ||
-                                  SystemTools.IsProcessRunning("chrome") ||
-                                  SystemTools.IsProcessRunning("firefox");
+                changes.Add(Get("clean.op.browser_keeps_data"));
+                changes.Add(Get("clean.op.irreversible_note"));
+                bool anyRunning = CleanupManager.GetRunningBrowserWarnings().Count > 0;
 
                 if (!PreviewDialog.ShowPreview(this, Get("clean.op.clean_browser_title"), changes,
                     anyRunning ? Get("clean.op.browser_running_warning") : null))
@@ -2462,22 +2447,13 @@ namespace KWin.UI
             try
             {
                 var progress = new Progress<string>(msg => SetStatus(msg, false));
-                var result = await Task.Run(() => _cleanup.CleanBrowserCachesAsync(progress));
+                var result = await _cleanup.CleanBrowserCachesAsync(progress);
+                ReportCleanup(Get("clean.op.clean_browser_title"), result);
 
-                if (result.Success)
+                if (result.Success && result.Data!.Warnings.Count > 0)
                 {
-                    var (files, bytes, warnings) = result.Data;
-                    SetStatus(Get("clean.op.cleaned_files", files, CleanupManager.FormatSize(bytes)), false);
-
-                    if (warnings.Count > 0)
-                    {
-                        MessageBox.Show(this, string.Join("\n", warnings),
-                            Get("dialog.kwin_warnings"), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                else
-                {
-                    SetStatus(Get("clean.op.cleanup_failed", result.ErrorMessage ?? ""), true);
+                    MessageBox.Show(this, string.Join("\n", result.Data.Warnings),
+                        Get("dialog.kwin_warnings"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 PreviewBrowserCacheAsync(previewLabel);
@@ -2528,6 +2504,8 @@ namespace KWin.UI
             SetStatus(result.Success
                 ? Get("clean.op.recycle_emptied")
                 : Get("failed", result.ErrorMessage ?? ""), !result.Success);
+            RecordOperation(Get("clean.op.recycle_title"), result.Success ? OperationStatus.Completed : OperationStatus.Failed,
+                Reversibility.None, null, result.ErrorMessage);
         }
 
         private void LoadRecycleBinSize(Label label)
@@ -2560,6 +2538,7 @@ namespace KWin.UI
 
             if (!PreviewDialog.ShowPreview(this, Get("clean.op.sfc_title"), changes))
                 return;
+            if (!EnsureAdmin(Get("clean.op.sfc_title"))) return;
 
             SetBusy(true, Get("clean.op.running_sfc"));
             _progressBar.Style = ProgressBarStyle.Marquee;
@@ -2578,6 +2557,8 @@ namespace KWin.UI
                 {
                     SetStatus(Get("failed", result.ErrorMessage ?? ""), true);
                 }
+                RecordOperation(Get("clean.op.sfc_title"), result.Success ? OperationStatus.Completed : OperationStatus.Failed,
+                    Reversibility.None, null, result.ErrorMessage);
             }
             finally
             {
@@ -2597,6 +2578,7 @@ namespace KWin.UI
 
             if (!PreviewDialog.ShowPreview(this, Get("clean.op.dism_title"), changes))
                 return;
+            if (!EnsureAdmin(Get("clean.op.dism_title"))) return;
 
             SetBusy(true, Get("clean.op.running_dism"));
             _progressBar.Style = ProgressBarStyle.Marquee;
@@ -2613,6 +2595,8 @@ namespace KWin.UI
                 {
                     SetStatus(Get("failed", result.ErrorMessage ?? ""), true);
                 }
+                RecordOperation(Get("clean.op.dism_title"), result.Success ? OperationStatus.Completed : OperationStatus.Failed,
+                    Reversibility.None, null, result.ErrorMessage);
             }
             finally
             {
@@ -3170,7 +3154,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, Get("tweak.op.switch_mode", mode), changes))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("tweak.op.switch_mode", mode), async () =>
+            await ExecuteUserLevelAsync(Get("tweak.op.switch_mode", mode), async () =>
             {
                 var backups = new List<string>();
 
@@ -3242,7 +3226,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, $"{action} Transparency", changes))
                 return;
 
-            await ExecuteWithSafetyAsync($"{action} Transparency", async () =>
+            await ExecuteUserLevelAsync($"{action} Transparency", async () =>
             {
                 var backups = new List<string>();
 
@@ -3309,7 +3293,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, $"{action} File Extensions", changes))
                 return;
 
-            await ExecuteWithSafetyAsync($"{action} File Extensions", async () =>
+            await ExecuteUserLevelAsync($"{action} File Extensions", async () =>
             {
                 var backups = new List<string>();
 
@@ -3376,7 +3360,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, $"{action} Widgets", changes))
                 return;
 
-            await ExecuteWithSafetyAsync($"{action} Widgets", async () =>
+            await ExecuteUserLevelAsync($"{action} Widgets", async () =>
             {
                 var backups = new List<string>();
 
@@ -3443,7 +3427,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, $"{action} Chat Icon", changes))
                 return;
 
-            await ExecuteWithSafetyAsync($"{action} Chat Icon", async () =>
+            await ExecuteUserLevelAsync($"{action} Chat Icon", async () =>
             {
                 var backups = new List<string>();
 
@@ -3507,7 +3491,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, Get("tweak.op.set_menu_title", delayMs), changes))
                 return;
 
-            await ExecuteWithSafetyAsync(Get("tweak.op.set_menu_title", delayMs), async () =>
+            await ExecuteUserLevelAsync(Get("tweak.op.set_menu_title", delayMs), async () =>
             {
                 var backups = new List<string>();
 
@@ -3691,7 +3675,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, $"{action} AutoEndTask", changes))
                 return;
 
-            await ExecuteWithSafetyAsync($"{action} AutoEndTask", async () =>
+            await ExecuteUserLevelAsync($"{action} AutoEndTask", async () =>
             {
                 var backups = new List<string>();
 
@@ -3743,7 +3727,7 @@ namespace KWin.UI
             if (!PreviewDialog.ShowPreview(this, action, changes))
                 return;
 
-            await ExecuteWithSafetyAsync(action, async () =>
+            await ExecuteUserLevelAsync(action, async () =>
             {
                 var backups = new List<string>();
 
@@ -3755,16 +3739,10 @@ namespace KWin.UI
                 }
                 else
                 {
-                    // Export backup then delete the key to restore Win11 menus
-                    try
-                    {
-                        using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
-                            @"Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}", false);
-                        if (key != null)
-                            Microsoft.Win32.Registry.CurrentUser.DeleteSubKeyTree(
-                                @"Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}", false);
-                    }
-                    catch { /* key may not exist */ }
+                    // Verified backup, then delete the key to restore the Windows 11 menus (undo re-imports it).
+                    var r = _registry.DeleteKeyTreeWithBackup(
+                        @"HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}");
+                    if (r.Success && !string.IsNullOrEmpty(r.Data)) backups.Add(r.Data);
                 }
 
                 _safety.PushUndoAction(new UndoAction
@@ -3780,7 +3758,8 @@ namespace KWin.UI
                     foreach (var proc in System.Diagnostics.Process.GetProcessesByName("explorer"))
                         proc.Kill();
                     await Task.Delay(500);
-                    System.Diagnostics.Process.Start("explorer.exe");
+                    System.Diagnostics.Process.Start(Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"));
                 }
                 catch { /* Explorer will auto-restart */ }
 
@@ -4247,6 +4226,10 @@ namespace KWin.UI
 
             progressBar.Visible = false;
 
+            RecordOperation(Get("apps.op.uninstall_title"),
+                failed == 0 ? OperationStatus.Completed : OperationStatus.Failed, Reversibility.None,
+                string.Join(", ", appNames), errors.Count > 0 ? string.Join(" | ", errors) : null);
+
             if (errors.Count > 0)
             {
                 statusLabel.Text = Get("apps.op.done_results", succeeded, failed);
@@ -4297,10 +4280,17 @@ namespace KWin.UI
             changes.AddRange(installed.Select(b => $"  • {b.DisplayName}"));
             changes.Add("");
             changes.Add(Get("apps.op.bloat_current_user"));
-            changes.Add(Get("apps.op.bloat_provisioned"));
+            changes.Add(Get("apps.op.bloat_all_users_optional"));
 
             if (!PreviewDialog.ShowPreview(this, Get("apps.op.bloat_title"), changes,
                 Get("apps.op.bloat_warning")))
+                return;
+
+            // Advanced, explicitly confirmed option: also remove for all users (provisioned packages).
+            bool includeAllUsers = MessageBox.Show(this,
+                Get("apps.op.bloat_all_users_q"), Get("apps.op.remove_all_title"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
+            if (includeAllUsers && !EnsureAdmin(Get("apps.op.remove_all_title")))
                 return;
 
             // Execute
@@ -4315,8 +4305,13 @@ namespace KWin.UI
                 progressBar.Value = Math.Min(p.current, progressBar.Maximum);
             });
 
-            var result = await _appManager.RemoveBloatwareAsync(progress);
+            var result = await _appManager.RemoveBloatwareAsync(progress, includeAllUsers);
             progressBar.Visible = false;
+            RecordOperation(Get("apps.op.bloat_title") + (includeAllUsers ? " (all users)" : ""),
+                result.Success && result.Data.Failed == 0 ? OperationStatus.Completed : OperationStatus.Failed,
+                Reversibility.None,
+                result.Success ? string.Join(", ", result.Data.Details) : null,
+                result.Success ? null : result.ErrorMessage);
 
             if (result.Success)
             {
@@ -4382,6 +4377,12 @@ namespace KWin.UI
                 Get("apps.op.remove_all_warning")))
                 return;
 
+            // Second, explicit confirmation for this advanced option (default answer: No).
+            if (MessageBox.Show(this, Get("apps.op.remove_all_confirm", storeApps.Count), Get("apps.op.remove_all_title"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+                return;
+            if (!EnsureAdmin(Get("apps.op.remove_all_title"))) return;
+
             progressBar.Visible = true;
             progressBar.Maximum = storeApps.Count;
             progressBar.Value = 0;
@@ -4394,8 +4395,10 @@ namespace KWin.UI
                 statusLabel.Text = Get("apps.op.removing_all", app.Name);
                 statusLabel.ForeColor = _isDarkMode ? DarkText : Color.Gray;
 
-                // Remove for current user first
-                await _appManager.UninstallStoreAppAsync(app);
+                // Remove for current user first (it may already be gone for this user)
+                var userResult = await _appManager.UninstallStoreAppAsync(app);
+                if (!userResult.Success)
+                    Logger.Instance.Warn("RemoveForAllUsers", app.Name, userResult.ErrorMessage ?? "");
 
                 // Then remove provisioned
                 string pkgName = app.PackageFullName;
@@ -4413,6 +4416,9 @@ namespace KWin.UI
             }
 
             progressBar.Visible = false;
+            RecordOperation(Get("apps.op.remove_all_title"),
+                failed == 0 ? OperationStatus.Completed : OperationStatus.Failed, Reversibility.None,
+                string.Join(", ", storeApps.Select(a => a.Name)), null);
             statusLabel.Text = Get("apps.op.done_all", succeeded, failed);
             statusLabel.ForeColor = failed == 0 ? Color.Green : Color.DarkOrange;
             SetStatus(Get("apps.op.removed_all", succeeded), failed > 0);
@@ -4494,52 +4500,6 @@ namespace KWin.UI
             ramInfoGroup.Controls.Add(ramDetailLabel);
             ramInfoGroup.Controls.Add(ramPageFileLabel);
             ramInfoGroup.Controls.Add(ramPageConfigLabel);
-
-            // --- Clear Cached RAM ---
-            var clearRamGroup = new GroupBox
-            {
-                Text = Get("ram.clear_cached"),
-                Dock = DockStyle.Fill,
-                Padding = new Padding(10),
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold)
-            };
-
-            var clearRamBtn = new Button
-            {
-                Text = Get("ram.empty_working"),
-                Location = new Point(15, 28),
-                Size = new Size(200, 35),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = AccentBlue,
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
-                Cursor = Cursors.Hand
-            };
-            clearRamBtn.FlatAppearance.BorderSize = 0;
-
-            var clearRamStatus = new Label
-            {
-                Text = Get("ram.frees_cached"),
-                Location = new Point(15, 70),
-                Size = new Size(400, 20),
-                Font = new Font("Segoe UI", 9F, FontStyle.Regular)
-            };
-
-            var clearRamNote = new Label
-            {
-                Text = Get("ram.safe_note"),
-                Location = new Point(15, 95),
-                Size = new Size(400, 35),
-                Font = new Font("Segoe UI", 8F, FontStyle.Italic),
-                ForeColor = Color.Gray
-            };
-
-            clearRamBtn.Click += async (s, e) =>
-                await ClearCachedRamAsync(clearRamStatus, ramUsageBar, ramPercentLabel, ramDetailLabel);
-
-            clearRamGroup.Controls.Add(clearRamBtn);
-            clearRamGroup.Controls.Add(clearRamStatus);
-            clearRamGroup.Controls.Add(clearRamNote);
 
             // --- Top Processes by RAM ---
             var topProcsGroup = new GroupBox
@@ -4696,11 +4656,10 @@ namespace KWin.UI
 
             // Layout
             layout.Controls.Add(ramInfoGroup, 0, 0);
-            layout.Controls.Add(clearRamGroup, 1, 0);
+            layout.Controls.Add(sysMainGroup, 1, 0);
             layout.Controls.Add(topProcsGroup, 0, 1);
             layout.SetRowSpan(topProcsGroup, 2);
-            layout.Controls.Add(sysMainGroup, 1, 1);
-            layout.Controls.Add(compressionGroup, 1, 2);
+            layout.Controls.Add(compressionGroup, 1, 1);
 
             tab.Controls.Add(layout);
 
@@ -4776,53 +4735,6 @@ namespace KWin.UI
             }
         }
 
-        private async Task ClearCachedRamAsync(Label statusLabel, ProgressBar ramBar,
-            Label percentLabel, Label detailLabel)
-        {
-            var changes = new List<string>
-            {
-                Get("ram.op.empty_calls"),
-                Get("ram.op.empty_frees"),
-                Get("ram.op.empty_safe"),
-                Get("ram.op.empty_warning")
-            };
-
-            if (!PreviewDialog.ShowPreview(this, Get("ram.op.empty_title"), changes))
-                return;
-
-            SetBusy(true, Get("ram.op.clearing"));
-            try
-            {
-                var result = await Task.Run(() => MemoryManager.EmptyAllWorkingSets());
-                if (result.Success)
-                {
-                    var (cleared, freed) = result.Data;
-                    statusLabel.Text = Get("ram.op.cleared", cleared, freed);
-                    statusLabel.ForeColor = Color.Green;
-                    SetStatus(Get("ram.op.ram_cleared", cleared, freed), false);
-                }
-                else
-                {
-                    statusLabel.Text = Get("failed", result.ErrorMessage ?? "");
-                    statusLabel.ForeColor = Color.Red;
-                }
-
-                // Refresh display after a brief delay
-                await Task.Delay(500);
-                var info = MemoryManager.GetMemoryInfo();
-                if (info.Success)
-                {
-                    ramBar.Value = Math.Min((int)info.Data!.MemoryLoadPercent, 100);
-                    percentLabel.Text = $"{info.Data.MemoryLoadPercent}%";
-                    detailLabel.Text = Get("ram.used_info", info.Data.UsedFormatted, info.Data.TotalFormatted, info.Data.AvailableFormatted);
-                }
-            }
-            finally
-            {
-                SetBusy(false);
-            }
-        }
-
         private void CheckSysMainStatus(Label label)
         {
             try
@@ -4878,24 +4790,22 @@ namespace KWin.UI
                     "Start", enable ? 2 : 4, RegistryValueKind.DWord);
                 if (rb.Success) backups.Add(rb.Data!);
 
-                // Actually start/stop the service
-                if (enable)
-                    await MemoryManager.EnableSysMainAsync();
-                else
-                    await MemoryManager.DisableSysMainAsync();
+                // Start/stop the service (only if the start type was changed successfully)
+                if (rb.Success)
+                {
+                    var svc = enable ? await MemoryManager.StartSysMainAsync() : await MemoryManager.StopSysMainAsync();
+                    if (!svc.Success)
+                        SetStatus(Get("failed", svc.ErrorMessage ?? "SysMain"), true);
+                }
 
                 _safety.PushUndoAction(new UndoAction
                 {
                     Description = Get("ram.op.revert_sysmain", enable ? Get("word.disabled") : Get("word.enabled")),
                     BackupFiles = backups,
-                    UndoDelegate = async () =>
-                    {
-                        if (enable)
-                            await MemoryManager.DisableSysMainAsync();
-                        else
-                            await MemoryManager.EnableSysMainAsync();
-                        return Result<bool>.Ok(true);
-                    }
+                    // Start type is reverted precisely first; this then restores the running state.
+                    UndoDelegate = async () => enable
+                        ? await MemoryManager.StopSysMainAsync()
+                        : await MemoryManager.StartSysMainAsync()
                 });
                 UpdateUndoButton();
 
@@ -4974,27 +4884,70 @@ namespace KWin.UI
 
         #region Safety & Undo
 
-        private async Task ExecuteWithSafetyAsync(string operationName, Func<Task> action)
+        /// <summary>
+        /// Runs a system-changing operation with the full safety workflow:
+        /// admin check, verified restore point (when enabled), registry change capture,
+        /// automatic undo entry, failure detection and a saved history record.
+        /// </summary>
+        private async Task ExecuteWithSafetyAsync(string operationName, Func<Task> action, bool requiresAdmin = true)
         {
+            if (requiresAdmin && !EnsureAdmin(operationName))
+                return;
+
+            var record = new OperationRecord { Name = operationName };
+            _statusErrorDuringOp = false;
+            _lastErrorStatus = null;
+            _operationHasIrreversibleSteps = false;
+
             SetBusy(true, Get("safety.applying", operationName));
+            _safety.BeginOperation();
             try
             {
-                // Create restore point if enabled
                 if (_autoRestorePoint)
                 {
-                    SetStatus(Get("safety.creating_rp"), false);
-                    var rpResult = _safety.CreateRestorePoint(operationName);
-                    if (!rpResult.Success)
+                    if (ElevationHelper.IsAdministrator)
                     {
-                        Logger.Instance.Warn("ExecuteWithSafety", operationName,
-                            $"Restore point failed: {rpResult.ErrorMessage}");
+                        SetStatus(Get("safety.creating_rp"), false);
+                        var rp = await Task.Run(() => _safety.CreateRestorePoint(operationName));
+                        record.RestorePoint = rp.Status;
+
+                        if (rp.Status == RestorePointStatus.Failed)
+                        {
+                            var answer = MessageBox.Show(this,
+                                Get("safety.rp_failed_continue", rp.Message),
+                                Get("safety.rp_failed_title"),
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                            if (answer != DialogResult.Yes)
+                            {
+                                record.Status = OperationStatus.Cancelled;
+                                record.Details = rp.Message;
+                                SetStatus(Get("safety.cancelled_no_rp"), false);
+                                return;
+                            }
+                        }
+                        else if (rp.Status == RestorePointStatus.SkippedRecentExists)
+                        {
+                            Logger.Instance.Info("ExecuteWithSafety", operationName, "restore_point_recent",
+                                newValue: rp.LatestRestorePointTime?.ToString("g"));
+                        }
+                    }
+                    else
+                    {
+                        // User-level change: no restore point possible without admin; registry backups still apply.
+                        record.RestorePoint = RestorePointStatus.SkippedNotAdmin;
                     }
                 }
 
+                SetStatus(Get("safety.applying", operationName), false);
+                _statusErrorDuringOp = false;
                 await action();
+                record.Status = _statusErrorDuringOp ? OperationStatus.Failed : OperationStatus.Completed;
+                if (_statusErrorDuringOp) record.Error = _lastErrorStatus;
             }
             catch (Exception ex)
             {
+                record.Status = OperationStatus.Failed;
+                record.Error = $"{ex.GetType().Name}: {ex.Message}";
                 Logger.Instance.Error("ExecuteWithSafety", operationName, ex);
                 SetStatus($"Error: {ex.Message}", true);
                 MessageBox.Show(this,
@@ -5005,7 +4958,99 @@ namespace KWin.UI
             }
             finally
             {
+                var capture = _safety.EndOperation(operationName);
+                record.RegistryChanges = capture.Changes;
+                record.UndoId = capture.UndoId;
+                record.Reversibility = capture.UndoId == null
+                    ? Reversibility.None
+                    : (capture.HasSessionStep || _operationHasIrreversibleSteps) ? Reversibility.Partial : Reversibility.Full;
+
+                if (capture.Failures.Count > 0 && record.Status != OperationStatus.Cancelled)
+                {
+                    record.Status = OperationStatus.Failed;
+                    record.Error = string.Join(" | ", capture.Failures);
+                }
+
+                record.CompletedUtc = DateTime.UtcNow;
+                _history.Add(record);
+                UpdateUndoButton();
                 SetBusy(false);
+
+                if (capture.Failures.Count > 0 && record.Status != OperationStatus.Cancelled)
+                {
+                    SetStatus(Get("safety.partial_failure_status", capture.Failures.Count), true);
+                    MessageBox.Show(this,
+                        Get("safety.partial_failure", operationName, capture.Changes.Count,
+                            string.Join("\n", capture.Failures.Take(8))),
+                        Get("safety.error_title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else if (record.Status == OperationStatus.Completed && record.RestorePoint == RestorePointStatus.SkippedRecentExists)
+                {
+                    SetStatus(Get("safety.done_rp_recent", operationName), false);
+                }
+            }
+        }
+
+        /// <summary>Same workflow for changes that only affect the current user (no admin rights needed).</summary>
+        private Task ExecuteUserLevelAsync(string operationName, Func<Task> action) =>
+            ExecuteWithSafetyAsync(operationName, action, requiresAdmin: false);
+
+        /// <summary>
+        /// Returns true when K-Win is elevated. Otherwise explains why administrator rights are needed
+        /// and offers to restart K-Win elevated (the current window closes if the user accepts).
+        /// </summary>
+        private bool EnsureAdmin(string operationName)
+        {
+            if (ElevationHelper.IsAdministrator) return true;
+            RequestElevation(operationName);
+            return false;
+        }
+
+        private void RequestElevation(string operationName)
+        {
+            var answer = MessageBox.Show(this,
+                Get("elev.required_msg", operationName),
+                Get("elev.required_title"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (answer != DialogResult.Yes) return;
+
+            if (ElevationHelper.TryRestartElevated(_tabControl.SelectedIndex))
+                Close();
+            else
+                SetStatus(Get("elev.not_started"), false);
+        }
+
+        /// <summary>Adds an entry to the saved operation history.</summary>
+        private void RecordOperation(string name, OperationStatus status, Reversibility reversibility,
+            string? details, string? error)
+        {
+            _history.Add(new OperationRecord
+            {
+                Name = name,
+                Status = status,
+                Reversibility = reversibility,
+                Details = details,
+                Error = error,
+                CompletedUtc = DateTime.UtcNow
+            });
+        }
+
+        /// <summary>Shows and records the outcome of a cleanup run, including skipped files.</summary>
+        private void ReportCleanup(string name, Result<CleanupReport> result)
+        {
+            if (result.Success)
+            {
+                var r = result.Data!;
+                string msg = r.FilesSkipped > 0
+                    ? Get("clean.op.cleaned_files_skipped", r.FilesDeleted, CleanupManager.FormatSize(r.BytesFreed), r.FilesSkipped)
+                    : Get("clean.op.cleaned_files", r.FilesDeleted, CleanupManager.FormatSize(r.BytesFreed));
+                SetStatus(msg, false);
+                RecordOperation(name, OperationStatus.Completed, Reversibility.None, msg, null);
+            }
+            else
+            {
+                SetStatus(Get("clean.op.cleanup_failed", result.ErrorMessage ?? ""), true);
+                RecordOperation(name, OperationStatus.Failed, Reversibility.None, null, result.ErrorMessage);
             }
         }
 
@@ -5017,11 +5062,14 @@ namespace KWin.UI
                 return;
             }
 
-            var confirm = MessageBox.Show(this,
-                Get("safety.undo_confirm", _safety.LastUndoDescription ?? ""),
-                Get("safety.undo_title"),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            var next = _safety.PeekUndo();
+            string desc = next?.Description ?? "";
+            string message = Get("safety.undo_confirm", desc);
+            if (next != null && next.IsPartial)
+                message += "\n\n" + Get("safety.undo_partial_note");
+
+            var confirm = MessageBox.Show(this, message, Get("safety.undo_title"),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm != DialogResult.Yes) return;
 
@@ -5032,6 +5080,14 @@ namespace KWin.UI
                 SetStatus(result.Success
                     ? Get("safety.undo_ok")
                     : Get("safety.undo_fail", result.ErrorMessage ?? ""), !result.Success);
+                RecordOperation(Get("hist.undo_of", desc),
+                    result.Success ? OperationStatus.Completed : OperationStatus.Failed,
+                    Reversibility.None, null, result.ErrorMessage);
+                if (!result.Success)
+                {
+                    MessageBox.Show(this, Get("safety.undo_fail", result.ErrorMessage ?? ""), Get("safety.undo_title"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
                 UpdateUndoButton();
             }
             finally
@@ -5053,11 +5109,7 @@ namespace KWin.UI
                 ? Get("app.undo_n", _safety.UndoCount)
                 : Get("app.undo");
 
-            if (_safety.UndoCount > 0)
-            {
-                var tip = new ToolTip();
-                tip.SetToolTip(_undoButton, _safety.LastUndoDescription);
-            }
+            _undoToolTip.SetToolTip(_undoButton, _safety.UndoCount > 0 ? _safety.LastUndoDescription : null);
         }
 
         #endregion
@@ -5074,6 +5126,11 @@ namespace KWin.UI
 
             _statusLabel.Text = message;
             _statusLabel.ForeColor = isError ? Color.Red : (_isDarkMode ? DarkText : Color.Gray);
+            if (isError)
+            {
+                _statusErrorDuringOp = true;
+                _lastErrorStatus = message;
+            }
         }
 
         private void SetBusy(bool busy, string? message = null)
@@ -5217,6 +5274,7 @@ namespace KWin.UI
         {
             _ramTimer?.Stop();
             _ramTimer?.Dispose();
+            _undoToolTip.Dispose();
             Logger.Instance.Info("Application", "MainForm", "closing");
             Logger.Instance.Dispose();
             base.OnFormClosing(e);

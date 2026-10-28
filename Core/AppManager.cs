@@ -223,7 +223,7 @@ namespace KWin.Core
             {
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "powershell.exe",
+                    FileName = PowerShellPath,
                     Arguments = "-NoProfile -NonInteractive -Command \"Get-AppxPackage | Select-Object Name, PackageFullName, Version, Publisher | ConvertTo-Csv -NoTypeInformation\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -288,7 +288,8 @@ namespace KWin.Core
         }
 
         /// <summary>
-        /// Uninstalls a Win32 desktop app using its uninstall string.
+        /// Uninstalls a Win32 desktop app. The registry UninstallString is parsed and validated by
+        /// <see cref="UninstallCommandParser"/> and the program is started directly - never through cmd.exe.
         /// </summary>
         public async Task<Result<bool>> UninstallDesktopAppAsync(InstalledApp app, IProgress<string>? progress = null)
         {
@@ -297,83 +298,65 @@ namespace KWin.Core
                 if (app.IsStoreApp)
                     return Result<bool>.Fail("Use UninstallStoreAppAsync for Store apps.");
 
-                if (string.IsNullOrWhiteSpace(app.UninstallString))
-                    return Result<bool>.Fail("No uninstall string available.");
+                var parsed = UninstallCommandParser.Parse(app.UninstallString);
+                if (!parsed.Success)
+                {
+                    Logger.Instance.Warn("UninstallDesktopApp", app.Name, $"Refused: {parsed.ErrorMessage} | {app.UninstallString}");
+                    return Result<bool>.Fail($"{parsed.ErrorMessage} Use Windows Settings > Apps to uninstall it.");
+                }
+
+                var cmd = parsed.Data!;
+                if (!File.Exists(cmd.FileName))
+                    return Result<bool>.Fail($"The uninstall program was not found: {cmd.FileName}");
 
                 progress?.Report($"Uninstalling {app.Name}...");
                 Logger.Instance.Info("UninstallDesktopApp", app.Name, "starting",
-                    newValue: app.UninstallString);
+                    newValue: $"{cmd.FileName} {cmd.Arguments}");
 
-                string fileName;
-                string arguments;
-
-                string uninstall = app.UninstallString.Trim();
-
-                // Check if it's an MSI uninstall
-                if (uninstall.Contains("msiexec", StringComparison.OrdinalIgnoreCase))
-                {
-                    fileName = "msiexec.exe";
-                    // Extract the arguments, ensure /quiet flag
-                    var match = Regex.Match(uninstall, @"\{[A-F0-9\-]+\}", RegexOptions.IgnoreCase);
-                    if (match.Success)
-                    {
-                        arguments = $"/x {match.Value} /passive /norestart";
-                    }
-                    else
-                    {
-                        // Use whatever arguments were provided
-                        int msiIdx = uninstall.IndexOf("msiexec", StringComparison.OrdinalIgnoreCase);
-                        arguments = uninstall[(msiIdx + "msiexec.exe".Length)..].Trim();
-                        if (!arguments.Contains("/passive", StringComparison.OrdinalIgnoreCase) &&
-                            !arguments.Contains("/quiet", StringComparison.OrdinalIgnoreCase))
-                        {
-                            arguments += " /passive /norestart";
-                        }
-                    }
-                }
-                else
-                {
-                    // Generic uninstall — run the command via cmd
-                    fileName = "cmd.exe";
-                    arguments = $"/c \"{uninstall}\"";
-                }
-
+                // UseShellExecute=true is required so installers that need elevation get a UAC prompt.
+                // FileName is a validated full path to an .exe, so no command interpreter is involved.
                 var psi = new ProcessStartInfo
                 {
-                    FileName = fileName,
-                    Arguments = arguments,
-                    UseShellExecute = fileName == "cmd.exe", // shell for unknown uninstallers
-                    CreateNoWindow = fileName != "cmd.exe",
-                    RedirectStandardOutput = fileName != "cmd.exe",
-                    RedirectStandardError = fileName != "cmd.exe"
+                    FileName = cmd.FileName,
+                    Arguments = cmd.Arguments,
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(cmd.FileName) ?? Environment.SystemDirectory
                 };
 
-                if (fileName == "cmd.exe")
-                {
-                    psi.UseShellExecute = false;
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.RedirectStandardError = true;
-                }
+                using var process = Process.Start(psi);
+                if (process == null)
+                    return Result<bool>.Fail($"Could not start the uninstaller for {app.Name}.");
 
-                using var process = new Process { StartInfo = psi };
-                process.Start();
-
-                // Wait up to 120 seconds for uninstall
-                using var cts = new CancellationTokenSource(120000);
+                using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(10));
                 try
                 {
                     await process.WaitForExitAsync(cts.Token);
                 }
                 catch (OperationCanceledException)
                 {
-                    try { process.Kill(true); } catch { }
-                    return Result<bool>.Fail($"Uninstall of {app.Name} timed out after 120 seconds.");
+                    return Result<bool>.Fail($"The uninstaller for {app.Name} is still running after 10 minutes. Check it manually.");
                 }
 
-                progress?.Report($"Uninstalled {app.Name}");
-                Logger.Instance.Info("UninstallDesktopApp", app.Name, "success");
-                return Result<bool>.Ok(true);
+                int code = process.ExitCode;
+                if (code == 0 || (cmd.IsMsi && code == 3010))
+                {
+                    progress?.Report($"Uninstalled {app.Name}");
+                    Logger.Instance.Info("UninstallDesktopApp", app.Name, code == 3010 ? "success_restart_required" : "success");
+                    return Result<bool>.Ok(true);
+                }
+
+                string reason = code switch
+                {
+                    1602 => "The uninstall was cancelled.",
+                    1605 => "Windows Installer says this product is not installed.",
+                    _ => $"The uninstaller exited with code {code}."
+                };
+                Logger.Instance.Error("UninstallDesktopApp", app.Name, reason);
+                return Result<bool>.Fail(reason);
+            }
+            catch (System.ComponentModel.Win32Exception ex) when (ex.NativeErrorCode == 1223)
+            {
+                return Result<bool>.Fail("The administrator prompt was declined.");
             }
             catch (Exception ex)
             {
@@ -394,6 +377,8 @@ namespace KWin.Core
 
                 if (IsProtectedApp(app.PackageFullName))
                     return Result<bool>.Fail($"'{app.Name}' is a protected system app and cannot be removed.");
+                if (!IsValidPackageName(app.PackageFullName))
+                    return Result<bool>.Fail($"'{app.Name}' has an unexpected package name and was not removed.");
 
                 progress?.Report($"Removing {app.Name}...");
                 Logger.Instance.Info("UninstallStoreApp", app.Name, "starting",
@@ -401,7 +386,7 @@ namespace KWin.Core
 
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "powershell.exe",
+                    FileName = PowerShellPath,
                     Arguments = $"-NoProfile -NonInteractive -Command \"Remove-AppxPackage -Package '{app.PackageFullName}'\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -415,7 +400,7 @@ namespace KWin.Core
                 string stderr = await process.StandardError.ReadToEndAsync();
                 await process.WaitForExitAsync();
 
-                if (process.ExitCode != 0 && !string.IsNullOrWhiteSpace(stderr))
+                if (process.ExitCode != 0)
                 {
                     Logger.Instance.Error("UninstallStoreApp", app.Name, stderr);
                     return Result<bool>.Fail($"Failed to remove {app.Name}: {stderr.Trim()}");
@@ -442,6 +427,10 @@ namespace KWin.Core
             {
                 if (IsProtectedApp(packageName))
                     return Result<bool>.Fail($"'{packageName}' is a protected system app and cannot be removed.");
+                if (!IsValidPackageName(packageName))
+                    return Result<bool>.Fail($"'{packageName}' is not a valid package name.");
+                if (!ElevationHelper.IsAdministrator)
+                    return Result<bool>.Fail("Removing an app for all users requires administrator rights.");
 
                 progress?.Report($"Removing provisioned package: {packageName}...");
                 Logger.Instance.Info("RemoveProvisionedApp", packageName, "starting");
@@ -449,8 +438,8 @@ namespace KWin.Core
                 // First get the provisioned package name
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "powershell.exe",
-                    Arguments = $"-NoProfile -NonInteractive -Command \"Get-AppxProvisionedPackage -Online | Where-Object {{ $_.DisplayName -like '*{packageName}*' }} | Select-Object -ExpandProperty PackageName\"",
+                    FileName = PowerShellPath,
+                    Arguments = $"-NoProfile -NonInteractive -Command \"Get-AppxProvisionedPackage -Online | Where-Object {{ $_.DisplayName -eq '{packageName}' }} | Select-Object -ExpandProperty PackageName\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -462,16 +451,26 @@ namespace KWin.Core
                 string provisionedName = (await findProcess.StandardOutput.ReadToEndAsync()).Trim();
                 await findProcess.WaitForExitAsync();
 
+                if (findProcess.ExitCode != 0)
+                    return Result<bool>.Fail($"Could not query provisioned packages (exit {findProcess.ExitCode}).");
+
                 if (string.IsNullOrWhiteSpace(provisionedName))
                 {
-                    // Not provisioned — just remove for current user
+                    // Not provisioned for new users; nothing more to remove.
+                    Logger.Instance.Info("RemoveProvisionedApp", packageName, "not_provisioned");
                     return Result<bool>.Ok(true);
                 }
+
+                // Each returned line must be a valid package name; expect exactly one.
+                var names = provisionedName.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (names.Length != 1 || !IsValidPackageName(names[0]))
+                    return Result<bool>.Fail($"Unexpected provisioned package result for '{packageName}'.");
+                provisionedName = names[0];
 
                 // Remove provisioned package
                 var removePsi = new ProcessStartInfo
                 {
-                    FileName = "powershell.exe",
+                    FileName = PowerShellPath,
                     Arguments = $"-NoProfile -NonInteractive -Command \"Remove-AppxProvisionedPackage -Online -PackageName '{provisionedName}'\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -484,9 +483,10 @@ namespace KWin.Core
                 string removeErr = await removeProcess.StandardError.ReadToEndAsync();
                 await removeProcess.WaitForExitAsync();
 
-                if (removeProcess.ExitCode != 0 && !string.IsNullOrWhiteSpace(removeErr))
+                if (removeProcess.ExitCode != 0)
                 {
-                    Logger.Instance.Warn("RemoveProvisionedApp", packageName, removeErr.Trim());
+                    Logger.Instance.Error("RemoveProvisionedApp", packageName, removeErr.Trim());
+                    return Result<bool>.Fail($"Could not remove '{packageName}' for all users: {removeErr.Trim()}");
                 }
 
                 progress?.Report($"Removed provisioned: {packageName}");
@@ -532,7 +532,8 @@ namespace KWin.Core
         /// One-click remove all detected bloatware. Returns count of removed / failed.
         /// </summary>
         public async Task<Result<(int Removed, int Failed, List<string> Details)>> RemoveBloatwareAsync(
-            IProgress<(int current, int total, string name)>? progress = null)
+            IProgress<(int current, int total, string name)>? progress = null,
+            bool includeAllUsers = false)
         {
             try
             {
@@ -565,10 +566,19 @@ namespace KWin.Core
 
                         if (removeResult.Success)
                         {
-                            // Also try to remove provisioned
-                            await RemoveProvisionedAppAsync(pkgName);
                             removed++;
-                            details.Add($"✓ {displayName}");
+                            if (includeAllUsers)
+                            {
+                                // Advanced option, explicitly confirmed by the user.
+                                var prov = await RemoveProvisionedAppAsync(pkgName);
+                                details.Add(prov.Success
+                                    ? $"✓ {displayName} (all users)"
+                                    : $"✓ {displayName} (current user only: {prov.ErrorMessage})");
+                            }
+                            else
+                            {
+                                details.Add($"✓ {displayName}");
+                            }
                         }
                         else
                         {
@@ -607,6 +617,18 @@ namespace KWin.Core
         public static IReadOnlyList<(string PackageName, string DisplayName)> KnownBloatware => BloatwareList;
 
         #region Helpers
+
+        private static readonly Regex PackageNamePattern = new(@"^[A-Za-z0-9][A-Za-z0-9._~+\-]{0,254}$", RegexOptions.Compiled);
+
+        private static string PowerShellPath => Path.Combine(
+            Environment.SystemDirectory, "WindowsPowerShell", "v1.0", "powershell.exe");
+
+        /// <summary>
+        /// Package names are inserted into PowerShell commands, so only the characters
+        /// Windows allows in package names are accepted (no quotes, spaces or $).
+        /// </summary>
+        public static bool IsValidPackageName(string? name) =>
+            !string.IsNullOrEmpty(name) && PackageNamePattern.IsMatch(name);
 
         private static string GetFriendlyAppName(string packageName)
         {

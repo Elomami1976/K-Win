@@ -7,7 +7,7 @@ namespace KWin.Utils
     /// Uses a key-based dictionary approach with English as fallback.
     /// Language preference is persisted to AppData/K-win/language.json.
     /// </summary>
-    public static class Loc
+    public static partial class Loc
     {
         private static string _currentLang = "en";
         private static readonly Dictionary<string, Dictionary<string, string>> _translations = new();
@@ -36,6 +36,7 @@ namespace KWin.Utils
             RegisterEnglish();
             RegisterFrench();
             RegisterArabic();
+            RegisterSecurityStrings();
         }
 
         /// <summary>Get a localized string by key. Falls back to English, then returns the key itself.</summary>

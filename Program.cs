@@ -62,23 +62,17 @@ namespace KWin
                 return;
             }
 
-            // Administrator check
-            if (!WindowsVersionChecker.IsRunningAsAdmin())
-            {
-                MessageBox.Show(
-                    Loc.Get("program.admin_msg"),
-                    Loc.Get("program.admin_title"),
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                return;
-            }
+            // Least privilege: K-Win runs as a normal user. Operations that need
+            // administrator rights ask to restart elevated (see ElevationHelper).
+            bool isAdmin = ElevationHelper.IsAdministrator;
 
             // Log startup
             Logger.Instance.Info("Application", "Program",
-                $"started_v1.0.0_{WindowsVersionChecker.GetVersionString()}_lang={Loc.CurrentLanguage}");
+                $"started_{Application.ProductVersion}_{WindowsVersionChecker.GetVersionString()}_lang={Loc.CurrentLanguage}_admin={isAdmin}");
 
-            // Launch main form
-            Application.Run(new MainForm());
+            // Launch main form (optionally on the tab the user was on before elevating)
+            int? initialTab = ElevationHelper.ParseTabArgument(Environment.GetCommandLineArgs());
+            Application.Run(new MainForm(initialTab));
         }
     }
 }
