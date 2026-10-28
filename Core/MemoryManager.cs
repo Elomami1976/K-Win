@@ -197,30 +197,109 @@ namespace KWin.Core
 
         #region Memory Compression
 
+        /// <summary>How the memory compression state was determined.</summary>
+        public enum CompressionSource { MMAgent, CompressionProcess }
+
         /// <summary>
-        /// Gets current memory compression status from registry.
+        /// Reads whether memory compression is on.
+        /// With administrator rights: Windows' supported Get-MMAgent (MemoryCompression property).
+        /// Without: Windows runs the "Memory Compression" system process only while compression is
+        /// on, and its presence is visible to normal users. (1.0 read a "DisableCompression"
+        /// registry value that Windows does not use.)
         /// </summary>
-        public static Result<bool> GetMemoryCompressionEnabled()
+        public static async Task<Result<(bool Enabled, CompressionSource Source)>> GetMemoryCompressionAsync()
         {
+            if (Utils.ElevationHelper.IsAdministrator)
+            {
+                var r = await RunPowerShellFixedAsync("(Get-MMAgent).MemoryCompression");
+                if (r.Success && ParsePowerShellBool(r.Data) is bool enabled)
+                    return Result<(bool, CompressionSource)>.Ok((enabled, CompressionSource.MMAgent));
+            }
+
             try
             {
-                using var key = Registry.LocalMachine.OpenSubKey(
-                    @"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management", false);
-
-                if (key == null)
-                    return Result<bool>.Ok(true); // Default is enabled
-
-                var val = key.GetValue("DisableCompression");
-                if (val is int intVal)
-                    return Result<bool>.Ok(intVal == 0); // 0 = compression enabled, 1 = disabled
-                
-                return Result<bool>.Ok(true); // Not set = enabled by default
+                bool running = System.Diagnostics.Process.GetProcessesByName("Memory Compression").Length > 0 ||
+                               System.Diagnostics.Process.GetProcessesByName("MemCompression").Length > 0;
+                return Result<(bool, CompressionSource)>.Ok((running, CompressionSource.CompressionProcess));
             }
             catch (Exception ex)
             {
-                Logger.Instance.Error("GetMemoryCompressionEnabled", "Registry", ex);
+                return Result<(bool, CompressionSource)>.Fail(ex);
+            }
+        }
+
+        /// <summary>
+        /// Turns memory compression on or off with Windows' supported Enable-MMAgent / Disable-MMAgent.
+        /// Requires administrator rights; takes effect after a restart.
+        /// </summary>
+        public static async Task<Result<bool>> SetMemoryCompressionAsync(bool enable)
+        {
+            try
+            {
+                Utils.DevMode.ThrowIfReadOnly("memory compression");
+                if (!Utils.ElevationHelper.IsAdministrator)
+                    return Result<bool>.Fail("Administrator rights are required.");
+
+                var set = await RunPowerShellFixedAsync(enable ? "Enable-MMAgent -MemoryCompression" : "Disable-MMAgent -MemoryCompression");
+                if (!set.Success) return Result<bool>.Fail(set.ErrorMessage ?? "Command failed");
+
+                var check = await RunPowerShellFixedAsync("(Get-MMAgent).MemoryCompression");
+                if (!check.Success || ParsePowerShellBool(check.Data) != enable)
+                    return Result<bool>.Fail("Verification failed: Get-MMAgent does not report the new setting.");
+
+                Logger.Instance.Info("SetMemoryCompression", "MMAgent", "success", newValue: enable.ToString());
+                return Result<bool>.Ok(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error("SetMemoryCompression", "MMAgent", ex);
                 return Result<bool>.Fail(ex);
             }
+        }
+
+        /// <summary>"True"/"False" output of PowerShell, or null.</summary>
+        public static bool? ParsePowerShellBool(string? output)
+        {
+            string s = (output ?? "").Trim();
+            if (s.Equals("True", StringComparison.OrdinalIgnoreCase)) return true;
+            if (s.Equals("False", StringComparison.OrdinalIgnoreCase)) return false;
+            return null;
+        }
+
+        /// <summary>
+        /// Runs one of K-Win's own fixed PowerShell commands (never user input) with the absolute
+        /// System32 PowerShell path. Fails on a non-zero exit code or error output.
+        /// </summary>
+        private static async Task<Result<string>> RunPowerShellFixedAsync(string command)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = Path.Combine(Environment.SystemDirectory, "WindowsPowerShell", "v1.0", "powershell.exe"),
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+            psi.ArgumentList.Add("-NoProfile");
+            psi.ArgumentList.Add("-NonInteractive");
+            psi.ArgumentList.Add("-Command");
+            psi.ArgumentList.Add(command);
+
+            using var proc = Process.Start(psi);
+            if (proc == null) return Result<string>.Fail("Could not start PowerShell.");
+            var stdout = proc.StandardOutput.ReadToEndAsync();
+            var stderr = proc.StandardError.ReadToEndAsync();
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            try { await proc.WaitForExitAsync(cts.Token); }
+            catch (OperationCanceledException)
+            {
+                try { proc.Kill(true); } catch { }
+                return Result<string>.Fail("PowerShell timed out.");
+            }
+            string err = (await stderr).Trim();
+            if (proc.ExitCode != 0 || err.Length > 0)
+                return Result<string>.Fail(err.Length > 0 ? err : $"Exit code {proc.ExitCode}");
+            return Result<string>.Ok(await stdout);
         }
 
         #endregion

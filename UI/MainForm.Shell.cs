@@ -37,8 +37,7 @@ namespace KWin.UI
 
         private DashboardPage? _dashboard;
         private SettingsPage? _settingsPage;
-        private GroupBox? _startupGroup;
-        private Label? _tempPreviewLabel;
+        private CleanupPage? _cleanupPage;
         private bool _syncingSelectors;
 
         private static readonly (string Glyph, string Key)[] NavItems =
@@ -358,17 +357,18 @@ namespace KWin.UI
                 OptimizeNow = () => _ = OneClickPerformanceBoostAsync(disableTransparency: true),
                 CleanTempFiles = () =>
                 {
-                    if (_tempPreviewLabel != null) _ = CleanTempFilesAsync(_tempPreviewLabel);
-                    else Navigate(PageIds.Cleanup);
+                    Navigate(PageIds.Cleanup);
+                    _ = _cleanupPage?.ScanAsync();
                 },
                 ViewHistory = ShowHistory
             }, _history, _monitor);
 
             // 1.0 pages, hosted unchanged (order matters: the Performance tab creates the startup group).
-            _pages[PageIds.Performance] = HostLegacy(BuildPerformanceTab());
-            _pages[PageIds.Privacy] = HostLegacy(BuildPrivacyTab());
-            _pages[PageIds.Cleanup] = HostLegacy(BuildCleanupTab());
-            _pages[PageIds.Startup] = BuildStartupPage();
+            InitFeatureServices();
+            _pages[PageIds.Performance] = new PerformancePage(CreatePerformanceActions());
+            _pages[PageIds.Privacy] = new PrivacyPage(CreatePrivacyActions());
+            _pages[PageIds.Cleanup] = _cleanupPage = new CleanupPage(CreateCleanupActions());
+            _pages[PageIds.Startup] = new StartupPage(CreateStartupActions());
 
             _pages[PageIds.Health] = new HealthPage(new HealthActions
             {
@@ -416,39 +416,6 @@ namespace KWin.UI
             }
         }
 
-        /// <summary>Moves a 1.0 tab's content into a page container (mirrored in Arabic, as in 1.0).</summary>
-        private Control HostLegacy(TabPage tab)
-        {
-            var host = new LegacyHostPanel { AutoScroll = true, Padding = new Padding(0) };
-            while (tab.Controls.Count > 0)
-            {
-                var content = tab.Controls[0];
-                // 1.0 pages were designed for a fixed 900x600 window: never squeeze them below
-                // that size; the page scrolls instead of overlapping controls.
-                content.MinimumSize = new Size(880, 500);
-                host.Controls.Add(content);
-            }
-            tab.Dispose();
-            _legacyHosts.Add(host);
-            return host;
-        }
-
-        private Control BuildStartupPage()
-        {
-            var host = new LegacyHostPanel { AutoScroll = true, Padding = new Padding(0) };
-            if (_startupGroup != null)
-            {
-                // Moved from the Performance page; Phase 5 replaces it with the full Startup Manager.
-                _startupGroup.Parent?.Controls.Remove(_startupGroup);
-                _startupGroup.Dock = DockStyle.None;
-                _startupGroup.Location = new Point(0, 0);
-                _startupGroup.Size = new Size(460, 200);
-                host.Controls.Add(_startupGroup);
-            }
-            _legacyHosts.Add(host);
-            return host;
-        }
-
         private Control BuildToolsPage()
         {
             var page = new Panel();
@@ -456,9 +423,9 @@ namespace KWin.UI
             var body = new Panel { Dock = DockStyle.Fill };
             var sections = new (string Title, Control Content)[]
             {
-                (Get("tools.tweaks"), HostLegacy(BuildTweaksTab())),
-                (Get("tools.apps"), HostLegacy(BuildAppsTab())),
-                (Get("tools.ram"), HostLegacy(BuildRamTab())),
+                (Get("tools.tweaks"), new TweaksPage(CreateSettingActions())),
+                (Get("tools.apps"), BuildAppsSection()),
+                (Get("tools.ram"), BuildMemorySection(CreateSettingActions())),
             };
             var buttons = new List<NavButton>();
             for (int i = 0; i < sections.Length; i++)

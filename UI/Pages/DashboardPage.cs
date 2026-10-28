@@ -382,7 +382,7 @@ namespace KWin.UI.Pages
             // GPU: usage from GPU Engine counters when the driver provides them
             string gpuName = _info?.Gpus.Count > 0 ? _info.Gpus[0] : unavailable;
             _gpuTile.SetValue(s.GpuPercent, gpuName);
-            _gpuTile.SetCaption(s.GpuPercent == null ? Get("dash.gpu_usage_unavailable") : "");
+            _gpuTile.SetCaption(s.GpuPercent == null ? Get("dash.gpu_usage_unavailable") : Get("dash.gpu_scope"));
 
             _cpuTile.RefreshChart();
             _memTile.RefreshChart();

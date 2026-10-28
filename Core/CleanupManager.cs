@@ -193,8 +193,19 @@ namespace KWin.Core
         public static CleanupReport CleanTargets(IEnumerable<CleanupTarget> targets,
             IProgress<string>? progress = null, CancellationToken cancellationToken = default)
         {
-            DevMode.ThrowIfReadOnly("cleanup");
             var report = new CleanupReport();
+            CleanTargets(targets, report, progress, cancellationToken);
+            return report;
+        }
+
+        /// <summary>
+        /// Same as above, but fills a report owned by the caller, so the files already deleted are
+        /// still reported when the run is cancelled part-way (OperationCanceledException).
+        /// </summary>
+        public static void CleanTargets(IEnumerable<CleanupTarget> targets, CleanupReport report,
+            IProgress<string>? progress, CancellationToken cancellationToken)
+        {
+            DevMode.ThrowIfReadOnly("cleanup");
             DateTime now = DateTime.UtcNow;
 
             foreach (var target in targets)
@@ -238,7 +249,6 @@ namespace KWin.Core
                     catch { }
                 }
             }
-            return report;
         }
 
         /// <summary>Cleans temporary files (files changed in the last 24 hours are kept).</summary>
