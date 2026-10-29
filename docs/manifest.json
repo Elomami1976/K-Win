@@ -42,7 +42,7 @@
     "related_applications": [
         {
             "platform": "windows",
-            "url": "https://github.com/Elomami1976/K-Win/releases/latest/download/K-win.exe"
+            "url": "https://github.com/Elomami1976/K-Win/releases/download/v1.5.0/K-Win-1.5.0.exe"
         }
     ],
     "prefer_related_applications": true

@@ -85,13 +85,13 @@
         "alternateName": "K-win Windows 11 Optimizer",
         "description": "Free open-source Windows 11 optimization tool featuring 30+ safe, reversible tweaks for performance, privacy, cleanup, and RAM management.",
         "url": "https://elomami1976.github.io/K-Win/",
-        "downloadUrl": "https://github.com/Elomami1976/K-Win/releases/latest/download/K-win.exe",
+        "downloadUrl": "https://github.com/Elomami1976/K-Win/releases/download/v1.5.0/K-Win-1.5.0.exe",
         "applicationCategory": "UtilitiesApplication",
         "operatingSystem": "Windows 11",
-        "softwareVersion": "1.0.0",
-        "fileSize": "68MB",
-        "releaseNotes": "Initial release with 30+ optimization features across 6 tabs",
-        "screenshot": "https://elomami1976.github.io/K-Win/assets/og-image.png",
+        "softwareVersion": "1.5.0",
+        "fileSize": "64MB",
+        "releaseNotes": "https://github.com/Elomami1976/K-Win/releases/tag/v1.5.0",
+        "screenshot": "https://elomami1976.github.io/K-Win/screenshots/dashboard.png",
         "author": {
             "@type": "Person",
             "name": "Elomami1976",
@@ -108,25 +108,19 @@
             "priceCurrency": "USD",
             "availability": "https://schema.org/InStock"
         },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.8",
-            "ratingCount": "50",
-            "bestRating": "5",
-            "worstRating": "1"
-        },
         "featureList": [
             "Performance optimization with power plan selector",
             "Privacy protection with telemetry control",
             "Disk cleanup and browser cache cleaner",
-            "System-wide ad blocker via hosts file",
+            "Optimize Now with risk-based recommendations",
+            "Operation history with per-operation undo",
             "DNS changer with multiple providers",
-            "RAM monitor and memory optimization",
+            "Live CPU, memory, disk and GPU monitoring",
             "Bloatware removal tool",
-            "100% reversible changes",
+            "Undo for registry changes with verified backups",
             "Automatic restore point creation"
         ],
-        "requirements": "Windows 11 22H2 or later, x64 architecture, Administrator privileges",
+        "requirements": "Windows 11 22H2 or later, x64 architecture. Administrator rights only for system-wide changes.",
         "inLanguage": ["en", "fr", "ar"],
         "isAccessibleForFree": true,
         "license": "https://opensource.org/licenses/MIT"
@@ -164,7 +158,7 @@
                 "name": "Is K-win safe to use?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes. K-win creates a System Restore Point before every modification and backs up all registry keys before writing. Every change can be undone via the built-in Undo button or Windows System Restore. K-win only uses built-in Windows tools — no third-party executables are ever downloaded or run."
+                    "text": "K-Win creates a restore point before system changes, backs up registry values before writing, and verifies each change. Registry changes can be undone from the Undo button or the History page. File deletions (cleanup) cannot be undone, and the preview says so. K-Win uses only built-in Windows tools and never downloads or runs third-party programs."
                 }
             },
             {
@@ -172,7 +166,7 @@
                 "name": "Will K-win break Windows Update or Defender?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "No. K-win never disables Windows Update services, Windows Defender, or any critical system service. Telemetry is reduced to Basic (level 1), not disabled entirely. 20+ critical Windows services are blocklisted from being disabled."
+                    "text": "No. K-win never disables Windows Update services, Windows Defender, or any critical system service. Diagnostic data is reduced to the Required (Basic) level, not switched off."
                 }
             },
             {
@@ -180,7 +174,7 @@
                 "name": "What changes does K-win make to my system?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "K-win modifies specific registry keys for visual effects, telemetry, advertising ID, context menu, and Windows Recall. It uses powercfg.exe for power plans, netsh.exe for DNS changes, and deletes only temporary files and browser caches. The ad blocker modifies the hosts file with clearly marked entries."
+                    "text": "K-win modifies specific registry keys for visual effects, telemetry, advertising ID, context menu, and Windows Recall. It uses powercfg.exe for power plans, netsh.exe for DNS changes, and deletes only temporary files, error reports, browser caches and (if you select it) the Recycle Bin."
                 }
             },
             {
@@ -188,15 +182,15 @@
                 "name": "Can I undo changes made by K-win?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes. K-win maintains an undo stack of up to 5 recent operations. Click the Undo button in the footer to revert the last change. Additionally, every operation creates a System Restore Point for full recovery."
+                    "text": "Yes. Registry changes can be undone with the Undo button or per operation on the History page, even after a restart. Service and power-plan steps can be undone only while K-Win stays open. A restore point is also created before system changes."
                 }
             },
             {
                 "@type": "Question",
-                "name": "Why does K-win need Administrator permissions?",
+                "name": "Does K-Win need Administrator permissions?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Most Windows 11 optimizations require writing to HKEY_LOCAL_MACHINE registry keys, modifying DNS settings, editing the hosts file, stopping system services, and running system tools like SFC and DISM. These operations require Administrator privileges."
+                    "text": "Only for some changes. K-Win 1.5 starts as a normal user. When a change needs administrator rights (system-wide settings, DNS, services, SFC/DISM), it explains why and offers to restart as administrator."
                 }
             },
             {
@@ -212,7 +206,7 @@
                 "name": "Is K-win really free?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes, K-win v1.0 is completely free with all features unlocked. No trials, no ads, no signup required. The source code is open-source and available on GitHub."
+                    "text": "Yes, K-Win is completely free with all features unlocked. No trials, no ads, no signup required. The source code is open-source and available on GitHub."
                 }
             },
             {
@@ -323,7 +317,7 @@
             <div class="hero-bg" aria-hidden="true"></div>
             <div class="container hero-container">
                 <div class="hero-content">
-                    <div class="hero-badge">Free &amp; Open Source · Built with .NET 8 · 🌍 Multilingual</div>
+                    <div class="hero-badge">New: v1.5.0 Enhanced Edition · Free &amp; Open Source · 🌍 Multilingual</div>
                     <h1 id="hero-heading" class="hero-title">
                         Optimize <span class="gradient-text">Windows 11</span><br>
                         in One Click
@@ -333,8 +327,8 @@
                         No bloatware, no third-party tools, no risk.
                     </p>
                     <div class="hero-actions">
-                        <a href="https://github.com/Elomami1976/K-Win/releases/latest/download/K-win.exe" class="btn btn-primary btn-lg" aria-label="Download K-win version 1.0.0 for Windows 11">
-                            <span class="btn-icon" aria-hidden="true">⬇</span> Download K-win v1.0.0
+                        <a href="https://github.com/Elomami1976/K-Win/releases/download/v1.5.0/K-Win-1.5.0.exe" class="btn btn-primary btn-lg" aria-label="Download K-Win version 1.5.0 for Windows 11">
+                            <span class="btn-icon" aria-hidden="true">⬇</span> Download K-Win v1.5.0
                         </a>
                         <a href="#features" class="btn btn-outline btn-lg">Explore Features</a>
                     </div>
@@ -355,8 +349,8 @@
                         </div>
                         <div class="stat-divider" aria-hidden="true"></div>
                         <div class="stat" role="listitem">
-                            <span class="stat-value">100%</span>
-                            <span class="stat-label">Reversible</span>
+                            <span class="stat-value">168</span>
+                            <span class="stat-label">Automated tests</span>
                         </div>
                     </div>
                     <!-- Trust Signals -->
@@ -366,47 +360,8 @@
                         <span class="trust-item">✓ Works Offline</span>
                     </div>
                 </div>
-                <div class="hero-visual" aria-hidden="true">
-                    <div class="app-window">
-                        <div class="app-titlebar">
-                            <div class="app-dots">
-                                <span class="dot dot-red"></span>
-                                <span class="dot dot-yellow"></span>
-                                <span class="dot dot-green"></span>
-                            </div>
-                            <span class="app-title">K-win — Windows 11 Optimization Tool</span>
-                        </div>
-                        <div class="app-body">
-                            <div class="app-tabs">
-                                <span class="app-tab active">⚡ Performance</span>
-                                <span class="app-tab">🔒 Privacy</span>
-                                <span class="app-tab">🧹 Cleanup</span>
-                                <span class="app-tab">🔧 Tweaks</span>
-                                <span class="app-tab">📦 Apps</span>
-                                <span class="app-tab">🧠 RAM</span>
-                            </div>
-                            <div class="app-content">
-                                <div class="app-card">
-                                    <div class="app-card-title">Power Plan</div>
-                                    <div class="app-select">High Performance ▾</div>
-                                    <div class="app-btn-small">Apply</div>
-                                </div>
-                                <div class="app-card">
-                                    <div class="app-card-title">Visual Effects</div>
-                                    <div class="app-btn-accent">Best Performance</div>
-                                    <label class="app-check">☑ Disable transparency</label>
-                                </div>
-                                <div class="app-card highlight">
-                                    <div class="app-btn-boost">🚀 One-Click Performance Boost</div>
-                                    <div class="app-note">High Perf + Best visuals + No transparency</div>
-                                </div>
-                            </div>
-                            <div class="app-footer-bar">
-                                <div class="app-progress"></div>
-                                <span class="app-status">Ready</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="hero-visual">
+                    <img class="hero-shot" src="screenshots/dashboard.png" alt="K-Win 1.5 dashboard with live CPU, memory, disk and GPU monitoring" width="1256" height="669">
                 </div>
             </div>
             <div class="hero-scroll" aria-hidden="true">
@@ -431,7 +386,7 @@
                     <div class="about-card">
                         <div class="about-icon">🎯</div>
                         <h3>Focused Optimization</h3>
-                        <p>30+ carefully selected optimizations across Performance, Privacy, Cleanup, Tweaks, Apps, and RAM management. Each tweak is tested and validated on Windows 11.</p>
+                        <p>30+ carefully selected optimizations across Performance, Privacy, Cleanup, Startup, Tweaks, Apps and Memory. Each one shows its current state, benefit, side effects and how to undo it.</p>
                     </div>
                     <div class="about-card">
                         <div class="about-icon">🔓</div>
@@ -517,7 +472,7 @@
                 <div class="section-header">
                     <span class="section-badge">Features</span>
                     <h2 id="features-heading" class="section-title">Complete Windows 11 Optimization Suite</h2>
-                    <p class="section-subtitle">Six powerful modules covering every aspect of Windows 11 optimization. Each feature is safe, reversible, and thoroughly tested.</p>
+                    <p class="section-subtitle">Six modules covering Windows 11 optimization. Every change is previewed first, and registry changes can be undone.</p>
                 </div>
 
                 <div class="features-grid">
@@ -544,14 +499,14 @@
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>Startup Manager</strong>
-                                    <p>Identify and disable unnecessary startup programs</p>
+                                    <p>Enable or disable startup entries the way Task Manager does; nothing is deleted</p>
                                 </div>
                             </li>
                             <li>
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
-                                    <strong>One-Click Performance Boost</strong>
-                                    <p>Apply all performance optimizations instantly</p>
+                                    <strong>Optimize Now</strong>
+                                    <p>Recommendations grouped by risk; only low-risk items pre-selected</p>
                                 </div>
                             </li>
                             <li>
@@ -573,7 +528,7 @@
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>Telemetry &amp; Ad ID Control</strong>
-                                    <p>Reduce Windows telemetry, disable advertising ID tracking</p>
+                                    <p>Reduce diagnostic data, turn off advertising ID tracking</p>
                                 </div>
                             </li>
                             <li>
@@ -593,8 +548,8 @@
                             <li>
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
-                                    <strong>System-Wide Ad Blocker</strong>
-                                    <p>Block 60,000+ ad &amp; tracker domains via hosts file</p>
+                                    <strong>Respects Your Organization</strong>
+                                    <p>Settings set by your organization or local Group Policy are shown read-only</p>
                                 </div>
                             </li>
                         </ul>
@@ -609,14 +564,14 @@
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>Temp File Cleaner</strong>
-                                    <p>Remove temporary files with space preview before cleaning</p>
+                                    <p>Measured sizes before cleaning; cancel at any time; junctions never followed</p>
                                 </div>
                             </li>
                             <li>
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>Browser Cache Cleaner</strong>
-                                    <p>Clean Edge, Chrome, and Firefox caches in one click</p>
+                                    <p>Clean Edge, Chrome, Brave and Firefox caches; passwords and cookies are kept</p>
                                 </div>
                             </li>
                             <li>
@@ -630,7 +585,7 @@
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>Store &amp; Recycle Bin</strong>
-                                    <p>Reset Microsoft Store cache and empty Recycle Bin</p>
+                                    <p>Reset Microsoft Store cache; Recycle Bin only when you select it</p>
                                 </div>
                             </li>
                         </ul>
@@ -688,14 +643,14 @@
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>One-Click Bloatware Remover</strong>
-                                    <p>Detect and remove all Windows bloatware automatically</p>
+                                    <p>Find common preinstalled apps and remove the ones you choose</p>
                                 </div>
                             </li>
                             <li>
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
                                     <strong>Remove for All Users</strong>
-                                    <p>Remove provisioned apps system-wide</p>
+                                    <p>Optional advanced setting, off by default</p>
                                 </div>
                             </li>
                         </ul>
@@ -704,20 +659,20 @@
                     <!-- RAM -->
                     <article class="feature-card feature-ram">
                         <div class="feature-icon" aria-hidden="true">🧠</div>
-                        <h3 class="feature-title">RAM Optimization</h3>
+                        <h3 class="feature-title">Monitoring &amp; Memory</h3>
                         <ul class="feature-list">
                             <li>
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
-                                    <strong>Live RAM Monitor</strong>
-                                    <p>Real-time memory usage with top processes</p>
+                                    <strong>Live System Monitor</strong>
+                                    <p>CPU, memory, disk and GPU from Windows performance counters</p>
                                 </div>
                             </li>
                             <li>
                                 <span class="feature-check" aria-hidden="true">✓</span>
                                 <div>
-                                    <strong>Clear Cached RAM</strong>
-                                    <p>Empty working sets to free memory instantly</p>
+                                    <strong>History &amp; Undo</strong>
+                                    <p>Every operation with original → new values; undo one operation when safe</p>
                                 </div>
                             </li>
                             <li>
@@ -733,30 +688,54 @@
             </div>
         </section>
 
+        <!-- Screenshots Section -->
+        <section class="screens" id="screenshots" aria-labelledby="screens-heading">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Screenshots</span>
+                    <h2 id="screens-heading" class="section-title">See K-Win 1.5 in Action</h2>
+                    <p class="section-subtitle">Real captures of K-Win 1.5 Enhanced Edition: dark and light themes, English, Français and العربية.</p>
+                </div>
+                <div class="screens-grid">
+                    <figure class="screen-shot"><img src="screenshots/optimize-now.png" alt="Optimize Now dialog with recommendations grouped by risk" loading="lazy" width="1256" height="669"><figcaption><strong>Optimize Now</strong>: recommendations grouped by risk, with a full preview</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/history.png" alt="History page with original and new values" loading="lazy" width="1256" height="669"><figcaption><strong>History</strong>: original → new values and per-operation undo</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/performance.png" alt="Performance settings cards" loading="lazy" width="1256" height="669"><figcaption><strong>Performance</strong>: current state, benefit and undo for each setting</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/privacy.png" alt="Privacy settings" loading="lazy" width="1256" height="669"><figcaption><strong>Privacy</strong>: diagnostic data, advertising ID, activity history, Recall</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/cleanup.png" alt="Cleanup page with measured sizes" loading="lazy" width="1256" height="669"><figcaption><strong>Cleanup</strong>: measured sizes before anything is deleted</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/startup-manager-light.png" alt="Startup Manager in light theme" loading="lazy" width="1256" height="669"><figcaption><strong>Startup Manager</strong> (light theme)</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/tools-tweaks.png" alt="Tools and tweaks page" loading="lazy" width="1256" height="669"><figcaption><strong>Tools › Tweaks</strong>: interface preferences, apps and memory</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/privacy-french.png" alt="Privacy page in French" loading="lazy" width="1256" height="669"><figcaption><strong>Français</strong>: Privacy page</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/privacy-arabic.png" alt="Privacy page in Arabic, right to left" loading="lazy" width="1256" height="669"><figcaption><strong>العربية</strong>: full right-to-left layout</figcaption></figure>
+                    <figure class="screen-shot"><img src="screenshots/performance-arabic.png" alt="Performance page in Arabic" loading="lazy" width="1256" height="669"><figcaption><strong>العربية</strong>: Performance page</figcaption></figure>
+                </div>
+                <p class="screens-note">Screenshots were taken on the Windows 10 development computer in a developer-only, read-only preview mode, which is why the title bar says "Development UI preview". The released app does not include this mode and runs only on Windows 11.</p>
+            </div>
+        </section>
+
         <!-- Safety Section -->
         <section class="safety" id="safety" aria-labelledby="safety-heading">
             <div class="container">
                 <div class="section-header">
                     <span class="section-badge">Safety First</span>
-                    <h2 id="safety-heading" class="section-title">Is K-win Safe? Absolutely.</h2>
-                    <p class="section-subtitle">Every change K-win makes is 100% reversible. Your system is always protected with multiple safety layers.</p>
+                    <h2 id="safety-heading" class="section-title">Is K-Win Safe?</h2>
+                    <p class="section-subtitle">Several safety layers protect your system. Registry changes can be undone; file deletions cannot, and K-Win tells you before you confirm.</p>
                 </div>
 
                 <div class="safety-grid">
                     <div class="safety-card">
                         <div class="safety-icon" aria-hidden="true">🛡️</div>
                         <h4>Automatic Restore Points</h4>
-                        <p>System Restore Point created before every modification via Windows WMI</p>
+                        <p>Created before system changes; K-Win says when Windows reuses one from the last 24 hours</p>
                     </div>
                     <div class="safety-card">
                         <div class="safety-icon" aria-hidden="true">💾</div>
                         <h4>Registry Backups</h4>
-                        <p>Every registry key exported to .reg file before any changes</p>
+                        <p>Backed up to a .reg file before writing, then read back to verify</p>
                     </div>
                     <div class="safety-card">
                         <div class="safety-icon" aria-hidden="true">↶</div>
-                        <h4>Instant Undo</h4>
-                        <p>Up to 5 operations can be undone instantly from the UI</p>
+                        <h4>Undo &amp; History</h4>
+                        <p>Undo the last change or one operation from History, even after a restart</p>
                     </div>
                     <div class="safety-card">
                         <div class="safety-icon" aria-hidden="true">👁️</div>
@@ -770,8 +749,8 @@
                     </div>
                     <div class="safety-card">
                         <div class="safety-icon" aria-hidden="true">⏱️</div>
-                        <h4>Timeout Protection</h4>
-                        <p>30-second timeout on all processes — no stuck operations</p>
+                        <h4>Least Privilege</h4>
+                        <p>Starts without administrator rights; asks to elevate only when needed</p>
                     </div>
                 </div>
 
@@ -791,12 +770,12 @@
                 <div class="section-header">
                     <span class="section-badge">Compatibility</span>
                     <h2 id="compat-heading" class="section-title">Windows 11 Compatibility</h2>
-                    <p class="section-subtitle">K-win is built specifically for Windows 11 with full support for all major releases.</p>
+                    <p class="section-subtitle">K-Win is built for Windows 11. Version 1.5 has 168 passing automated tests; manual validation on Windows 11 is still in progress (<a href="https://github.com/Elomami1976/K-Win/blob/main/WINDOWS11_VALIDATION_CHECKLIST.md" target="_blank" rel="noopener">checklist</a>).</p>
                 </div>
                 
                 <div class="compat-grid">
                     <div class="compat-card supported">
-                        <h4>✓ Fully Supported</h4>
+                        <h4>✓ Designed For</h4>
                         <ul>
                             <li>Windows 11 22H2</li>
                             <li>Windows 11 23H2</li>
@@ -819,7 +798,7 @@
                         <h4>System Requirements</h4>
                         <ul>
                             <li>x64 (64-bit) processor</li>
-                            <li>Administrator privileges</li>
+                            <li>Administrator rights only for system-wide changes</li>
                             <li>~150 MB disk space</li>
                             <li>No .NET install required (self-contained)</li>
                         </ul>
@@ -839,11 +818,11 @@
                         <div class="download-info">
                             <div class="download-detail">
                                 <span class="detail-label">Version</span>
-                                <span class="detail-value">1.0.0</span>
+                                <span class="detail-value">1.5.0 (pre-release)</span>
                             </div>
                             <div class="download-detail">
                                 <span class="detail-label">Size</span>
-                                <span class="detail-value">~68 MB</span>
+                                <span class="detail-value">63.6 MB</span>
                             </div>
                             <div class="download-detail">
                                 <span class="detail-label">Platform</span>
@@ -855,8 +834,8 @@
                             </div>
                         </div>
 
-                        <a href="https://github.com/Elomami1976/K-Win/releases/latest/download/K-win.exe" class="btn btn-primary btn-xl download-btn" aria-label="Download K-win.exe for Windows 11">
-                            <span class="btn-icon" aria-hidden="true">⬇</span> Download K-win.exe
+                        <a href="https://github.com/Elomami1976/K-Win/releases/download/v1.5.0/K-Win-1.5.0.exe" class="btn btn-primary btn-xl download-btn" aria-label="Download K-Win-1.5.0.exe for Windows 11">
+                            <span class="btn-icon" aria-hidden="true">⬇</span> Download K-Win-1.5.0.exe
                         </a>
                         
                         <div class="download-actions">
@@ -868,22 +847,22 @@
                             </a>
                         </div>
                         
-                        <p class="download-note">Requires Windows 11 22H2 or later. Run as Administrator (UAC prompt will appear).</p>
-                        <p class="download-note"><strong>⚠️ SmartScreen notice:</strong> Windows may show a "Windows protected your PC" screen because K-win is not yet code-signed — this is not a virus detection. Click <strong>More info</strong> → <strong>Run anyway</strong>. If the button is missing, right-click K-win.exe → Properties → check <strong>Unblock</strong> → OK.</p>
+                        <p class="download-note">Requires Windows 11 22H2 or later. No installation; just run the file. Manual Windows 11 validation of 1.5 is pending: create a restore point before first use and <a href="https://github.com/Elomami1976/K-Win/issues" target="_blank" rel="noopener">report any problem</a>.</p>
+                        <p class="download-note"><strong>⚠️ SmartScreen notice:</strong> Windows may show a "Windows protected your PC" screen because K-win is not yet code-signed — this is not a virus detection. Click <strong>More info</strong> → <strong>Run anyway</strong>. If the button is missing, right-click the file → Properties → check <strong>Unblock</strong> → OK.</p>
                     </div>
 
                     <div class="download-requirements">
                         <h4>Quick Start Guide</h4>
                         <ol class="quick-start-list">
-                            <li>Download K-win.exe</li>
-                            <li>Right-click → "Run as administrator"</li>
+                            <li>Download K-Win-1.5.0.exe</li>
+                            <li>Double-click it (no administrator prompt)</li>
                             <li>Select your language (English, French, Arabic)</li>
-                            <li>Choose optimizations in the preview dialog</li>
+                            <li>Click Optimize Now or choose individual settings, then review the preview</li>
                             <li>Apply and restart if prompted</li>
                         </ol>
 
                         <h4>File Verification</h4>
-                        <p class="verification-note">Build from source available on <a href="https://github.com/Elomami1976/K-Win" target="_blank" rel="noopener">GitHub</a> for security verification.</p>
+                        <p class="verification-note">SHA-256:<br><code style="word-break:break-all">66213E433940A8DD8AC80D1D403CBDA47365F61F6F374ECA864E8FE27E044D14</code><br>Check with <code>Get-FileHash K-Win-1.5.0.exe</code>. Source code on <a href="https://github.com/Elomami1976/K-Win" target="_blank" rel="noopener">GitHub</a>.</p>
                     </div>
                 </div>
             </div>
@@ -905,7 +884,7 @@
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-1">
-                            <p>Yes, K-win is completely safe. It creates a System Restore Point before every modification and backs up all registry keys before writing. Every change can be undone via the built-in Undo button or Windows System Restore. K-win only uses built-in Windows tools — no third-party executables are ever downloaded or run. The hosts-based ad blocker uses a well-known community list and can be fully reversed.</p>
+                            <p>K-Win is designed to be safe. It creates a restore point before system changes, backs up registry values before writing and verifies each change. Registry changes can be undone from the Undo button or the History page. File deletions (cleanup) cannot be undone, and the preview says so before you confirm. K-Win uses only built-in Windows tools and never downloads or runs third-party programs.</p>
                         </div>
                     </article>
 
@@ -915,7 +894,7 @@
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-2">
-                            <p>No. K-win never disables Windows Update services, Windows Defender, or any critical system service. Telemetry is reduced to Basic (level 1), not disabled entirely — level 0 can break updates, so K-win avoids it. 20+ critical Windows services are blocklisted from being disabled.</p>
+                            <p>No. K-win never disables Windows Update services, Windows Defender, or any critical system service. Diagnostic data is reduced to the Required (Basic) level, not switched off — level 0 can affect updates, so K-Win avoids it.</p>
                         </div>
                     </article>
 
@@ -925,7 +904,7 @@
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-3">
-                            <p>K-win modifies specific registry keys for visual effects, telemetry, advertising ID, context menu, and Windows Recall. It uses powercfg.exe for power plans, netsh.exe for DNS changes, and deletes only temporary files and browser caches. The ad blocker modifies the hosts file with clearly marked entries. A complete list is documented in the SAFETY.md file included with the source code.</p>
+                            <p>K-win modifies specific registry keys for visual effects, telemetry, advertising ID, context menu, and Windows Recall. It uses powercfg.exe for power plans, netsh.exe for DNS changes, and deletes only temporary files, error reports, browser caches and (if you select it) the Recycle Bin. A complete list is documented in the SAFETY.md file included with the source code.</p>
                         </div>
                     </article>
 
@@ -935,17 +914,17 @@
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-4">
-                            <p>Yes. K-win maintains an undo stack of up to 5 recent operations. Click the "↶ Undo" button in the footer to revert the last change. Additionally, every operation creates a System Restore Point, so you can also use Windows System Restore for full recovery.</p>
+                            <p>Yes. Click "↶ Undo" in the top bar to revert the last change, or open History to undo a specific operation (K-Win refuses if a later operation changed the same values). Registry changes can be undone even after a restart; service and power-plan steps only while K-Win stays open. A restore point is also created before system changes.</p>
                         </div>
                     </article>
 
                     <article class="faq-item" role="listitem">
                         <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-5">
-                            Why does K-win need Administrator permissions?
+                            Does K-Win need Administrator permissions?
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-5">
-                            <p>Most Windows 11 optimizations require writing to HKEY_LOCAL_MACHINE registry keys, modifying DNS settings, editing the hosts file, stopping system services, and running system tools like SFC and DISM. These operations require Administrator privileges. K-win requests elevation through the standard Windows UAC prompt.</p>
+                            <p>Only for some changes. K-Win 1.5 starts as a normal user. System-wide settings, DNS, services and SFC/DISM need administrator rights; K-Win explains why and offers to restart as administrator through the standard UAC prompt.</p>
                         </div>
                     </article>
 
@@ -975,7 +954,7 @@
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-8">
-                            <p>Yes, K-win v1.0 is completely free with all features unlocked. No trials, no ads, no signup required. The project is open-source and available on GitHub. We may offer a Pro version with additional features in the future, but the core optimizer will always be free.</p>
+                            <p>Yes, K-Win is completely free with all features unlocked. No trials, no ads, no signup required. The project is open-source and available on GitHub. We may offer a Pro version with additional features in the future, but the core optimizer will always be free.</p>
                         </div>
                     </article>
 
@@ -1001,11 +980,11 @@
 
                     <article class="faq-item" role="listitem">
                         <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-11">
-                            How does the system-wide ad blocker work?
+                            What happened to the ad blocker and "Clear cached RAM"?
                             <span class="faq-arrow" aria-hidden="true">+</span>
                         </button>
                         <div class="faq-answer" id="faq-answer-11">
-                            <p>K-win downloads the Steven Black unified hosts file — a well-known, community-maintained blocklist containing 60,000+ ad and tracker domains. These entries are added to your Windows hosts file between clearly marked K-win comment blocks, making them easy to identify and fully reversible with one click.</p>
+                            <p>Both were removed in 1.5 for safety. K-Win no longer downloads a hosts-file blocklist (it can still remove entries added by 1.0), and "Clear cached RAM" gave no real benefit because Windows manages that memory itself.</p>
                         </div>
                     </article>
                 </div>
@@ -1049,7 +1028,7 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025-2026 K-win. Free &amp; Open Source Windows 11 Optimizer. Built with .NET 8.</p>
-                <p class="footer-version">v1.0.0 · <a href="https://github.com/Elomami1976/K-Win/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a></p>
+                <p class="footer-version">v1.5.0 · <a href="https://github.com/Elomami1976/K-Win/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a></p>
             </div>
         </div>
     </footer>
