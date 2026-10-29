@@ -14,9 +14,9 @@ Built with C# and .NET 8 Windows Forms.
 
 ## 📥 Download
 
-[![Download K-Win 1.5.0](https://img.shields.io/badge/Download-K--Win%20v1.5.0-blue)](https://github.com/Elomami1976/K-Win/releases/latest)
+[![Download K-Win 1.5.0](https://img.shields.io/badge/Download-K--Win%20v1.5.0-blue)](https://github.com/Elomami1976/K-Win/releases/tag/v1.5.0)
 
-**[⬇️ Download the latest release](https://github.com/Elomami1976/K-Win/releases/latest)**: one portable file, `K-Win-1.5.0.exe` (Windows x64, self-contained, nothing to install). Each release lists the file's SHA-256 checksum so you can verify the download:
+**[⬇️ Download K-Win v1.5.0](https://github.com/Elomami1976/K-Win/releases/tag/v1.5.0)** (pre-release): one portable file, `K-Win-1.5.0.exe` (Windows x64, self-contained, nothing to install). Each release lists the file's SHA-256 checksum so you can verify the download:
 
 ```powershell
 Get-FileHash .\K-Win-1.5.0.exe -Algorithm SHA256
@@ -39,15 +39,35 @@ See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## 🖼️ Screenshots
 
-| Dashboard | Optimize Now |
-|---|---|
-| ![Dashboard](screenshots/dashboard.png) | ![Optimize Now](screenshots/optimize-now.png) |
-| **Performance** | **Cleanup** |
-| ![Performance](screenshots/performance.png) | ![Cleanup](screenshots/cleanup.png) |
-| **History** | **Privacy (Arabic)** |
-| ![History](screenshots/history.png) | ![Privacy in Arabic](screenshots/privacy-arabic.png) |
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="K-Win dashboard with live CPU, memory, disk and GPU monitoring" width="820"><br>
+  <em>Dashboard: system overview, live monitoring and Optimize Now</em>
+</p>
 
-*Screenshots were taken on Windows 10 with the developer-only read-only preview, which is why the title bar says "Development UI preview". The released app does not show this label.*
+<table>
+  <tr>
+    <td width="50%" align="center"><img src="docs/screenshots/optimize-now.png" alt="Optimize Now dialog" width="100%"><br><sub><b>Optimize Now</b>: recommendations grouped by risk, with a preview</sub></td>
+    <td width="50%" align="center"><img src="docs/screenshots/history.png" alt="History page" width="100%"><br><sub><b>History</b>: original → new values and per-operation undo</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/performance.png" alt="Performance page" width="100%"><br><sub><b>Performance</b>: each setting shows its current state, benefit and undo</sub></td>
+    <td align="center"><img src="docs/screenshots/privacy.png" alt="Privacy page" width="100%"><br><sub><b>Privacy</b>: diagnostic data, advertising ID, activity history, Recall</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/cleanup.png" alt="Cleanup page" width="100%"><br><sub><b>Cleanup</b>: measured sizes before anything is deleted</sub></td>
+    <td align="center"><img src="docs/screenshots/startup-manager-light.png" alt="Startup Manager in light theme" width="100%"><br><sub><b>Startup Manager</b> (light theme): disables entries like Task Manager does</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/tools-tweaks.png" alt="Tools and tweaks page" width="100%"><br><sub><b>Tools › Tweaks</b>: interface preferences, apps and memory</sub></td>
+    <td align="center"><img src="docs/screenshots/privacy-french.png" alt="Privacy page in French" width="100%"><br><sub><b>Français</b>: Privacy page in French</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/privacy-arabic.png" alt="Privacy page in Arabic, right to left" width="100%"><br><sub><b>العربية</b>: full right-to-left layout</sub></td>
+    <td align="center"><img src="docs/screenshots/performance-arabic.png" alt="Performance page in Arabic" width="100%"><br><sub><b>العربية</b>: Performance page</sub></td>
+  </tr>
+</table>
+
+> **About these screenshots:** they are real captures of K-Win 1.5, taken on the Windows 10 development computer with a developer-only, read-only preview mode. That is why the title bar says "Development UI preview" and the dashboard shows Windows 10. The released app does not include this mode and runs only on Windows 11.
 
 ## ✨ Features
 
@@ -138,7 +158,17 @@ Trimming is not used: Windows Forms does not support it.
 
 ## 🧪 Testing
 
+168 automated tests (`dotnet test Tests/KWin.Tests`) cover registry rollback, cleanup safety, recommendations, history, the update checker and translations. Manual Windows 11 testing: [WINDOWS11_VALIDATION_CHECKLIST.md](WINDOWS11_VALIDATION_CHECKLIST.md).
+
 See `TESTING.md` for a full validation checklist.
+
+## 🌍 Languages
+
+English, Français and العربية (right-to-left). Choose on first launch or from the top bar.
+
+## 📄 License
+
+MIT. See [LICENSE](LICENSE).
 
 ## 🤝 Contributing
 
