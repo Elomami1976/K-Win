@@ -16,7 +16,7 @@ namespace KWin.UI
     public sealed class OptimizeDialog : Form
     {
         private readonly ThemedListView _list = new() { Dock = DockStyle.Fill, CheckBoxes = true };
-        private readonly ThemedLabel _details;
+        private readonly TextBox _details; // scrolls when the text is long
         private readonly Func<SettingDefinition, string> _undoText;
         private bool _filling;
 
@@ -38,7 +38,12 @@ namespace KWin.UI
             KeyPreview = true;
             KeyDown += (s, e) => { if (e.KeyCode == Keys.Escape) { DialogResult = DialogResult.Cancel; Close(); } };
             if (Loc.IsRTL) { RightToLeft = RightToLeft.Yes; RightToLeftLayout = true; }
-            _details = new ThemedLabel { Dock = DockStyle.Fill, AutoEllipsis = false, Font = UiFonts.Regular(10f), Padding = new Padding(12) };
+            _details = new TextBox
+            {
+                Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, WordWrap = true,
+                ScrollBars = ScrollBars.Vertical, BorderStyle = BorderStyle.None, Font = UiFonts.Regular(10f),
+                BackColor = ThemeManager.Current.Card, ForeColor = ThemeManager.Current.Text
+            };
         }
 
         /// <summary>Choose recommendations. Returns the dialog; read <see cref="Selected"/> when OK.</summary>
@@ -79,7 +84,7 @@ namespace KWin.UI
 
             root.Controls.Add(_list, 0, 1);
 
-            var detailsCard = new RoundedPanel { Kind = SurfaceKind.Card, Dock = DockStyle.Fill, Margin = new Padding(0, 10, 0, 0), AutoScroll = true };
+            var detailsCard = new RoundedPanel { Kind = SurfaceKind.Card, Dock = DockStyle.Fill, Margin = new Padding(0, 10, 0, 0), Padding = new Padding(12) };
             detailsCard.Controls.Add(_details);
             root.Controls.Add(detailsCard, 0, 2);
 

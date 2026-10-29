@@ -2077,7 +2077,7 @@ Check</value>
     <value>Undo</value>
   </data>
   <data name="card.current" xml:space="preserve">
-    <value>Current: {0}</value>
+    <value>{0}</value>
   </data>
   <data name="card.preference" xml:space="preserve">
     <value>Your preference (no recommendation)</value>

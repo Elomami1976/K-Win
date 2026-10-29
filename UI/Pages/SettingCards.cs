@@ -36,21 +36,12 @@ namespace KWin.UI.Pages
             _grid = Ui.Grid(1, 5, new Padding(16, 12, 16, 10));
             Ui.Rows(_grid, (SizeType.Absolute, 32), (SizeType.Absolute, 40), (SizeType.Absolute, 100), (SizeType.AutoSize, 0), (SizeType.Absolute, 44));
 
-            var header = Ui.Grid(3, 1);
-            Ui.Columns(header, (SizeType.Absolute, 34), (SizeType.Percent, 100), (SizeType.AutoSize, 0));
+            var header = Ui.Grid(2, 1);
+            Ui.Columns(header, (SizeType.Absolute, 34), (SizeType.Percent, 100));
             header.Controls.Add(new IconBadge { Glyph = glyph, GlyphSize = 13f, Dock = DockStyle.Fill, Margin = new Padding(0, 2, 6, 2) }, 0, 0);
             var titleLabel = Ui.Text(title, UiFonts.Semibold(11.5f));
             _tips.SetToolTip(titleLabel, title);
             header.Controls.Add(titleLabel, 1, 0);
-            _state = new ThemedLabel
-            {
-                AutoSize = true,
-                AutoEllipsis = false,
-                Font = UiFonts.Semibold(9.5f),
-                Margin = new Padding(8, 7, 0, 0),
-                Role = TextRole.Muted
-            };
-            header.Controls.Add(_state, 2, 0);
             _grid.Controls.Add(header, 0, 0);
 
             // Description and facts wrap fully; the card grows to fit (see LayoutFor).
@@ -66,11 +57,19 @@ namespace KWin.UI.Pages
             _extra = new Panel { Dock = DockStyle.Fill, AutoSize = true, Height = 0, Margin = new Padding(0, 0, 0, 2) };
             _grid.Controls.Add(_extra, 0, 3);
 
-            _buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = new Padding(0, 4, 0, 0) };
+            _buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = true, Margin = new Padding(0, 4, 0, 0) };
             _grid.Controls.Add(_buttons, 0, 4);
 
             Controls.Add(_grid);
+
+            // The current state is the first fact (instead of a badge next to the title, which
+            // squeezed long titles and long translations).
+            SetFact(CurrentLabel, "—", TextRole.Muted);
+            _state = _factValues[CurrentLabel];
+            _state.Font = UiFonts.Semibold(9.5f);
         }
+
+        private static string CurrentLabel => Get("opt.col_current");
 
         /// <summary>Adds or updates one fact row ("Benefit: ...").</summary>
         public void SetFact(string label, string value, TextRole role = TextRole.Primary)
@@ -121,7 +120,17 @@ namespace KWin.UI.Pages
             }
             _grid.RowStyles[2].Height = factsH + S(4);
 
-            return S(12) + S(10) + S(32) + (int)_grid.RowStyles[1].Height + factsH + S(4) + _extra.Height + S(4) + S(44) + Margin.Vertical;
+            int lineWidth = 0, lines = 1;
+            foreach (Control b in _buttons.Controls)
+            {
+                int w = b.Width + b.Margin.Horizontal;
+                if (lineWidth > 0 && lineWidth + w > inner) { lines++; lineWidth = 0; }
+                lineWidth += w;
+            }
+            int buttonsH = lines * S(42) + S(4);
+            _grid.RowStyles[4].Height = buttonsH;
+
+            return S(12) + S(10) + S(32) + (int)_grid.RowStyles[1].Height + factsH + S(4) + _extra.Height + S(4) + buttonsH + Margin.Vertical;
         }
 
         /// <summary>The badge in the top corner: current state.</summary>
@@ -142,7 +151,7 @@ namespace KWin.UI.Pages
                 Margin = new Padding(0, 0, 8, 0)
             };
             using (var g = CreateGraphics())
-                b.Width = Math.Clamp(TextRenderer.MeasureText(g, text, UiFonts.Semibold(9.5f)).Width + Draw.S(this, 36), Draw.S(this, 110), Draw.S(this, 320));
+                b.Width = Math.Max(TextRenderer.MeasureText(g, text, UiFonts.Semibold(9.5f)).Width + Draw.S(this, 36), Draw.S(this, 110));
             b.Click += (s, e) => onClick();
             _buttons.Controls.Add(b);
             ThemeManager.ApplyTree(b);

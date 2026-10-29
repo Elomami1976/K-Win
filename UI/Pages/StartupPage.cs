@@ -122,6 +122,7 @@ namespace KWin.UI.Pages
                 _list.Items.Add(item);
             }
             _list.EndUpdate();
+            ShowDetails();
             int enabled = _all.Count(e => e.Enabled);
             _summary.Text = Get("startup.summary", _all.Count, enabled, _all.Count - enabled);
         }

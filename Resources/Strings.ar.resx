@@ -2077,7 +2077,7 @@
     <value>التراجع</value>
   </data>
   <data name="card.current" xml:space="preserve">
-    <value>الحالي: {0}</value>
+    <value>{0}</value>
   </data>
   <data name="card.preference" xml:space="preserve">
     <value>حسب تفضيلك (لا توجد توصية)</value>

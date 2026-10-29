@@ -216,7 +216,7 @@ namespace KWin.Controls
             }
             else
             {
-                if (!Enabled) fill = Draw.Mix(fill, Palette.Card, 0.6f);
+                if (!Enabled) { fill = Palette.Input; text = Palette.TextMuted; } // clearly not clickable
                 else if (Pressed) fill = Draw.Darken(fill, 0.15f);
                 else if (Hover) fill = Draw.Lighten(fill, 0.12f);
                 using var b = new LinearGradientBrush(r, Draw.Lighten(fill, 0.08f), Draw.Darken(fill, 0.12f), LinearGradientMode.Vertical);
