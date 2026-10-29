@@ -16,7 +16,7 @@ Built with C# and .NET 8 Windows Forms.
 
 [![Download K-Win 1.5.0](https://img.shields.io/badge/Download-K--Win%20v1.5.0-blue)](https://github.com/Elomami1976/K-Win/releases/tag/v1.5.0)
 
-**[⬇️ Download K-Win v1.5.0](https://github.com/Elomami1976/K-Win/releases/tag/v1.5.0)** (pre-release): one portable file, `K-Win-1.5.0.exe` (Windows x64, self-contained, nothing to install). Each release lists the file's SHA-256 checksum so you can verify the download:
+**[⬇️ Download K-Win v1.5.0](https://github.com/Elomami1976/K-Win/releases/tag/v1.5.0)**: one portable file, `K-Win-1.5.0.exe` (Windows x64, self-contained, nothing to install). Each release lists the file's SHA-256 checksum so you can verify the download:
 
 ```powershell
 Get-FileHash .\K-Win-1.5.0.exe -Algorithm SHA256
