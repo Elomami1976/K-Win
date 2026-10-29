@@ -26,9 +26,9 @@ Complete list of all registry changes, service modifications, and file operation
 
 | Key | Value | Data | Purpose |
 |-----|-------|------|---------|
-| `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` | *(varies)* | *(deleted)* | Disable user startup programs by removing their Run entries |
+| `HKCU\…\Explorer\StartupApproved\Run` (and `HKLM`, `Run32`, `StartupFolder`) | *(entry name)* | 12-byte flag | Enable/disable a startup entry the same way Task Manager does |
 
-**Safety:** Values are exported to `.reg` backup before deletion. Undo restores the backup.
+**Safety (1.5):** Run entries and Startup-folder shortcuts are never deleted. Only the Task Manager "approved" flag changes; the previous flag is recorded and Undo restores it. All-users entries require administrator rights.
 
 ### Privacy — Telemetry
 

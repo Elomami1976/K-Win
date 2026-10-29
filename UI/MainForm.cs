@@ -303,9 +303,10 @@ namespace KWin.UI
                     "Microsoft", "Windows", "Clipboard");
                 if (Directory.Exists(clipboardPath))
                 {
-                    foreach (var file in Directory.EnumerateFiles(clipboardPath, "*", SearchOption.AllDirectories))
+                    // Junction-safe walk: links inside the folder are never followed.
+                    foreach (var file in KWin.Core.SafeFileWalker.EnumerateFiles(clipboardPath))
                     {
-                        try { File.Delete(file); filesDeleted++; } catch { }
+                        try { file.Delete(); filesDeleted++; } catch { }
                     }
                 }
 

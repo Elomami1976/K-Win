@@ -59,7 +59,9 @@ namespace KWin.UI.Pages
             grid.Controls.Add(_step, 0, 1);
 
             _list.Columns.Add(Get("cleanup.col_category"), 240);
-            _list.Columns.Add(Get("cleanup.col_size"), 110);
+            // Wide enough for "Needs administrator" in every language (it was clipped at 110).
+            int sizeWidth = Math.Max(110, TextRenderer.MeasureText(Get("cleanup.needs_admin"), _list.Font).Width + 24);
+            _list.Columns.Add(Get("cleanup.col_size"), sizeWidth);
             _list.Columns.Add(Get("cleanup.col_description"), 520);
             _list.NumericColumns.Add(1);
             _list.ShowItemToolTips = true;

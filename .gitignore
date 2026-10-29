@@ -5,3 +5,7 @@ publish/
 *.suo
 .vs/
 .vscode/
+
+# Local release output
+release/
+release_out/
