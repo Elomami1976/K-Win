@@ -24,6 +24,7 @@ namespace KWin.UI
         {
             _tweaks = new TweakEngine(_registry);
             _startup = new StartupService(_registry);
+            SettingCard.LockCheck = d => Locks.Check(d);
         }
 
         #region Data-driven settings
@@ -54,9 +55,11 @@ namespace KWin.UI
             string title = Get(d.TextKey("title"));
             string target = Get(d.TextKey(on ? "on" : "off"));
 
-            if (d.IsPolicy && OrgManagement.IsManaged)
+            var lockReason = Locks.Check(d);
+            if (lockReason != LockReason.None)
             {
-                MessageBox.Show(this, Get("card.managed_desc"), title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, Get(lockReason == LockReason.Organization ? "card.managed_desc" : "card.locked_local_desc"),
+                    title, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -82,7 +85,11 @@ namespace KWin.UI
                 }
 
                 var (hookError, undoStep) = await RunSettingHookAsync(d, on);
-                if (hookError != null) SetStatus(hookError, true);
+                if (hookError != null)
+                {
+                    _currentWarnings.Add(hookError);
+                    SetStatus(Get("card.applied_with_warning", title, target, hookError), false);
+                }
 
                 _safety.PushUndoAction(new UndoAction { Description = $"{title}: {target}", UndoDelegate = undoStep });
                 if (hookError == null)
@@ -479,8 +486,8 @@ namespace KWin.UI
         private Control BuildAppsSection()
         {
             var card = new RoundedPanel { Kind = SurfaceKind.Card, Padding = new Padding(14) };
-            var grid = Ui.Grid(1, 5);
-            Ui.Rows(grid, (SizeType.Absolute, 44), (SizeType.Percent, 100), (SizeType.Absolute, 26), (SizeType.Absolute, 46), (SizeType.Absolute, 40));
+            var grid = Ui.Grid(1, 6);
+            Ui.Rows(grid, (SizeType.Absolute, 44), (SizeType.Percent, 100), (SizeType.Absolute, 66), (SizeType.Absolute, 26), (SizeType.Absolute, 46), (SizeType.Absolute, 44));
 
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = new Padding(0) };
             var filter = new ThemedComboBox { Width = 220, Font = UiFonts.Regular(9.5f), Margin = new Padding(0, 6, 10, 0) };
@@ -500,8 +507,20 @@ namespace KWin.UI
             list.Columns.Add(Get("apps.col_size"), 90);
             grid.Controls.Add(list, 0, 1);
 
-            var count = new ThemedLabel { Dock = DockStyle.Fill, Role = TextRole.Muted, Font = UiFonts.Regular(9f) };
-            grid.Controls.Add(count, 0, 2);
+            // Full name / publisher / version of the selected app (long names are not cut off here).
+            var details = StartupPage.DetailsBox();
+            details.BackColor = ThemeManager.Current.Card;
+            details.ForeColor = ThemeManager.Current.Text;
+            list.SelectedIndexChanged += (s, e) =>
+            {
+                if (list.SelectedItems.Count == 0 || list.SelectedItems[0].Tag is not AppManager.InstalledApp app) { details.Text = ""; return; }
+                details.Text = $"{app.Name}{Environment.NewLine}{Get("apps.col_publisher")}: {app.Publisher}  ·  {Get("apps.col_version")}: {Loc.Ltr(app.Version)}" +
+                    (string.IsNullOrEmpty(app.PackageFullName) ? "" : $"{Environment.NewLine}{Loc.Ltr(app.PackageFullName)}");
+            };
+            grid.Controls.Add(details, 0, 2);
+
+            var count = new ThemedLabel { Dock = DockStyle.Fill, Role = TextRole.Muted, Font = UiFonts.Regular(9.5f) };
+            grid.Controls.Add(count, 0, 3);
 
             var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = new Padding(0) };
             var progress = new ProgressBar { Width = 160, Height = 8, Visible = false, Margin = new Padding(0, 18, 10, 0) };
@@ -529,9 +548,9 @@ namespace KWin.UI
                 }));
             actions.Controls.Add(progress);
             actions.Controls.Add(status);
-            grid.Controls.Add(actions, 0, 3);
+            grid.Controls.Add(actions, 0, 4);
 
-            grid.Controls.Add(Ui.Text(Get("toolsp.apps_note"), UiFonts.Regular(9f), TextRole.Muted, wrap: true), 0, 4);
+            grid.Controls.Add(Ui.Text(Get("toolsp.apps_note"), UiFonts.Regular(9.5f), TextRole.Muted, wrap: true), 0, 5);
 
             filter.SelectedIndexChanged += async (s, e) => await LoadAppsAsync(filter, list, count, search, all);
             search.TextChanged += (s, e) => { FilterAppList(list, all, search.Text); UpdateAppCount(list, count); };

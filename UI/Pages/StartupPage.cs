@@ -25,6 +25,7 @@ namespace KWin.UI.Pages
         private readonly ThemedListView _list = new() { Dock = DockStyle.Fill, CheckBoxes = true, MultiSelect = true };
         private readonly TextBox _search = new() { Width = 240, BorderStyle = BorderStyle.FixedSingle };
         private readonly ThemedLabel _summary;
+        private readonly TextBox _details = DetailsBox();
         private List<StartupEntry> _all = new();
         private bool _loading;
 
@@ -34,8 +35,8 @@ namespace KWin.UI.Pages
             DoubleBuffered = true;
 
             var card = new RoundedPanel { Kind = SurfaceKind.Card, Dock = DockStyle.Fill, Margin = new Padding(0), Padding = new Padding(14) };
-            var grid = Ui.Grid(1, 4);
-            Ui.Rows(grid, (SizeType.Absolute, 44), (SizeType.Absolute, 30), (SizeType.Percent, 100), (SizeType.Absolute, 28));
+            var grid = Ui.Grid(1, 5);
+            Ui.Rows(grid, (SizeType.Absolute, 44), (SizeType.Absolute, 30), (SizeType.Percent, 100), (SizeType.Absolute, 28), (SizeType.Absolute, 92));
 
             var toolbar = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, Margin = new Padding(0) };
             _search.Font = UiFonts.Regular(10f);
@@ -59,8 +60,10 @@ namespace KWin.UI.Pages
             _list.ShowItemToolTips = true;
             grid.Controls.Add(_list, 0, 2);
 
-            _summary = Ui.Text("", UiFonts.Regular(9f), TextRole.Muted);
+            _summary = Ui.Text("", UiFonts.Regular(9.5f), TextRole.Muted);
             grid.Controls.Add(_summary, 0, 3);
+            grid.Controls.Add(_details, 0, 4);
+            _list.SelectedIndexChanged += (s, e) => ShowDetails();
 
             card.Controls.Add(grid);
             Controls.Add(card);
@@ -123,6 +126,34 @@ namespace KWin.UI.Pages
             _summary.Text = Get("startup.summary", _all.Count, enabled, _all.Count - enabled);
         }
 
+        private void ShowDetails()
+        {
+            if (_list.SelectedItems.Count == 0 || _list.SelectedItems[0].Tag is not StartupEntry e)
+            {
+                _details.Text = Get("startup.details_hint");
+                return;
+            }
+            string nl = Environment.NewLine;
+            _details.Text =
+                $"{e.Name}  ·  {(e.Enabled ? Get("startup.enabled") : Get("startup.disabled"))}{(e.TargetExists ? "" : "  ·  " + Get("startup.missing"))}{nl}" +
+                $"{Get("startup.col_publisher")}: {e.Publisher ?? Get("startup.unknown_publisher")}{nl}" +
+                $"{Get("startup.col_source")}: {SourceText(e.Source)}  ·  {Loc.Ltr(e.Location)}{nl}" +
+                $"{Get("startup.col_command")}: {Loc.Ltr(e.Command)}";
+        }
+
+        /// <summary>Read-only, selectable details of the selected row (full texts, wrapped).</summary>
+        internal static TextBox DetailsBox() => new()
+        {
+            Dock = DockStyle.Fill,
+            Multiline = true,
+            ReadOnly = true,
+            WordWrap = true,
+            ScrollBars = ScrollBars.Vertical,
+            BorderStyle = BorderStyle.None,
+            Font = UiFonts.Regular(9.5f),
+            Margin = new Padding(0, 6, 0, 0)
+        };
+
         public static string SourceText(StartupSource s) => s switch
         {
             StartupSource.RegistryUser => Get("startup.src_user_run"),
@@ -153,6 +184,8 @@ namespace KWin.UI.Pages
             BackColor = p.WindowBackground;
             _search.BackColor = p.Input;
             _search.ForeColor = p.Text;
+            _details.BackColor = p.Card;
+            _details.ForeColor = p.Text;
             if (_all.Count > 0) Fill();
         }
     }

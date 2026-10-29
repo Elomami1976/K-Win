@@ -42,6 +42,20 @@ namespace KWin.Services
             Changed?.Invoke();
         }
 
+        /// <summary>Marks the operation that created this undo entry as undone and saves.</summary>
+        public void MarkUndone(string? undoId)
+        {
+            if (string.IsNullOrEmpty(undoId)) return;
+            lock (_lock)
+            {
+                var r = _records.LastOrDefault(x => x.UndoId == undoId);
+                if (r == null || r.UndoneUtc != null) return;
+                r.UndoneUtc = DateTime.UtcNow;
+                Save();
+            }
+            Changed?.Invoke();
+        }
+
         /// <summary>Most recent first.</summary>
         public IReadOnlyList<OperationRecord> GetRecent(int count = 20)
         {

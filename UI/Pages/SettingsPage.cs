@@ -17,6 +17,7 @@ namespace KWin.UI.Pages
         public required Action OpenBackups { get; init; }
         public required Action ViewHistory { get; init; }
         public required Action<int> SetMonitorInterval { get; init; }
+        public required Func<Task> CheckForUpdates { get; init; }
     }
 
     /// <summary>
@@ -34,6 +35,8 @@ namespace KWin.UI.Pages
         private readonly CheckBox _restorePoint;
         private readonly NumericUpDown _retention;
         private readonly ThemedComboBox _interval;
+        private readonly CheckBox _updatesOnStart;
+        private readonly ThemedLabel _lastCheck;
         private bool _syncing;
 
         public SettingsPage(SettingsActions actions, SettingsService settings)
@@ -43,9 +46,9 @@ namespace KWin.UI.Pages
             DoubleBuffered = true;
             AutoScroll = true;
 
-            var root = Ui.Grid(2, 3);
+            var root = Ui.Grid(2, 4);
             Ui.Columns(root, (SizeType.Percent, 50), (SizeType.Percent, 50));
-            Ui.Rows(root, (SizeType.Absolute, 200), (SizeType.Absolute, 220), (SizeType.Absolute, 220));
+            Ui.Rows(root, (SizeType.Absolute, 200), (SizeType.Absolute, 230), (SizeType.Absolute, 230), (SizeType.Absolute, 210));
 
             // ---- Appearance ----
             var appearance = Section(Glyphs.Moon, Get("set.appearance"), new Padding(0, 6, 6, 6), out var aBody);
@@ -148,8 +151,28 @@ namespace KWin.UI.Pages
             }
             root.Controls.Add(about, 1, 2);
 
+            // ---- Updates (optional, off by default) ----
+            var updates = Section(Glyphs.Globe, Get("upd.title"), new Padding(0, 6, 0, 6), out var uBody);
+            _updatesOnStart = new CheckBox { Text = Get("upd.on_start"), AutoSize = true, Font = UiFonts.Regular(10f), Margin = new Padding(0, 6, 0, 2) };
+            _updatesOnStart.CheckedChanged += (s, e) =>
+            {
+                if (_syncing) return;
+                _settings.Current.CheckUpdatesOnStart = _updatesOnStart.Checked;
+                _settings.Save();
+            };
+            uBody.Controls.Add(_updatesOnStart, 0, 0);
+            var row = new FlowLayoutPanel { AutoSize = true, WrapContents = true, Dock = DockStyle.Fill, Margin = new Padding(0, 6, 0, 0) };
+            var check = Button(Get("upd.check_now"), () => _ = _actions.CheckForUpdates());
+            row.Controls.Add(check);
+            _lastCheck = new ThemedLabel { AutoSize = true, AutoEllipsis = false, Role = TextRole.Muted, Font = UiFonts.Regular(9.5f), Margin = new Padding(4, 8, 0, 0) };
+            row.Controls.Add(_lastCheck);
+            uBody.Controls.Add(row, 0, 1);
+            uBody.Controls.Add(Ui.Text(Get("upd.note"), UiFonts.Regular(9.5f), TextRole.Muted, wrap: true), 0, 2);
+            root.Controls.Add(updates, 0, 3);
+            root.SetColumnSpan(updates, 2);
+
             Controls.Add(root);
-            Ui.KeepMinScrollSize(this, new Size(820, 660));
+            Ui.KeepMinScrollSize(this, new Size(820, 900));
             SyncFromSettings();
         }
 
@@ -205,6 +228,10 @@ namespace KWin.UI.Pages
                 _light.Checked = !_settings.Current.IsDark;
                 _restorePoint.Checked = _settings.Current.AutoRestorePoint;
                 _retention.Value = Math.Clamp(_settings.Current.BackupRetentionDays, 1, 365);
+                _updatesOnStart.Checked = _settings.Current.CheckUpdatesOnStart;
+                _lastCheck.Text = _settings.Current.LastUpdateCheckUtc is DateTime t
+                    ? Get("upd.last_check", t.ToLocalTime().ToString("g", Loc.Culture))
+                    : Get("upd.never_checked");
                 _interval.SelectedItem = _interval.Items.Cast<IntervalItem>()
                     .FirstOrDefault(i => i.Seconds == _settings.Current.MonitorIntervalSeconds);
                 _language.SelectedItem = _language.Items.Cast<LanguageItem>().FirstOrDefault(i => i.Code == Loc.CurrentLanguage)
@@ -220,7 +247,7 @@ namespace KWin.UI.Pages
         {
             BackColor = p.WindowBackground;
             ForeColor = p.Text;
-            foreach (var c in new Control[] { _dark, _light, _restorePoint })
+            foreach (var c in new Control[] { _dark, _light, _restorePoint, _updatesOnStart })
                 c.ForeColor = p.Text;
             foreach (var c in new Control[] { _language, _retention })
             {

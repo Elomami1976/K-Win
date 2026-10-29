@@ -2799,4 +2799,277 @@ Check</value>
   <data name="setting.sysmain.off" xml:space="preserve">
     <value>Disabled</value>
   </data>
+  <data name="nav.history" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="page.history_sub" xml:space="preserve">
+    <value>Everything K-win changed, with details and undo</value>
+  </data>
+  <data name="card.applied_with_warning" xml:space="preserve">
+    <value>{0}: {1} applied and verified, with a warning: {2}</value>
+  </data>
+  <data name="card.locked_local" xml:space="preserve">
+    <value>Set by local Group Policy</value>
+  </data>
+  <data name="card.locked_local_desc" xml:space="preserve">
+    <value>This value is set by local Group Policy. Windows would re-apply the policy, so K-win does not change it. Use the Group Policy Editor instead.</value>
+  </data>
+  <data name="dash.menu_optimize" xml:space="preserve">
+    <value>Optimize Now (recommendations)…</value>
+  </data>
+  <data name="opt.title" xml:space="preserve">
+    <value>Optimize Now</value>
+  </data>
+  <data name="opt.analyzing" xml:space="preserve">
+    <value>Checking your settings…</value>
+  </data>
+  <data name="opt.intro" xml:space="preserve">
+    <value>K-win checked your settings: {0} differ from its recommendations. Choose which to apply. Nothing changes until you confirm the preview.</value>
+  </data>
+  <data name="opt.intro_safety" xml:space="preserve">
+    <value>Only low-risk items are selected for you. Medium- and high-risk items must be chosen yourself.</value>
+  </data>
+  <data name="opt.none_needed" xml:space="preserve">
+    <value>All settings with a K-win recommendation are already in the recommended state. Nothing to do.</value>
+  </data>
+  <data name="opt.already" xml:space="preserve">
+    <value>{0} settings are already in the recommended state.</value>
+  </data>
+  <data name="opt.preferences" xml:space="preserve">
+    <value>{0} settings are personal preferences (no recommendation) and are not part of Optimize Now; find them under Performance and Tools.</value>
+  </data>
+  <data name="opt.skipped" xml:space="preserve">
+    <value>Skipped: {0} ({1})</value>
+  </data>
+  <data name="opt.skip_notapplicable" xml:space="preserve">
+    <value>not available on this Windows version</value>
+  </data>
+  <data name="opt.skip_lockedbyorganization" xml:space="preserve">
+    <value>managed by your organization</value>
+  </data>
+  <data name="opt.skip_lockedbylocalpolicy" xml:space="preserve">
+    <value>set by local Group Policy</value>
+  </data>
+  <data name="opt.skip_stateunknown" xml:space="preserve">
+    <value>its current state could not be read</value>
+  </data>
+  <data name="opt.col_risk" xml:space="preserve">
+    <value>Risk</value>
+  </data>
+  <data name="opt.col_setting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="opt.col_current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="opt.col_recommended" xml:space="preserve">
+    <value>Recommended</value>
+  </data>
+  <data name="opt.col_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="opt.col_details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="opt.risk_low" xml:space="preserve">
+    <value>Low risk</value>
+  </data>
+  <data name="opt.risk_medium" xml:space="preserve">
+    <value>Medium risk</value>
+  </data>
+  <data name="opt.risk_high" xml:space="preserve">
+    <value>High risk</value>
+  </data>
+  <data name="opt.review_apply" xml:space="preserve">
+    <value>Review and apply…</value>
+  </data>
+  <data name="opt.cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="opt.select_hint" xml:space="preserve">
+    <value>Select a line to see what it changes, its benefit and side effects.</value>
+  </data>
+  <data name="opt.changed_outside" xml:space="preserve">
+    <value>This setting was changed by another tool or policy. It is not selected for you.</value>
+  </data>
+  <data name="opt.preview_intro" xml:space="preserve">
+    <value>These {0} changes will be made:</value>
+  </data>
+  <data name="opt.preview_rp" xml:space="preserve">
+    <value>A restore point is requested first (if enabled in Settings and running as administrator). Each change is verified after it is applied.</value>
+  </data>
+  <data name="opt.preview_medium_warning" xml:space="preserve">
+    <value>Medium-risk items are included. Read their side effects before you continue.</value>
+  </data>
+  <data name="opt.op_name" xml:space="preserve">
+    <value>Optimize Now ({0} changes)</value>
+  </data>
+  <data name="opt.status" xml:space="preserve">
+    <value>Optimize Now: {0} applied, {1} failed.</value>
+  </data>
+  <data name="opt.summary_title" xml:space="preserve">
+    <value>Optimize Now — Summary</value>
+  </data>
+  <data name="opt.summary_intro" xml:space="preserve">
+    <value>{0} of {2} changes applied and verified; {1} failed.</value>
+  </data>
+  <data name="opt.summary_restart" xml:space="preserve">
+    <value>Some changes take effect after you restart Windows or sign out.</value>
+  </data>
+  <data name="opt.summary_undo" xml:space="preserve">
+    <value>You can undo this whole run with Undo or from History.</value>
+  </data>
+  <data name="opt.summary_hint" xml:space="preserve">
+    <value>Select a line to see its details.</value>
+  </data>
+  <data name="opt.applied" xml:space="preserve">
+    <value>Applied</value>
+  </data>
+  <data name="opt.applied_verified" xml:space="preserve">
+    <value>Applied and verified.</value>
+  </data>
+  <data name="opt.failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="opt.not_run" xml:space="preserve">
+    <value>Not run</value>
+  </data>
+  <data name="opt.warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="opt.rp_created" xml:space="preserve">
+    <value>Restore point: created and verified.</value>
+  </data>
+  <data name="opt.rp_recent" xml:space="preserve">
+    <value>Restore point: Windows reused one from the last 24 hours.</value>
+  </data>
+  <data name="opt.rp_not_admin" xml:space="preserve">
+    <value>Restore point: not created (only user settings changed, no administrator rights).</value>
+  </data>
+  <data name="opt.rp_failed" xml:space="preserve">
+    <value>Restore point: could not be created (you chose to continue).</value>
+  </data>
+  <data name="opt.rp_off" xml:space="preserve">
+    <value>Restore point: turned off in Settings.</value>
+  </data>
+  <data name="hist.undo_this" xml:space="preserve">
+    <value>Undo this operation…</value>
+  </data>
+  <data name="hist.undone" xml:space="preserve">
+    <value>Undone</value>
+  </data>
+  <data name="hist.undone_at" xml:space="preserve">
+    <value>Undone on {0}.</value>
+  </data>
+  <data name="hist.undo_gone" xml:space="preserve">
+    <value>No longer available</value>
+  </data>
+  <data name="hist.undo_gone_explain" xml:space="preserve">
+    <value>Undo is no longer available: this change was already undone or is older than the last 20 undoable changes.</value>
+  </data>
+  <data name="hist.undo_blocked" xml:space="preserve">
+    <value>Undo "{0}" first: it changed the same settings later.</value>
+  </data>
+  <data name="hist.undo_ready_full" xml:space="preserve">
+    <value>Undo restores every changed value exactly.</value>
+  </data>
+  <data name="hist.undo_ready_partial" xml:space="preserve">
+    <value>Undo restores the registry values exactly. A service, power or Explorer step can only be reversed while K-win stays open, so it may need to be changed back by hand.</value>
+  </data>
+  <data name="hist.explain_full" xml:space="preserve">
+    <value>registry values can be restored exactly, also after a restart</value>
+  </data>
+  <data name="hist.explain_partial" xml:space="preserve">
+    <value>registry values can be restored; some steps only until K-win is closed</value>
+  </data>
+  <data name="hist.explain_none" xml:space="preserve">
+    <value>this operation cannot be undone (for example deleted files or uninstalled apps)</value>
+  </data>
+  <data name="hist.not_set" xml:space="preserve">
+    <value>(not set)</value>
+  </data>
+  <data name="hist.key_removed" xml:space="preserve">
+    <value>key removed (restorable from its backup)</value>
+  </data>
+  <data name="hist.changes" xml:space="preserve">
+    <value>Changed values ({0}):</value>
+  </data>
+  <data name="hist.errors" xml:space="preserve">
+    <value>Errors:</value>
+  </data>
+  <data name="hist.warnings" xml:space="preserve">
+    <value>Warnings:</value>
+  </data>
+  <data name="hist.page_summary" xml:space="preserve">
+    <value>{0} operations, newest first.</value>
+  </data>
+  <data name="hist.select_hint" xml:space="preserve">
+    <value>Select an operation to see its details.</value>
+  </data>
+  <data name="perfp.comp_source_label" xml:space="preserve">
+    <value>Reading</value>
+  </data>
+  <data name="perfp.comp_source_measured" xml:space="preserve">
+    <value>Measured with Get-MMAgent (authoritative)</value>
+  </data>
+  <data name="perfp.comp_source_inferred" xml:space="preserve">
+    <value>Inferred from the Memory Compression process, not authoritative. Restart K-win as administrator for the exact setting.</value>
+  </data>
+  <data name="perfp.comp_inferred_on" xml:space="preserve">
+    <value>Probably on (inferred)</value>
+  </data>
+  <data name="perfp.comp_inferred_off" xml:space="preserve">
+    <value>Probably off (inferred)</value>
+  </data>
+  <data name="privp.clear_activity_op" xml:space="preserve">
+    <value>Clear activity data</value>
+  </data>
+  <data name="privp.dns_auto" xml:space="preserve">
+    <value>Automatic (DHCP)</value>
+  </data>
+  <data name="startup.details_hint" xml:space="preserve">
+    <value>Select an entry to see its full name, location and command.</value>
+  </data>
+  <data name="upd.title" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="upd.on_start" xml:space="preserve">
+    <value>Check for a new version when K-win starts (off by default)</value>
+  </data>
+  <data name="upd.check_now" xml:space="preserve">
+    <value>Check now</value>
+  </data>
+  <data name="upd.checking" xml:space="preserve">
+    <value>Checking GitHub for a new version…</value>
+  </data>
+  <data name="upd.last_check" xml:space="preserve">
+    <value>Last check: {0}</value>
+  </data>
+  <data name="upd.never_checked" xml:space="preserve">
+    <value>Never checked</value>
+  </data>
+  <data name="upd.note" xml:space="preserve">
+    <value>K-win only reads the public release information of github.com/Elomami1976/K-Win. It never downloads or installs anything; you decide whether to open the release page.</value>
+  </data>
+  <data name="upd.failed" xml:space="preserve">
+    <value>The update check did not work: {0}</value>
+  </data>
+  <data name="upd.failed_short" xml:space="preserve">
+    <value>Update check failed (offline?).</value>
+  </data>
+  <data name="upd.up_to_date" xml:space="preserve">
+    <value>K-win {0} is up to date.</value>
+  </data>
+  <data name="upd.up_to_date_long" xml:space="preserve">
+    <value>You have K-win {0}. The latest release is {1}. No update is needed.</value>
+  </data>
+  <data name="upd.available" xml:space="preserve">
+    <value>A new version is available: {0} (you have {1}, released {2}).</value>
+  </data>
+  <data name="upd.available_short" xml:space="preserve">
+    <value>Update available: {0}</value>
+  </data>
+  <data name="upd.open_question" xml:space="preserve">
+    <value>Open the official release page on GitHub?</value>
+  </data>
 </root>

@@ -46,6 +46,12 @@ namespace KWin.Models
         /// <summary>true = K-Win recommends On, false = recommends Off, null = personal preference.</summary>
         public bool? RecommendOn { get; init; }
 
+        /// <summary>
+        /// Risk of applying the recommended state: Low = easy to live with and fully reversible;
+        /// Medium = noticeable side effects or a non-registry step; High = never pre-selected.
+        /// </summary>
+        public RiskLevel Risk { get; init; } = RiskLevel.Low;
+
         /// <summary>Change takes effect after restart (true) or sign-out (see SignOutRequired).</summary>
         public bool RestartRequired { get; init; }
         public bool SignOutRequired { get; init; }

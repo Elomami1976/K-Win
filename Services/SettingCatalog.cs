@@ -61,6 +61,7 @@ namespace KWin.Services
         public static readonly SettingDefinition FastStartup = new()
         {
             Id = "fast_startup",
+            Risk = RiskLevel.Medium, // has a service or power step that is undoable only until K-win closes
             Group = SettingGroup.Performance,
             Glyph = Glyphs.Bolt,
             RecommendOn = true, // Windows default; turning it off only helps specific dual-boot/driver cases
@@ -74,6 +75,7 @@ namespace KWin.Services
         public static readonly SettingDefinition Telemetry = new()
         {
             Id = "telemetry",
+            Risk = RiskLevel.Medium, // has a service or power step that is undoable only until K-win closes
             Group = SettingGroup.Privacy,
             Glyph = "",
             RecommendOn = true,
@@ -224,6 +226,7 @@ namespace KWin.Services
         public static readonly SettingDefinition SysMain = new()
         {
             Id = "sysmain", Group = SettingGroup.Memory, Glyph = Glyphs.Memory,
+            Risk = RiskLevel.Medium, // service step
             RecommendOn = true, // Windows default; disabling rarely helps on modern PCs
             On = new[] { new RegistryTweak(@"HKLM\SYSTEM\CurrentControlSet\Services\SysMain", "Start", 2, MatchesWhenMissing: true) },
             Off = new[] { new RegistryTweak(@"HKLM\SYSTEM\CurrentControlSet\Services\SysMain", "Start", 4) }

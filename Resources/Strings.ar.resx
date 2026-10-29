@@ -2799,4 +2799,277 @@
   <data name="setting.sysmain.off" xml:space="preserve">
     <value>معطّلة</value>
   </data>
+  <data name="nav.history" xml:space="preserve">
+    <value>السجل</value>
+  </data>
+  <data name="page.history_sub" xml:space="preserve">
+    <value>كل ما غيّره K-win، مع التفاصيل والتراجع</value>
+  </data>
+  <data name="card.applied_with_warning" xml:space="preserve">
+    <value>{0}: تم تطبيق {1} والتحقق منه، مع تحذير: {2}</value>
+  </data>
+  <data name="card.locked_local" xml:space="preserve">
+    <value>مضبوط بنهج المجموعة المحلي</value>
+  </data>
+  <data name="card.locked_local_desc" xml:space="preserve">
+    <value>هذه القيمة مضبوطة بنهج المجموعة المحلي. سيعيد ويندوز تطبيق النهج، لذلك لا يغيّرها K-win. استخدم محرر نهج المجموعة بدلاً من ذلك.</value>
+  </data>
+  <data name="dash.menu_optimize" xml:space="preserve">
+    <value>حسّن الآن (التوصيات)…</value>
+  </data>
+  <data name="opt.title" xml:space="preserve">
+    <value>حسّن الآن</value>
+  </data>
+  <data name="opt.analyzing" xml:space="preserve">
+    <value>جارٍ فحص إعداداتك…</value>
+  </data>
+  <data name="opt.intro" xml:space="preserve">
+    <value>فحص K-win إعداداتك: {0} تختلف عن توصياته. اختر ما تريد تطبيقه. لن يتغير شيء قبل أن تؤكد المعاينة.</value>
+  </data>
+  <data name="opt.intro_safety" xml:space="preserve">
+    <value>يتم تحديد العناصر منخفضة الخطورة فقط تلقائياً. أما العناصر متوسطة أو عالية الخطورة فعليك اختيارها بنفسك.</value>
+  </data>
+  <data name="opt.none_needed" xml:space="preserve">
+    <value>جميع الإعدادات التي يوصي بها K-win في الحالة الموصى بها بالفعل. لا شيء لفعله.</value>
+  </data>
+  <data name="opt.already" xml:space="preserve">
+    <value>{0} إعدادات في الحالة الموصى بها بالفعل.</value>
+  </data>
+  <data name="opt.preferences" xml:space="preserve">
+    <value>{0} إعدادات هي تفضيلات شخصية (بلا توصية) وليست جزءاً من "حسّن الآن"؛ تجدها في صفحتي الأداء والأدوات.</value>
+  </data>
+  <data name="opt.skipped" xml:space="preserve">
+    <value>تم التخطي: {0} ({1})</value>
+  </data>
+  <data name="opt.skip_notapplicable" xml:space="preserve">
+    <value>غير متوفر في إصدار ويندوز هذا</value>
+  </data>
+  <data name="opt.skip_lockedbyorganization" xml:space="preserve">
+    <value>تديره مؤسستك</value>
+  </data>
+  <data name="opt.skip_lockedbylocalpolicy" xml:space="preserve">
+    <value>مضبوط بنهج المجموعة المحلي</value>
+  </data>
+  <data name="opt.skip_stateunknown" xml:space="preserve">
+    <value>تعذّرت قراءة حالته الحالية</value>
+  </data>
+  <data name="opt.col_risk" xml:space="preserve">
+    <value>الخطورة</value>
+  </data>
+  <data name="opt.col_setting" xml:space="preserve">
+    <value>الإعداد</value>
+  </data>
+  <data name="opt.col_current" xml:space="preserve">
+    <value>الحالي</value>
+  </data>
+  <data name="opt.col_recommended" xml:space="preserve">
+    <value>الموصى به</value>
+  </data>
+  <data name="opt.col_result" xml:space="preserve">
+    <value>النتيجة</value>
+  </data>
+  <data name="opt.col_details" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="opt.risk_low" xml:space="preserve">
+    <value>خطورة منخفضة</value>
+  </data>
+  <data name="opt.risk_medium" xml:space="preserve">
+    <value>خطورة متوسطة</value>
+  </data>
+  <data name="opt.risk_high" xml:space="preserve">
+    <value>خطورة عالية</value>
+  </data>
+  <data name="opt.review_apply" xml:space="preserve">
+    <value>مراجعة وتطبيق…</value>
+  </data>
+  <data name="opt.cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="opt.select_hint" xml:space="preserve">
+    <value>اختر سطراً لترى ما يغيّره وفائدته وآثاره الجانبية.</value>
+  </data>
+  <data name="opt.changed_outside" xml:space="preserve">
+    <value>تم تغيير هذا الإعداد بواسطة أداة أو نهج آخر. لم يتم تحديده تلقائياً.</value>
+  </data>
+  <data name="opt.preview_intro" xml:space="preserve">
+    <value>سيتم إجراء هذه التغييرات ({0}):</value>
+  </data>
+  <data name="opt.preview_rp" xml:space="preserve">
+    <value>يُطلب إنشاء نقطة استعادة أولاً (إذا كانت مفعّلة في الإعدادات وفي وضع المسؤول). يتم التحقق من كل تغيير بعد تطبيقه.</value>
+  </data>
+  <data name="opt.preview_medium_warning" xml:space="preserve">
+    <value>تتضمن عناصر متوسطة الخطورة. اقرأ آثارها الجانبية قبل المتابعة.</value>
+  </data>
+  <data name="opt.op_name" xml:space="preserve">
+    <value>حسّن الآن ({0} تغييرات)</value>
+  </data>
+  <data name="opt.status" xml:space="preserve">
+    <value>حسّن الآن: تم تطبيق {0}، وفشل {1}.</value>
+  </data>
+  <data name="opt.summary_title" xml:space="preserve">
+    <value>حسّن الآن — الملخص</value>
+  </data>
+  <data name="opt.summary_intro" xml:space="preserve">
+    <value>تم تطبيق {0} من {2} تغييرات والتحقق منها؛ وفشل {1}.</value>
+  </data>
+  <data name="opt.summary_restart" xml:space="preserve">
+    <value>بعض التغييرات تسري بعد إعادة تشغيل ويندوز أو تسجيل الخروج.</value>
+  </data>
+  <data name="opt.summary_undo" xml:space="preserve">
+    <value>يمكنك التراجع عن هذه العملية كاملة بزر التراجع أو من السجل.</value>
+  </data>
+  <data name="opt.summary_hint" xml:space="preserve">
+    <value>اختر سطراً لعرض تفاصيله.</value>
+  </data>
+  <data name="opt.applied" xml:space="preserve">
+    <value>تم التطبيق</value>
+  </data>
+  <data name="opt.applied_verified" xml:space="preserve">
+    <value>تم التطبيق والتحقق.</value>
+  </data>
+  <data name="opt.failed" xml:space="preserve">
+    <value>فشل</value>
+  </data>
+  <data name="opt.not_run" xml:space="preserve">
+    <value>لم يُنفّذ</value>
+  </data>
+  <data name="opt.warning" xml:space="preserve">
+    <value>تحذير</value>
+  </data>
+  <data name="opt.rp_created" xml:space="preserve">
+    <value>نقطة الاستعادة: تم إنشاؤها والتحقق منها.</value>
+  </data>
+  <data name="opt.rp_recent" xml:space="preserve">
+    <value>نقطة الاستعادة: أعاد ويندوز استخدام نقطة من آخر 24 ساعة.</value>
+  </data>
+  <data name="opt.rp_not_admin" xml:space="preserve">
+    <value>نقطة الاستعادة: لم تُنشأ (تغيّرت إعدادات المستخدم فقط، دون صلاحيات المسؤول).</value>
+  </data>
+  <data name="opt.rp_failed" xml:space="preserve">
+    <value>نقطة الاستعادة: تعذّر إنشاؤها (اخترت المتابعة).</value>
+  </data>
+  <data name="opt.rp_off" xml:space="preserve">
+    <value>نقطة الاستعادة: معطّلة في الإعدادات.</value>
+  </data>
+  <data name="hist.undo_this" xml:space="preserve">
+    <value>التراجع عن هذه العملية…</value>
+  </data>
+  <data name="hist.undone" xml:space="preserve">
+    <value>تم التراجع</value>
+  </data>
+  <data name="hist.undone_at" xml:space="preserve">
+    <value>تم التراجع في {0}.</value>
+  </data>
+  <data name="hist.undo_gone" xml:space="preserve">
+    <value>لم يعد متاحاً</value>
+  </data>
+  <data name="hist.undo_gone_explain" xml:space="preserve">
+    <value>التراجع لم يعد متاحاً: تم التراجع عن هذا التغيير بالفعل أو أنه أقدم من آخر 20 تغييراً قابلاً للتراجع.</value>
+  </data>
+  <data name="hist.undo_blocked" xml:space="preserve">
+    <value>تراجع أولاً عن "{0}": فقد غيّر الإعدادات نفسها لاحقاً.</value>
+  </data>
+  <data name="hist.undo_ready_full" xml:space="preserve">
+    <value>يعيد التراجع كل قيمة متغيرة بدقة.</value>
+  </data>
+  <data name="hist.undo_ready_partial" xml:space="preserve">
+    <value>يعيد التراجع قيم السجل بدقة. أما خطوة الخدمة أو الطاقة أو المستكشف فلا يمكن عكسها إلا ما دام K-win مفتوحاً، وقد تحتاج إلى إعادتها يدوياً.</value>
+  </data>
+  <data name="hist.explain_full" xml:space="preserve">
+    <value>يمكن استعادة قيم السجل بدقة، حتى بعد إعادة التشغيل</value>
+  </data>
+  <data name="hist.explain_partial" xml:space="preserve">
+    <value>يمكن استعادة قيم السجل؛ وبعض الخطوات فقط ما دام K-win مفتوحاً</value>
+  </data>
+  <data name="hist.explain_none" xml:space="preserve">
+    <value>لا يمكن التراجع عن هذه العملية (مثل الملفات المحذوفة أو التطبيقات المُزالة)</value>
+  </data>
+  <data name="hist.not_set" xml:space="preserve">
+    <value>(غير مضبوط)</value>
+  </data>
+  <data name="hist.key_removed" xml:space="preserve">
+    <value>تمت إزالة المفتاح (يمكن استعادته من نسخته الاحتياطية)</value>
+  </data>
+  <data name="hist.changes" xml:space="preserve">
+    <value>القيم المتغيرة ({0}):</value>
+  </data>
+  <data name="hist.errors" xml:space="preserve">
+    <value>الأخطاء:</value>
+  </data>
+  <data name="hist.warnings" xml:space="preserve">
+    <value>التحذيرات:</value>
+  </data>
+  <data name="hist.page_summary" xml:space="preserve">
+    <value>{0} عملية، الأحدث أولاً.</value>
+  </data>
+  <data name="hist.select_hint" xml:space="preserve">
+    <value>اختر عملية لعرض تفاصيلها.</value>
+  </data>
+  <data name="perfp.comp_source_label" xml:space="preserve">
+    <value>القراءة</value>
+  </data>
+  <data name="perfp.comp_source_measured" xml:space="preserve">
+    <value>مقيسة بواسطة Get-MMAgent (موثوقة)</value>
+  </data>
+  <data name="perfp.comp_source_inferred" xml:space="preserve">
+    <value>مستنتجة من عملية ضغط الذاكرة، وليست موثوقة. أعد تشغيل K-win كمسؤول لمعرفة الإعداد الدقيق.</value>
+  </data>
+  <data name="perfp.comp_inferred_on" xml:space="preserve">
+    <value>مفعّل على الأرجح (استنتاج)</value>
+  </data>
+  <data name="perfp.comp_inferred_off" xml:space="preserve">
+    <value>معطّل على الأرجح (استنتاج)</value>
+  </data>
+  <data name="privp.clear_activity_op" xml:space="preserve">
+    <value>مسح بيانات النشاط</value>
+  </data>
+  <data name="privp.dns_auto" xml:space="preserve">
+    <value>تلقائي (DHCP)</value>
+  </data>
+  <data name="startup.details_hint" xml:space="preserve">
+    <value>اختر إدخالاً لعرض اسمه الكامل وموقعه وأمره.</value>
+  </data>
+  <data name="upd.title" xml:space="preserve">
+    <value>التحديثات</value>
+  </data>
+  <data name="upd.on_start" xml:space="preserve">
+    <value>البحث عن إصدار جديد عند بدء K-win (معطّل افتراضياً)</value>
+  </data>
+  <data name="upd.check_now" xml:space="preserve">
+    <value>التحقق الآن</value>
+  </data>
+  <data name="upd.checking" xml:space="preserve">
+    <value>جارٍ البحث عن إصدار جديد على GitHub…</value>
+  </data>
+  <data name="upd.last_check" xml:space="preserve">
+    <value>آخر تحقق: {0}</value>
+  </data>
+  <data name="upd.never_checked" xml:space="preserve">
+    <value>لم يتم التحقق أبداً</value>
+  </data>
+  <data name="upd.note" xml:space="preserve">
+    <value>يقرأ K-win فقط معلومات الإصدارات العامة من github.com/Elomami1976/K-Win. لا ينزّل أو يثبّت أي شيء أبداً؛ وأنت من يقرر فتح صفحة الإصدار.</value>
+  </data>
+  <data name="upd.failed" xml:space="preserve">
+    <value>لم ينجح التحقق من التحديثات: {0}</value>
+  </data>
+  <data name="upd.failed_short" xml:space="preserve">
+    <value>فشل التحقق من التحديثات (غير متصل؟).</value>
+  </data>
+  <data name="upd.up_to_date" xml:space="preserve">
+    <value>K-win {0} محدّث.</value>
+  </data>
+  <data name="upd.up_to_date_long" xml:space="preserve">
+    <value>لديك K-win {0}. آخر إصدار هو {1}. لا حاجة إلى تحديث.</value>
+  </data>
+  <data name="upd.available" xml:space="preserve">
+    <value>يتوفر إصدار جديد: {0} (لديك {1}، نُشر في {2}).</value>
+  </data>
+  <data name="upd.available_short" xml:space="preserve">
+    <value>يتوفر تحديث: {0}</value>
+  </data>
+  <data name="upd.open_question" xml:space="preserve">
+    <value>هل تريد فتح صفحة الإصدار الرسمية على GitHub؟</value>
+  </data>
 </root>

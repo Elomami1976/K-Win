@@ -83,5 +83,13 @@ namespace KWin.Models
 
         [JsonPropertyName("error")]
         public string? Error { get; set; }
+
+        /// <summary>When this operation was undone (null = not undone).</summary>
+        [JsonPropertyName("undone")]
+        public DateTime? UndoneUtc { get; set; }
+
+        /// <summary>Non-fatal problems (e.g. a service could not be restarted).</summary>
+        [JsonPropertyName("warnings")]
+        public List<string> Warnings { get; set; } = new();
     }
 }

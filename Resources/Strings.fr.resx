@@ -2799,4 +2799,277 @@ du système</value>
   <data name="setting.sysmain.off" xml:space="preserve">
     <value>Désactivé</value>
   </data>
+  <data name="nav.history" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="page.history_sub" xml:space="preserve">
+    <value>Tout ce que K-win a modifié, avec détails et annulation</value>
+  </data>
+  <data name="card.applied_with_warning" xml:space="preserve">
+    <value>{0} : {1} appliqué et vérifié, avec un avertissement : {2}</value>
+  </data>
+  <data name="card.locked_local" xml:space="preserve">
+    <value>Défini par une stratégie de groupe locale</value>
+  </data>
+  <data name="card.locked_local_desc" xml:space="preserve">
+    <value>Cette valeur est définie par une stratégie de groupe locale. Windows réappliquerait la stratégie, donc K-win ne la modifie pas. Utilisez plutôt l'Éditeur de stratégie de groupe.</value>
+  </data>
+  <data name="dash.menu_optimize" xml:space="preserve">
+    <value>Optimiser (recommandations)…</value>
+  </data>
+  <data name="opt.title" xml:space="preserve">
+    <value>Optimiser</value>
+  </data>
+  <data name="opt.analyzing" xml:space="preserve">
+    <value>Vérification de vos paramètres…</value>
+  </data>
+  <data name="opt.intro" xml:space="preserve">
+    <value>K-win a vérifié vos paramètres : {0} diffèrent de ses recommandations. Choisissez ceux à appliquer. Rien ne change avant que vous confirmiez l'aperçu.</value>
+  </data>
+  <data name="opt.intro_safety" xml:space="preserve">
+    <value>Seuls les éléments à faible risque sont présélectionnés. Les éléments à risque moyen ou élevé doivent être choisis par vous.</value>
+  </data>
+  <data name="opt.none_needed" xml:space="preserve">
+    <value>Tous les paramètres recommandés par K-win sont déjà dans l'état recommandé. Rien à faire.</value>
+  </data>
+  <data name="opt.already" xml:space="preserve">
+    <value>{0} paramètres sont déjà dans l'état recommandé.</value>
+  </data>
+  <data name="opt.preferences" xml:space="preserve">
+    <value>{0} paramètres relèvent de vos préférences (aucune recommandation) et ne font pas partie d'Optimiser ; ils se trouvent dans Performances et Outils.</value>
+  </data>
+  <data name="opt.skipped" xml:space="preserve">
+    <value>Ignoré : {0} ({1})</value>
+  </data>
+  <data name="opt.skip_notapplicable" xml:space="preserve">
+    <value>non disponible sur cette version de Windows</value>
+  </data>
+  <data name="opt.skip_lockedbyorganization" xml:space="preserve">
+    <value>géré par votre organisation</value>
+  </data>
+  <data name="opt.skip_lockedbylocalpolicy" xml:space="preserve">
+    <value>défini par une stratégie de groupe locale</value>
+  </data>
+  <data name="opt.skip_stateunknown" xml:space="preserve">
+    <value>son état actuel n'a pas pu être lu</value>
+  </data>
+  <data name="opt.col_risk" xml:space="preserve">
+    <value>Risque</value>
+  </data>
+  <data name="opt.col_setting" xml:space="preserve">
+    <value>Paramètre</value>
+  </data>
+  <data name="opt.col_current" xml:space="preserve">
+    <value>Actuel</value>
+  </data>
+  <data name="opt.col_recommended" xml:space="preserve">
+    <value>Recommandé</value>
+  </data>
+  <data name="opt.col_result" xml:space="preserve">
+    <value>Résultat</value>
+  </data>
+  <data name="opt.col_details" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="opt.risk_low" xml:space="preserve">
+    <value>Risque faible</value>
+  </data>
+  <data name="opt.risk_medium" xml:space="preserve">
+    <value>Risque moyen</value>
+  </data>
+  <data name="opt.risk_high" xml:space="preserve">
+    <value>Risque élevé</value>
+  </data>
+  <data name="opt.review_apply" xml:space="preserve">
+    <value>Vérifier et appliquer…</value>
+  </data>
+  <data name="opt.cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="opt.select_hint" xml:space="preserve">
+    <value>Sélectionnez une ligne pour voir ce qu'elle modifie, son avantage et ses effets secondaires.</value>
+  </data>
+  <data name="opt.changed_outside" xml:space="preserve">
+    <value>Ce paramètre a été modifié par un autre outil ou une stratégie. Il n'est pas présélectionné.</value>
+  </data>
+  <data name="opt.preview_intro" xml:space="preserve">
+    <value>Ces {0} modifications seront effectuées :</value>
+  </data>
+  <data name="opt.preview_rp" xml:space="preserve">
+    <value>Un point de restauration est demandé d'abord (s'il est activé dans les Paramètres et en mode administrateur). Chaque modification est vérifiée après application.</value>
+  </data>
+  <data name="opt.preview_medium_warning" xml:space="preserve">
+    <value>Des éléments à risque moyen sont inclus. Lisez leurs effets secondaires avant de continuer.</value>
+  </data>
+  <data name="opt.op_name" xml:space="preserve">
+    <value>Optimiser ({0} modifications)</value>
+  </data>
+  <data name="opt.status" xml:space="preserve">
+    <value>Optimiser : {0} appliquées, {1} échouées.</value>
+  </data>
+  <data name="opt.summary_title" xml:space="preserve">
+    <value>Optimiser — Résumé</value>
+  </data>
+  <data name="opt.summary_intro" xml:space="preserve">
+    <value>{0} modifications sur {2} appliquées et vérifiées ; {1} ont échoué.</value>
+  </data>
+  <data name="opt.summary_restart" xml:space="preserve">
+    <value>Certaines modifications prennent effet après un redémarrage de Windows ou une déconnexion.</value>
+  </data>
+  <data name="opt.summary_undo" xml:space="preserve">
+    <value>Vous pouvez annuler toute cette opération avec Annuler ou depuis l'Historique.</value>
+  </data>
+  <data name="opt.summary_hint" xml:space="preserve">
+    <value>Sélectionnez une ligne pour voir ses détails.</value>
+  </data>
+  <data name="opt.applied" xml:space="preserve">
+    <value>Appliqué</value>
+  </data>
+  <data name="opt.applied_verified" xml:space="preserve">
+    <value>Appliqué et vérifié.</value>
+  </data>
+  <data name="opt.failed" xml:space="preserve">
+    <value>Échec</value>
+  </data>
+  <data name="opt.not_run" xml:space="preserve">
+    <value>Non exécuté</value>
+  </data>
+  <data name="opt.warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="opt.rp_created" xml:space="preserve">
+    <value>Point de restauration : créé et vérifié.</value>
+  </data>
+  <data name="opt.rp_recent" xml:space="preserve">
+    <value>Point de restauration : Windows a réutilisé un point des dernières 24 heures.</value>
+  </data>
+  <data name="opt.rp_not_admin" xml:space="preserve">
+    <value>Point de restauration : non créé (seuls des paramètres utilisateur ont changé, sans droits d'administrateur).</value>
+  </data>
+  <data name="opt.rp_failed" xml:space="preserve">
+    <value>Point de restauration : n'a pas pu être créé (vous avez choisi de continuer).</value>
+  </data>
+  <data name="opt.rp_off" xml:space="preserve">
+    <value>Point de restauration : désactivé dans les Paramètres.</value>
+  </data>
+  <data name="hist.undo_this" xml:space="preserve">
+    <value>Annuler cette opération…</value>
+  </data>
+  <data name="hist.undone" xml:space="preserve">
+    <value>Annulée</value>
+  </data>
+  <data name="hist.undone_at" xml:space="preserve">
+    <value>Annulée le {0}.</value>
+  </data>
+  <data name="hist.undo_gone" xml:space="preserve">
+    <value>Plus disponible</value>
+  </data>
+  <data name="hist.undo_gone_explain" xml:space="preserve">
+    <value>L'annulation n'est plus disponible : cette modification a déjà été annulée ou est plus ancienne que les 20 dernières modifications annulables.</value>
+  </data>
+  <data name="hist.undo_blocked" xml:space="preserve">
+    <value>Annulez d'abord « {0} » : elle a modifié les mêmes paramètres plus tard.</value>
+  </data>
+  <data name="hist.undo_ready_full" xml:space="preserve">
+    <value>L'annulation restaure exactement chaque valeur modifiée.</value>
+  </data>
+  <data name="hist.undo_ready_partial" xml:space="preserve">
+    <value>L'annulation restaure exactement les valeurs du registre. Une étape de service, d'alimentation ou de l'Explorateur ne peut être annulée que tant que K-win reste ouvert ; elle peut devoir être rétablie manuellement.</value>
+  </data>
+  <data name="hist.explain_full" xml:space="preserve">
+    <value>les valeurs du registre peuvent être restaurées exactement, même après un redémarrage</value>
+  </data>
+  <data name="hist.explain_partial" xml:space="preserve">
+    <value>les valeurs du registre peuvent être restaurées ; certaines étapes seulement tant que K-win reste ouvert</value>
+  </data>
+  <data name="hist.explain_none" xml:space="preserve">
+    <value>cette opération ne peut pas être annulée (par exemple fichiers supprimés ou applications désinstallées)</value>
+  </data>
+  <data name="hist.not_set" xml:space="preserve">
+    <value>(non défini)</value>
+  </data>
+  <data name="hist.key_removed" xml:space="preserve">
+    <value>clé supprimée (restaurable depuis sa sauvegarde)</value>
+  </data>
+  <data name="hist.changes" xml:space="preserve">
+    <value>Valeurs modifiées ({0}) :</value>
+  </data>
+  <data name="hist.errors" xml:space="preserve">
+    <value>Erreurs :</value>
+  </data>
+  <data name="hist.warnings" xml:space="preserve">
+    <value>Avertissements :</value>
+  </data>
+  <data name="hist.page_summary" xml:space="preserve">
+    <value>{0} opérations, les plus récentes en premier.</value>
+  </data>
+  <data name="hist.select_hint" xml:space="preserve">
+    <value>Sélectionnez une opération pour voir ses détails.</value>
+  </data>
+  <data name="perfp.comp_source_label" xml:space="preserve">
+    <value>Lecture</value>
+  </data>
+  <data name="perfp.comp_source_measured" xml:space="preserve">
+    <value>Mesuré avec Get-MMAgent (fiable)</value>
+  </data>
+  <data name="perfp.comp_source_inferred" xml:space="preserve">
+    <value>Déduit du processus Compression de la mémoire, non fiable. Redémarrez K-win en administrateur pour le paramètre exact.</value>
+  </data>
+  <data name="perfp.comp_inferred_on" xml:space="preserve">
+    <value>Probablement activée (déduit)</value>
+  </data>
+  <data name="perfp.comp_inferred_off" xml:space="preserve">
+    <value>Probablement désactivée (déduit)</value>
+  </data>
+  <data name="privp.clear_activity_op" xml:space="preserve">
+    <value>Effacer les données d'activité</value>
+  </data>
+  <data name="privp.dns_auto" xml:space="preserve">
+    <value>Automatique (DHCP)</value>
+  </data>
+  <data name="startup.details_hint" xml:space="preserve">
+    <value>Sélectionnez une entrée pour voir son nom complet, son emplacement et sa commande.</value>
+  </data>
+  <data name="upd.title" xml:space="preserve">
+    <value>Mises à jour</value>
+  </data>
+  <data name="upd.on_start" xml:space="preserve">
+    <value>Rechercher une nouvelle version au démarrage de K-win (désactivé par défaut)</value>
+  </data>
+  <data name="upd.check_now" xml:space="preserve">
+    <value>Vérifier maintenant</value>
+  </data>
+  <data name="upd.checking" xml:space="preserve">
+    <value>Recherche d'une nouvelle version sur GitHub…</value>
+  </data>
+  <data name="upd.last_check" xml:space="preserve">
+    <value>Dernière vérification : {0}</value>
+  </data>
+  <data name="upd.never_checked" xml:space="preserve">
+    <value>Jamais vérifié</value>
+  </data>
+  <data name="upd.note" xml:space="preserve">
+    <value>K-win lit seulement les informations publiques des versions de github.com/Elomami1976/K-Win. Il ne télécharge ni n'installe jamais rien ; vous décidez d'ouvrir ou non la page de la version.</value>
+  </data>
+  <data name="upd.failed" xml:space="preserve">
+    <value>La vérification des mises à jour n'a pas fonctionné : {0}</value>
+  </data>
+  <data name="upd.failed_short" xml:space="preserve">
+    <value>Échec de la vérification (hors ligne ?).</value>
+  </data>
+  <data name="upd.up_to_date" xml:space="preserve">
+    <value>K-win {0} est à jour.</value>
+  </data>
+  <data name="upd.up_to_date_long" xml:space="preserve">
+    <value>Vous avez K-win {0}. La dernière version est {1}. Aucune mise à jour nécessaire.</value>
+  </data>
+  <data name="upd.available" xml:space="preserve">
+    <value>Une nouvelle version est disponible : {0} (vous avez {1}, publiée le {2}).</value>
+  </data>
+  <data name="upd.available_short" xml:space="preserve">
+    <value>Mise à jour disponible : {0}</value>
+  </data>
+  <data name="upd.open_question" xml:space="preserve">
+    <value>Ouvrir la page officielle de la version sur GitHub ?</value>
+  </data>
 </root>

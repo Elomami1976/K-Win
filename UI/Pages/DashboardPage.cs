@@ -13,8 +13,10 @@ namespace KWin.UI.Pages
     public sealed class DashboardActions
     {
         public required Action<int> Navigate { get; init; }
-        /// <summary>Opens the existing one-click performance boost (with its preview and confirmation).</summary>
+        /// <summary>Optimize Now: analyze, recommend, choose, preview, confirm, apply, summary.</summary>
         public required Action OptimizeNow { get; init; }
+        /// <summary>The 1.0 one-click boost (with its own preview and confirmation).</summary>
+        public required Action OneClickBoost { get; init; }
         public required Action CleanTempFiles { get; init; }
         public required Action ViewHistory { get; init; }
     }
@@ -302,7 +304,8 @@ namespace KWin.UI.Pages
         private void ShowOptimizeMenu(Control anchor)
         {
             var menu = new ContextMenuStrip { RightToLeft = RightToLeft, ShowImageMargin = false };
-            menu.Items.Add(Get("dash.menu_boost"), null, (s, e) => _actions.OptimizeNow());
+            menu.Items.Add(Get("dash.menu_optimize"), null, (s, e) => _actions.OptimizeNow());
+            menu.Items.Add(Get("dash.menu_boost"), null, (s, e) => _actions.OneClickBoost());
             menu.Items.Add(Get("dash.menu_clean_temp"), null, (s, e) => _actions.CleanTempFiles());
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add(Get("dash.menu_performance_page"), null, (s, e) => _actions.Navigate(PageIds.Performance));

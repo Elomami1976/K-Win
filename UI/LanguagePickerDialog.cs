@@ -15,7 +15,7 @@ namespace KWin.UI
 
         public LanguagePickerDialog()
         {
-            Text = "K-win — Choose Language";
+            Text = "K-win — Language · Langue · اللغة";
             Size = new Size(480, 420);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -29,7 +29,7 @@ namespace KWin.UI
             // Header icon/title
             var titleLabel = new Label
             {
-                Text = "Welcome to K-win",
+                Text = "K-win",
                 Font = new Font("Segoe UI", 20F, FontStyle.Bold),
                 ForeColor = Color.White,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -40,7 +40,7 @@ namespace KWin.UI
 
             var subtitleLabel = new Label
             {
-                Text = "Choose your language:",
+                Text = "Choose your language · Choisissez votre langue · اختر لغتك",
                 Font = new Font("Segoe UI", 11F),
                 ForeColor = Color.FromArgb(180, 180, 180),
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -115,7 +115,7 @@ namespace KWin.UI
 
             var continueBtn = new Button
             {
-                Text = "Continue →",
+                Text = "Continue · Continuer · متابعة",
                 Dock = DockStyle.Fill,
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(0, 150, 80),

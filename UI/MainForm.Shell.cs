@@ -50,6 +50,7 @@ namespace KWin.UI
             (Glyphs.Health, "health"),
             (Glyphs.Tools, "tools"),
             (Glyphs.Settings, "settings"),
+            (Glyphs.History, "history"),
         };
 
         /// <summary>Builds the whole window. Called once from the constructor.</summary>
@@ -120,7 +121,7 @@ namespace KWin.UI
                 AutoScroll = true,
                 Margin = new Padding(0, 10, 0, 0)
             };
-            for (int i = 0; i < NavItems.Length; i++)
+            for (int i = 0; i < PageIds.SidebarCount; i++)
             {
                 int index = i;
                 var b = new NavButton
@@ -354,7 +355,8 @@ namespace KWin.UI
             _pages[PageIds.Dashboard] = _dashboard = new DashboardPage(new DashboardActions
             {
                 Navigate = Navigate,
-                OptimizeNow = () => _ = OneClickPerformanceBoostAsync(disableTransparency: true),
+                OptimizeNow = () => _ = OptimizeNowAsync(),
+                OneClickBoost = () => _ = OneClickPerformanceBoostAsync(disableTransparency: true),
                 CleanTempFiles = () =>
                 {
                     Navigate(PageIds.Cleanup);
@@ -379,6 +381,7 @@ namespace KWin.UI
             });
 
             _pages[PageIds.Tools] = BuildToolsPage();
+            _pages[PageIds.History] = new HistoryPage(CreateHistoryActions());
 
             _pages[PageIds.Settings] = _settingsPage = new SettingsPage(new SettingsActions
             {
@@ -399,6 +402,7 @@ namespace KWin.UI
                 OpenLogs = () => OpenFolder(Logger.Instance.LogDirectory),
                 OpenBackups = () => OpenFolder(_safety.BackupDirectory),
                 ViewHistory = ShowHistory,
+                CheckForUpdates = () => CheckForUpdatesAsync(userInitiated: true),
                 SetMonitorInterval = seconds =>
                 {
                     _settingsService.Current.MonitorIntervalSeconds = SystemMonitorService.NormalizeInterval(seconds);
@@ -542,10 +546,48 @@ namespace KWin.UI
             }
         }
 
-        private void ShowHistory()
+        private void ShowHistory() => Navigate(PageIds.History);
+
+        private HistoryActions CreateHistoryActions() => new()
         {
-            using var form = new HistoryForm(_history);
-            form.ShowDialog(this);
+            Load = () => _history.GetRecent(OperationHistoryService.MaxEntries),
+            HasUndo = id => _safety.HasUndo(id),
+            CanUndo = id => (_safety.CanUndo(id, out var reason), reason),
+            Undo = UndoHistoryRecordAsync
+        };
+
+        /// <summary>Undoes one operation from the History page (only when SafetyEngine allows it).</summary>
+        private async Task UndoHistoryRecordAsync(OperationRecord record)
+        {
+            if (record.UndoId == null) return;
+            if (DevMode.IsUiPreview) { ShowDevPreviewBlocked(Get("hist.undo_this")); return; }
+
+            string message = Get("safety.undo_confirm", record.Name);
+            if (record.Reversibility != Reversibility.Full)
+                message += Environment.NewLine + Environment.NewLine + Get("hist.undo_ready_partial");
+            if (MessageBox.Show(this, message, Get("safety.undo_title"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            bool machineWide = record.RegistryChanges.Any(c => c.KeyPath.StartsWith("HKLM", StringComparison.OrdinalIgnoreCase));
+            if (machineWide && !EnsureAdmin(Get("hist.undo_this"))) return;
+
+            SetBusy(true, Get("safety.undoing"));
+            try
+            {
+                var result = await _safety.UndoByIdAsync(record.UndoId);
+                if (result.Success) _history.MarkUndone(record.UndoId);
+                RecordOperation(Get("hist.undo_of", record.Name),
+                    result.Success ? OperationStatus.Completed : OperationStatus.Failed, Reversibility.None, null, result.ErrorMessage);
+                SetStatus(result.Success ? Get("safety.undo_ok") : Get("safety.undo_fail", result.ErrorMessage ?? ""), !result.Success);
+                if (!result.Success)
+                    MessageBox.Show(this, Get("safety.undo_fail", result.ErrorMessage ?? ""), Get("safety.undo_title"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                UpdateUndoButton();
+            }
+            finally
+            {
+                SetBusy(false);
+            }
         }
 
         private void OpenFolder(string path)
@@ -622,6 +664,57 @@ namespace KWin.UI
             base.OnShown(e);
             _monitor.Start();
             UpdateMonitoring();
+            if (_settingsService.Current.CheckUpdatesOnStart)
+                _ = CheckForUpdatesAsync(userInitiated: false);
+        }
+
+        /// <summary>
+        /// Optional update check (GitHub release metadata only). Never downloads or runs anything;
+        /// offers to open the official release page. Silent at startup unless an update exists.
+        /// </summary>
+        private async Task CheckForUpdatesAsync(bool userInitiated)
+        {
+            var current = new Version(Application.ProductVersion.Split('+')[0].Split('-')[0]);
+            if (userInitiated) SetStatus(Get("upd.checking"), false);
+            var result = await new UpdateChecker().CheckAsync(current);
+            _settingsService.Current.LastUpdateCheckUtc = DateTime.UtcNow;
+            _settingsService.Save();
+            _settingsPage?.SyncFromSettings();
+
+            if (!result.Success)
+            {
+                if (userInitiated)
+                {
+                    SetStatus(Get("upd.failed_short"), false);
+                    MessageBox.Show(this, Get("upd.failed", result.ErrorMessage ?? ""), Get("upd.title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                return;
+            }
+
+            var r = result.Data!;
+            if (!r.UpdateAvailable)
+            {
+                if (userInitiated)
+                {
+                    SetStatus(Get("upd.up_to_date", r.Current), false);
+                    MessageBox.Show(this, Get("upd.up_to_date_long", r.Current, r.Latest?.Tag ?? "—"), Get("upd.title"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                return;
+            }
+
+            var latest = r.Latest!;
+            string notes = latest.Notes.Length > 1500 ? latest.Notes[..1500] + "…" : latest.Notes;
+            string text = Get("upd.available", latest.Tag, r.Current,
+                latest.PublishedUtc?.ToLocalTime().ToString("d", Loc.Culture) ?? "—") +
+                Environment.NewLine + Environment.NewLine + notes + Environment.NewLine + Environment.NewLine + Get("upd.open_question");
+            SetStatus(Get("upd.available_short", latest.Tag), false);
+            if (MessageBox.Show(this, text, Get("upd.title"), MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes
+                && UpdateChecker.IsOfficialReleasePage(latest.PageUrl.ToString()))
+            {
+                try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(latest.PageUrl.ToString()) { UseShellExecute = true })?.Dispose(); }
+                catch (Exception ex) { SetStatus(Get("failed", ex.Message), true); }
+            }
         }
 
         /// <summary>

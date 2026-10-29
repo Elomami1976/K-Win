@@ -21,6 +21,13 @@ namespace KWin.Services
         [JsonPropertyName("monitor_interval_seconds")]
         public int MonitorIntervalSeconds { get; set; } = 2;
 
+        /// <summary>Optional GitHub update check at startup. Off by default.</summary>
+        [JsonPropertyName("check_updates_on_start")]
+        public bool CheckUpdatesOnStart { get; set; }
+
+        [JsonPropertyName("last_update_check_utc")]
+        public DateTime? LastUpdateCheckUtc { get; set; }
+
         [JsonIgnore]
         public bool IsDark => !string.Equals(Theme, "light", StringComparison.OrdinalIgnoreCase);
     }

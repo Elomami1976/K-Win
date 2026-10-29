@@ -184,7 +184,73 @@ namespace KWin.Core
                 _undo.RemoveAt(_undo.Count - 1);
                 SaveUndo();
             }
+            return await RunUndoAsync(action);
+        }
 
+        /// <summary>True if this undo entry still exists (not undone yet and not trimmed).</summary>
+        public bool HasUndo(string? id)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+            lock (_lock) return _undo.Any(u => u.Id == id);
+        }
+
+        /// <summary>
+        /// Whether one specific (possibly older) action can be undone safely. It cannot when a later
+        /// action changed one of the same registry values or keys: undoing out of order would
+        /// overwrite that later change. The reason names the action to undo first.
+        /// </summary>
+        public bool CanUndo(string? id, out string reason)
+        {
+            reason = string.Empty;
+            lock (_lock)
+            {
+                int index = _undo.FindIndex(u => u.Id == id);
+                if (index < 0)
+                {
+                    reason = "not_available";
+                    return false;
+                }
+                var mine = _undo[index].RegistryChanges.Select(ChangeId).ToList();
+                for (int i = _undo.Count - 1; i > index; i--)
+                {
+                    var later = _undo[i];
+                    if (later.RegistryChanges.Select(ChangeId).Any(l => mine.Any(m => Overlaps(m, l))))
+                    {
+                        reason = later.Description;
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+
+        private static string ChangeId(RegistryChange c) =>
+            (c.Operation == RegistryOperation.DeleteKeyTree ? c.KeyPath + "\\" : $"{c.KeyPath}\\{c.ValueName}").ToUpperInvariant();
+
+        /// <summary>Same value, or one is inside a key the other deleted/created.</summary>
+        private static bool Overlaps(string a, string b) =>
+            a == b || (a.EndsWith("\\") && b.StartsWith(a)) || (b.EndsWith("\\") && a.StartsWith(b));
+
+        /// <summary>Undoes one specific action if <see cref="CanUndo"/> allows it.</summary>
+        public async Task<Result<bool>> UndoByIdAsync(string id)
+        {
+            UndoAction action;
+            lock (_lock)
+            {
+                if (!CanUndo(id, out var reason))
+                    return Result<bool>.Fail(reason == "not_available"
+                        ? "This change can no longer be undone (already undone, or older than the last 20 changes)."
+                        : $"Undo \"{reason}\" first: it changed the same settings later.");
+                int index = _undo.FindIndex(u => u.Id == id);
+                action = _undo[index];
+                _undo.RemoveAt(index);
+                SaveUndo();
+            }
+            return await RunUndoAsync(action);
+        }
+
+        private async Task<Result<bool>> RunUndoAsync(UndoAction action)
+        {
             Logger.Instance.Info("UndoLastAction", action.Description, "starting");
             var errors = new List<string>();
 

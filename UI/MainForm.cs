@@ -209,7 +209,7 @@ namespace KWin.UI
 
             if (confirm != DialogResult.Yes) return;
 
-            await ExecuteWithSafetyAsync("Clear Activity History", async () =>
+            await ExecuteWithSafetyAsync(Get("privp.clear_activity_op"), async () =>
             {
                 int filesDeleted = 0;
                 var backups = new List<string>();
@@ -336,7 +336,8 @@ namespace KWin.UI
             new[] { "208.67.222.222", "208.67.220.220" },  // 4 = OpenDNS
         };
 
-        private static readonly string[] DnsNames = { "DHCP (Auto)", "Cloudflare", "Google", "Quad9", "OpenDNS" };
+        /// <summary>Provider names (brand names stay as they are; "automatic" is translated).</summary>
+        private static string[] DnsNames => new[] { Get("privp.dns_auto"), "Cloudflare", "Google", "Quad9", "OpenDNS" };
 
         private static string? GetActiveInterfaceName()
         {
@@ -429,7 +430,7 @@ namespace KWin.UI
                 if (result.Success)
                 {
                     SetStatus(Get("clean.op.sfc_complete"), false);
-                    MessageBox.Show(this, result.Data ?? "Scan complete.",
+                    MessageBox.Show(this, string.IsNullOrWhiteSpace(result.Data) ? Get("clean.op.sfc_complete") : result.Data,
                         Get("clean.op.sfc_results"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -915,7 +916,11 @@ namespace KWin.UI
         /// admin check, verified restore point (when enabled), registry change capture,
         /// automatic undo entry, failure detection and a saved history record.
         /// </summary>
-        private async Task ExecuteWithSafetyAsync(string operationName, Func<Task> action, bool requiresAdmin = true)
+        /// <summary>Warnings collected during the running operation (saved with its history record).</summary>
+        private readonly List<string> _currentWarnings = new();
+
+        private async Task ExecuteWithSafetyAsync(string operationName, Func<Task> action, bool requiresAdmin = true,
+            Action<OperationRecord>? onRecorded = null)
         {
             if (DevMode.IsUiPreview)
             {
@@ -929,6 +934,7 @@ namespace KWin.UI
             _statusErrorDuringOp = false;
             _lastErrorStatus = null;
             _operationHasIrreversibleSteps = false;
+            _currentWarnings.Clear();
 
             SetBusy(true, Get("safety.applying", operationName));
             _safety.BeginOperation();
@@ -980,7 +986,7 @@ namespace KWin.UI
                 record.Status = OperationStatus.Failed;
                 record.Error = $"{ex.GetType().Name}: {ex.Message}";
                 Logger.Instance.Error("ExecuteWithSafety", operationName, ex);
-                SetStatus($"Error: {ex.Message}", true);
+                SetStatus(Get("failed", ex.Message), true);
                 MessageBox.Show(this,
                     Get("safety.error_msg", operationName, ex.Message),
                     Get("safety.error_title"),
@@ -1003,7 +1009,9 @@ namespace KWin.UI
                 }
 
                 record.CompletedUtc = DateTime.UtcNow;
+                record.Warnings.AddRange(_currentWarnings);
                 _history.Add(record);
+                onRecorded?.Invoke(record);
                 UpdateUndoButton();
                 SetBusy(false);
 
@@ -1087,6 +1095,7 @@ namespace KWin.UI
 
             var next = _safety.PeekUndo();
             string desc = next?.Description ?? "";
+            string? undoId = next?.Id;
             string message = Get("safety.undo_confirm", desc);
             if (next != null && next.IsPartial)
                 message += "\n\n" + Get("safety.undo_partial_note");
@@ -1100,6 +1109,7 @@ namespace KWin.UI
             try
             {
                 var result = await _safety.UndoLastAction();
+                if (result.Success) _history.MarkUndone(undoId);
                 SetStatus(result.Success
                     ? Get("safety.undo_ok")
                     : Get("safety.undo_fail", result.ErrorMessage ?? ""), !result.Success);

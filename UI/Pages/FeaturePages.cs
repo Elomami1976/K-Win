@@ -129,17 +129,29 @@ namespace KWin.UI.Pages
                 return;
             }
             var (enabled, source) = r.Data;
-            string state = enabled ? Get("perfp.comp_on") : Get("perfp.comp_off");
-            if (source == MemoryManager.CompressionSource.CompressionProcess)
-                state += " · " + Get("perfp.comp_detected");
-            _compression.SetState(Get("card.current", state), enabled ? TextRole.Success : TextRole.Accent);
-            _compOn.Enabled = !enabled || source != MemoryManager.CompressionSource.MMAgent;
-            _compOff.Enabled = enabled || source != MemoryManager.CompressionSource.MMAgent;
+            bool measured = source == MemoryManager.CompressionSource.MMAgent;
+            if (measured)
+            {
+                _compression.SetState(Get("card.current", enabled ? Get("perfp.comp_on") : Get("perfp.comp_off")),
+                    enabled ? TextRole.Success : TextRole.Accent);
+                _compression.SetFact(Get("perfp.comp_source_label"), Get("perfp.comp_source_measured"));
+            }
+            else
+            {
+                // Not authoritative: shown as an inference, never as the confirmed setting.
+                _compression.SetState(Get(enabled ? "perfp.comp_inferred_on" : "perfp.comp_inferred_off"), TextRole.Muted);
+                _compression.SetFact(Get("perfp.comp_source_label"), Get("perfp.comp_source_inferred"), TextRole.Warning);
+            }
+            // Only a measured state disables the matching button.
+            _compOn.Enabled = !(measured && enabled);
+            _compOff.Enabled = !(measured && !enabled);
+            Relayout();
         }
 
         public void RefreshAll()
         {
             foreach (var c in Cards<SettingCard>()) c.RefreshState();
+            Relayout();
         }
     }
 
@@ -234,6 +246,7 @@ namespace KWin.UI.Pages
             _dns.SetState(_a.GetDnsStatus(), TextRole.Accent);
             var (active, status) = _a.GetHostsStatus();
             _hosts.SetState(status, active ? TextRole.Warning : TextRole.Muted);
+            Relayout();
         }
     }
 
@@ -253,6 +266,7 @@ namespace KWin.UI.Pages
         public void RefreshAll()
         {
             foreach (var c in Cards<SettingCard>()) c.RefreshState();
+            Relayout();
         }
     }
 }

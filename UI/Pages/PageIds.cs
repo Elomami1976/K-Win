@@ -11,7 +11,10 @@ namespace KWin.UI.Pages
         public const int Health = 5;
         public const int Tools = 6;
         public const int Settings = 7;
-        public const int Count = 8;
+        /// <summary>Opened from the dashboard, Settings and the status bar (not a sidebar item).</summary>
+        public const int History = 8;
+        public const int SidebarCount = 8;
+        public const int Count = 9;
     }
 
     /// <summary>Small helpers for building themed layouts in code.</summary>
